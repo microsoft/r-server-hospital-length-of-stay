@@ -1,0 +1,61 @@
+
+img {
+    display: block; 
+    height: auto; 
+    max-width: 100%;
+}
+.toc {
+    font-size:0.9em; 
+    margin-top:16px;
+    margin-bottom: 16px;
+}
+.toc li {
+    list-style-type:none; 
+    padding:0; 
+    margin-left:0px; 
+}
+.btn-info {
+    background-color: #0072C6;
+    border-color: #0072C6;
+}
+.btn {
+    border:none;
+    -webkit-box-shadow:none;
+    -moz-box-shadow:none;
+    box-shadow:none;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
+}
+.teal {
+    color:  #0072C6;
+}  
+h2 {
+    font-size:1.8rem;
+    font-weight: 500;
+}  
+h3 {
+    font-size:1.1rem;
+    font-weight: 600;
+}
+a {
+    color: #0072C6;
+    font-weight: 600;
+}
+body {
+    font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+    margin-top: 20px;
+    color: #2C3137;
+    text-align: justify;
+    text-justify: auto;
+}
+.details {
+  font-family: 'Segoe UI Semibold';
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.25px;
+  text-transform: uppercase;
+}
+.center {
+    text-align: center;
+}

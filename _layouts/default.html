@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" type="image/png" href="images/favicon.png">
+    <title>{{ page.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ site.description }}">
+    <meta name="author" content="{{ site.author.name }}">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="stylesheets/bootstrap.css">
+
+    <!--<link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">-->
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/js/html5shiv.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="stylesheets/mystyles.css">
+
+  </head>
+  <body> 
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9">
+          <div class="jumboton teal">
+            <h1>{{ site.solution_name }}</h1>
+            <p>Implemented with SQL Server R Services</p>
+          </div>
+              <div class="content">
+                {{ content }}
+              </div>  
+          </div><!--/col -->
+
+        <div class="col-sm-3 sidebar-offcanvas" id="sidebar">
+          <img  src="images/los.png">
+          <div class="list-group">
+          <a href="index.html" class="list-group-item">Home</a>
+					<a href="business-manager.html" class="list-group-item">For the Business Manager</a>
+					<a href="data-scientist.html" class="list-group-item">For the Data Scientist</a>
+          <a href="dba.html" class="list-group-item">For the Database Analyst</a>
+					<a href="Typical.html" class="list-group-item">Typical Workflow</a>
+					<a href="START_HERE.html" class="list-group-item">Quick Start</a>
+				  </div>
+        <hr />
+            <div class="center">
+            <a  class="btn btn-large btn-info" href="{{ site.code_url }}">
+            View On <strong>GitHub</strong></a>
+            </div>
+            <hr />
+            <p class="details">Other Links</p>
+              <div class="toc">
+                <li><a href="contents.html">Packet Contents</a></li>
+                <li><a href="sitemap.html">Site Map</a></li>
+
+            </div>
+          </div><!--/col -->
+      </div><!-- /row -->
+
+<div class="row">
+  <hr />
+      <footer>
+        <p> 
+This project has adopted the <a href="https://opensource.microsoft.com/codeofconduct/">Microsoft Open Source Code of Conduct</a>. For more information see the <a href="https://opensource.microsoft.com/codeofconduct/faq/">Code of Conduct FAQ</a> or contact <a href="mailto:opencode@microsoft.com">opencode@microsoft.com</a> with any additional questions or comments.</p>
+        <p><small>Hosted on GitHub Pages</small> </p>
+      </footer>
+  </div>
+  
+</div><!-- /container -->
+
+  <script src="javascripts/scale.fix.js"></script>
+
+  <!-- XXX  PUT GOOGLE ANALYTICS HERE -->
+    
+
+  </body>
+</html>
