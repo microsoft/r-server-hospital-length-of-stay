@@ -1,7 +1,7 @@
 author:
         name: Microsoft
 
-description: Use SQL Server 2016 + R Services to build and deploy a XXXDESCRIBE.
+description: Use SQL Server 2016 + R Services to build and deploy a predictive model for Length of Stay for in-hospital admissions.
 
 # site variables
 solution_name: Predicting Hospital Length of Stay
