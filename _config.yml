@@ -6,14 +6,14 @@ description: Use SQL Server 2016 + R Services to build and deploy a predictive m
 # site variables
 solution_name: Predicting Hospital Length of Stay
 folder_name: Hospital
-db_name: DBNAME
-ps1_name: PSNAME.ps1
+db_name: Hospital
+ps1_name: Length_Of_Stay.ps1
 
 # urls, etc
 code_url: "https://github.com/Microsoft/r-server-hospital-length-of-stay"
 code: "r-server-hospital-length-of-stay"
 website_url: "https://microsoft.github.io/r-server-hospital-length-of-stay/"  
-dashboard_url: "PUTURLHERE"
+dashboard_url: "PUTDASHBOARDURLHERE"
 aka_url: "http://aka.ms/hospital" 
 
 
