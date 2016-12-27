@@ -7,7 +7,7 @@ GO
 DROP PROCEDURE IF EXISTS [dbo].[train_model_reg];
 GO
 
-CREATE PROCEDURE [train_model_reg]   @modelName varchar(20), @connectionString varchar(300),
+CREATE PROCEDURE [train_model_reg]   @connectionString varchar(300),
 									 @dataset_name varchar(max) = 'LoS', @training_name varchar(max) = 'Train_Id'
 AS 
 BEGIN
@@ -19,14 +19,8 @@ BEGIN
 		model varbinary(max) not null
 		)
 
-/*  Make sure that the target variable will be treated as an integer. */
-	DECLARE @sql0 nvarchar(max);
-	SELECT @sql0 = N'
-	ALTER TABLE ' + @dataset_name + ' ALTER COLUMN lengthofstay int ' ;
-	EXEC sp_executesql @sql0;
-
 /* 	Train the model on CM_AD_Train.  */	
-	DELETE FROM Models_Reg WHERE model_name = @modelName;
+	DELETE FROM Models_Reg WHERE model_name = 'RF';
 	INSERT INTO Models_Reg (model)
 	EXECUTE sp_execute_external_script @language = N'R',
 					   @script = N' 
@@ -40,7 +34,6 @@ rxSetComputeContext(sql)
 ##########################################################################################################################################
 ##	Specify the types of the features before the training
 ##########################################################################################################################################
-
 # Get the variables names, types and levels for factors.
 LoS <- RxSqlServerData(table = dataset_name, connectionString = connection_string, stringsAsFactors = T)
 column_info <- rxCreateColInfo(LoS)
@@ -59,15 +52,14 @@ LoS_Train <- RxSqlServerData(
 ##########################################################################################################################################
 variables_all <- rxGetVarNames(LoS_Train)
 # We remove dates and ID variables.
-variables_to_remove <- c("eid", "vdate", "discharged")
+variables_to_remove <- c("eid", "vdate", "discharged", "lengthofstay_bucket", "facid")
 traning_variables <- variables_all[!(variables_all %in% c("lengthofstay", variables_to_remove))]
 formula <- as.formula(paste("lengthofstay ~", paste(traning_variables, collapse = "+")))
 
 ##########################################################################################################################################
 ## Training model based on model selection
 ##########################################################################################################################################
-if (model_name == "RF") {
-	# Train the Random Forest.
+# Train the Random Forest.
 	model <- rxDForest(formula = formula,
 	 			       data = LoS_Train,
 				       nTree = 40,
@@ -76,27 +68,13 @@ if (model_name == "RF") {
 				       cp = 0.00005,
 				       seed = 5)
 					   				       
-} else {
-	# Train the GBT.
-	model <- rxBTrees(formula = formula,
-					  data = LoS_Train,
-				      learningRate = 0.05,				    
-				      minBucket = 5,
-				      minSplit = 10,
-				      cp = 0.0005,
-				      nTree = 40,
-				      seed = 5,
-				      lossFunction = "gaussian")
-} 
-
 OutputDataSet <- data.frame(payload = as.raw(serialize(model, connection=NULL)))'
-, @params = N'@model_name varchar(20), @connection_string varchar(300), @dataset_name varchar(max) , @training_name varchar(max) '
-, @model_name = @modelName
+, @params = N'@connection_string varchar(300), @dataset_name varchar(max) , @training_name varchar(max) '
 , @connection_string = @connectionString 
 , @dataset_name =  @dataset_name
 , @training_name = @training_name 
 
-UPDATE Models_Reg set model_name = @modelName 
+UPDATE Models_Reg set model_name = 'RF'
 WHERE model_name = 'default model'
 
 ;

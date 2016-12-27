@@ -90,6 +90,7 @@ In this step, we create a stored procedure [dbo].[feature_engineering] that desi
 
 * The continuous laboratory measurements (e.g. hemo, hematocritic, sodium, glucose etc.) are standardized: we substract the mean and divide by the standard deviation. 
 * number_of_issues: the total number of preidentified medical conditions.
+* lengthofstay_bucket: bucketed version of the target variable for classification.
 
 Input:
 
@@ -128,7 +129,7 @@ If running Length_Of_Stay.ps1 with uninterrupted = "Y", the two approaches will 
 ### Step 3b: Training (Classification)
 -------------------------
 
-In this step, we create a stored procedure [dbo].[train_model_class] that trains a classification Random Forest (RF) or a classification Gradient Boosted Trees (GBT) on the training set. The trained models are serialized then stored in a table called “Models_Class”. The PowerShell script automatically calls the procedure twice in order to train both models. 
+In this step, we create a stored procedure [dbo].[train_model_class] that trains a classification Random Forest (RF) on the training set. The models perform a stratified sampling in order to deal with class imbalance. The trained model is serialized then stored in a table called “Models_Class”.
 
 
 Input:
@@ -137,7 +138,7 @@ Input:
 
 Output:
 
-* "Models_Class" table containing the classification RF and GBT trained models. 
+* "Models_Class" table containing the classification RF trained models. 
 
 Related files:
 
@@ -146,7 +147,7 @@ Related files:
 ### Step 3c: Testing and Evaluating (Classification)
 -------------------------
 
-In this step, we create a stored procedure [dbo].[test_evaluate_models_class] that scores the two trained models on the testing set, and then compute multi-class performance metrics. The performance metrics are written in “Metrics_Class”.
+In this step, we create a stored procedure [dbo].[test_evaluate_model_class] that scores the trained model on the testing set, and then compute multi-class performance metrics. The performance metrics are written in “Metrics_Class”.
 
 
 Input:
@@ -155,7 +156,7 @@ Input:
 
 Output:
 
-* "Metrics_Class" table containing the performance metrics of the two models.
+* "Metrics_Class" table containing the performance metrics of the model.
 
 
 Related files:
@@ -165,7 +166,7 @@ Related files:
 ### Step 3b: Training (Regression)
 -------------------------
 
-In this step, we create a stored procedure [dbo].[train_model_class] that trains a regression Random Forest (RF) or a regression Gradient Boosted Trees (GBT) on the training set. The trained models are serialized then stored in a table called “Models_Reg”. The PowerShell script automatically calls the procedure twice in order to train both models. 
+In this step, we create a stored procedure [dbo].[train_model_class] that trains a regression Random Forest (RF) on the training set. The trained model is serialized then stored in a table called “Models_Reg”. 
 
 
 Input:
@@ -174,7 +175,7 @@ Input:
 
 Output:
 
-* "Models_Reg" table containing the regression RF and GBT trained models. 
+* "Models_Reg" table containing the regression RF trained model. 
 
 Related files:
 
@@ -183,7 +184,7 @@ Related files:
 ### Step 3c: Testing and Evaluating (Regression)
 -------------------------
 
-In this step, we create a stored procedure [dbo].[test_evaluate_models_reg] that scores the two trained models on the testing set, and then compute regressiom performance metrics as well as multi-class classification metrics obtained after rounding the prediction. The performance metrics are written in “Metrics_Reg”.
+In this step, we create a stored procedure [dbo].[test_evaluate_model_reg] that scores the trained model on the testing set, and then compute regression performance metrics written in “Metrics_Reg”.
 
 
 Input:
@@ -192,7 +193,7 @@ Input:
 
 Output:
 
-* "Metrics_Reg" table containing the performance metrics of the two models.
+* "Metrics_Reg" table containing the performance metrics of the model.
 
 
 Related files:

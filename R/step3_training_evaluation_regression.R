@@ -1,11 +1,11 @@
 ##########################################################################################################################################
 ## This R script will do the following:
 ## 1. Split LoS into a Training LoS_Train, and a Testing set LoS_Test.  
-## 2. Train regression models Random Forest (RF) and Gradient Boosting Trees (GBT) on LoS_Train, and save them to SQL. 
-## 3. Score RF and GBT on LoS_Test.
+## 2. Train regression model Random Forest (RF) on LoS_Train, and save it to SQL. 
+## 3. Score RF on LoS_Test.
 
 ## Input : Data set LoS
-## Output: Random forest and GBT models saved to SQL. 
+## Output: Regression Random forest saved to SQL. 
 
 ##########################################################################################################################################
 
@@ -61,8 +61,6 @@ LoS <- RxSqlServerData(table = "LoS", connectionString = connection_string, stri
 outOdbcDS <- RxOdbcData(table = "NewData", connectionString = connection_string, useFastRead=TRUE)
 rxOpen(outOdbcDS, "w")
 
-rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("ALTER TABLE LoS ALTER COLUMN lengthofstay int;", sep=""))
-
 column_info <- rxCreateColInfo(LoS)
 
 ##########################################################################################################################################
@@ -109,7 +107,7 @@ LoS_Test <- RxSqlServerData(
 
 # Write the formula after removing variables not used in the modeling.
 variables_all <- rxGetVarNames(LoS)
-variables_to_remove <- c("eid", "vdate", "discharged")
+variables_to_remove <- c("eid", "vdate", "discharged", "lengthofstay_bucket", "facid")
 traning_variables <- variables_all[!(variables_all %in% c("lengthofstay", variables_to_remove))]
 formula <- as.formula(paste("lengthofstay ~", paste(traning_variables, collapse = "+")))
 
@@ -140,34 +138,6 @@ forest_model_reg_char <- as.character(forest_model_reg_raw)
 forest_model_reg_sql <- RxSqlServerData(table = "Forest_Model_Reg", connectionString = connection_string) 
 rxDataStep(inData = data.frame(x = forest_model_reg_char ), outFile = forest_model_reg_sql, overwrite = TRUE)
 
-# Set back the compute context to SQL.
-rxSetComputeContext(sql)
-
-
-##########################################################################################################################################
-
-##	Gradient Boosted Trees Training and saving the model to SQL
-
-##########################################################################################################################################
-
-# Train the GBT.
-btree_model_reg <- rxBTrees(formula = formula,
-                            data = LoS_Train,
-                            learningRate = 0.05,
-                            minSplit = 10,
-                            minBucket = 5,
-                            cp = 0.0005,
-                            nTree = 40,
-                            seed = 5,
-                            lossFunction = "gaussian")
-
-# Save the GBT in SQL. The Compute Context is set to Local in order to export the model. 
-rxSetComputeContext(local)
-saveRDS(btree_model_reg, file = "btree_model_reg.rds")
-btree_model_reg_raw <- readBin("btree_model_reg.rds", "raw", n = file.size("btree_model_reg.rds"))
-btree_model_reg_char <- as.character(btree_model_reg_raw)
-btree_model_reg_sql <- RxSqlServerData(table = "Btree_Model_Reg", connectionString = connection_string) 
-rxDataStep(inData = data.frame(x = btree_model_reg_char ), outFile = btree_model_reg_sql, overwrite = TRUE)
 
 ##########################################################################################################################################
 
@@ -177,9 +147,6 @@ rxDataStep(inData = data.frame(x = btree_model_reg_char ), outFile = btree_model
 
 # Write a function that computes regression performance metrics. 
 evaluate_model_reg <- function(observed, predicted, model) {
-  
-  print(model)
-  ## Regression Metrics
   mean_observed <- mean(observed)
   se <- (observed - predicted)^2
   ae <- abs(observed - predicted)
@@ -190,51 +157,15 @@ evaluate_model_reg <- function(observed, predicted, model) {
   rae <- sum(ae) / sum(aem)
   rse <- sum(se) / sum(sem)
   rsq <- 1 - rse
-  
-  ## Classification Metrics when the prediction is rounded to the nearest integer. 
-  predicted <- factor(round(predicted), levels = c("1","2","3","4"))
-  observed <- factor(observed, levels = c("1","2","3","4"))
-  
-  confusion <- table(observed, predicted)
-  num_classes <- nlevels(observed)
-  tp <- rep(0, num_classes)
-  fn <- rep(0, num_classes)
-  fp <- rep(0, num_classes)
-  tn <- rep(0, num_classes)
-  accuracy <- rep(0, num_classes)
-  precision <- rep(0, num_classes)
-  recall <- rep(0, num_classes)
-  for(i in 1:num_classes) {
-    tp[i] <- sum(confusion[i, i])
-    fn[i] <- sum(confusion[-i, i])
-    fp[i] <- sum(confusion[i, -i])
-    tn[i] <- sum(confusion[-i, -i])
-    accuracy[i] <- (tp[i] + tn[i]) / (tp[i] + fn[i] + fp[i] + tn[i])
-    precision[i] <- tp[i] / (tp[i] + fp[i])
-    recall[i] <- tp[i] / (tp[i] + fn[i])
-  }
-  overall_accuracy <- sum(tp) / sum(confusion)
-  average_accuracy <- sum(accuracy) / num_classes
-  micro_precision <- sum(tp) / (sum(tp) + sum(fp))
-  macro_precision <- sum(precision) / num_classes
-  micro_recall <- sum(tp) / (sum(tp) + sum(fn))
-  macro_recall <- sum(recall) / num_classes
-  
-  ## Writing all the performance metrics. 
   metrics <- c("Mean Absolute Error" = mae,
                "Root Mean Squared Error" = rmse,
                "Relative Absolute Error" = rae,
                "Relative Squared Error" = rse,
-               "Coefficient of Determination" = rsq,
-               "Overall accuracy (Rounded Prediction)" = overall_accuracy,
-               "Average accuracy (Rounded Prediction)" = average_accuracy,
-               "Micro-averaged Precision (Rounded Prediction)" = micro_precision,
-               "Macro-averaged Precision (Rounded Prediction)" = macro_precision,
-               "Micro-averaged Recall (Rounded Prediction)" = micro_recall,
-               "Macro-averaged Recall (Rounded Prediction)" = macro_recall)
+               "Coefficient of Determination" = rsq)
+  print(model)
   print(metrics)
-  print("Confusion Matrix when the prediction is rounded")
-  print(confusion)
+  print("Summary statistics of the absolute error")
+  print(summary(abs(observed-predicted)))
   return(metrics)
 }
 
@@ -255,22 +186,3 @@ Prediction_RF_Reg<- rxImport(inData = Prediction_Table_RF_Reg, stringsAsFactors 
 Metrics_RF_Reg <- evaluate_model_reg(observed = Prediction_RF_Reg$lengthofstay,
                                     predicted = Prediction_RF_Reg$lengthofstay_Pred,
                                     model = "RF")
-
-
-##########################################################################################################################################
-
-##	Gradient Boosted Trees Scoring 
-
-##########################################################################################################################################
-
-# Make Predictions, then import them into R. The observed Conversion_Flag is kept through the argument extraVarsToWrite.
-Prediction_Table_GBT_Reg <- RxSqlServerData(table = "Boosted_Prediction_Reg", stringsAsFactors = T, connectionString = connection_string)
-rxPredict(btree_model_reg,data = LoS_Test, outData = Prediction_Table_GBT_Reg, overwrite = T, type="response",
-          extraVarsToWrite = c("lengthofstay"))
-
-Prediction_GBT_Reg <- rxImport(inData = Prediction_Table_GBT_Reg, stringsAsFactors = T, outFile = NULL)
-
-# Compute the performance metrics of the model.
-Metrics_GBT_Reg <- evaluate_model_reg(observed = Prediction_GBT_Reg$lengthofstay,
-                                      predicted = Prediction_GBT_Reg$lengthofstay_Pred,
-                                      model = "GBT")

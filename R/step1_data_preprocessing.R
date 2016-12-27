@@ -51,7 +51,7 @@ display_head <- function(table_name, n_rows){
 # Character and Factor are converted to nvarchar(255), Integer to Integer and Numeric to Float. 
 column_types <-  c(eid = "integer",               
                    vdate = "character",           
-                   rcount = "integer",        
+                   rcount = "character",        
                    gender = "factor",            
                    dialysisrenalendstage = "factor",             
                    asthma = "factor",                
@@ -73,8 +73,10 @@ column_types <-  c(eid = "integer",
                    bmi = "numeric",                 
                    pulse = "numeric",                  
                    respiration = "numeric",                  
-                   secondarydiagnosisnonicd9 = "factor",                   
-                   lengthofstay = "factor")
+                   secondarydiagnosisnonicd9 = "factor",
+                   discharged = "character",
+                   facid = "factor",
+                   lengthofstay = "integer")
 
 
 # Point to the input data set while specifying the classes.
@@ -91,67 +93,86 @@ rxOpen(outOdbcDS, "w")
 
 ##########################################################################################################################################
 
+## Determine if LengthOfStay has missing values
+
+##########################################################################################################################################
+
+table <- "LengthOfStay"
+
+# First, get the names and types of the variables to be treated.
+data_sql <- RxSqlServerData(table = table, connectionString = connection_string)
+col <- rxCreateColInfo(data_sql)
+
+# Then, get the names of the variables that actually have missing values. Assumption: no NA in eid. 
+colnames <- names(col)
+var <- colnames[!colnames %in% c("eid")]
+formula <- as.formula(paste("~", paste(var, collapse = "+")))
+summary <- rxSummary(formula, data_sql, byTerm = TRUE)
+var_with_NA <- summary$sDataFrame[summary$sDataFrame$MissingObs > 0, 1] 
+
+if(length(var_with_NA) == 0){
+  print("No missing values.")
+  print("You can move to step 2.")
+  missing <- 0
+  
+} else{
+  print("Variables containing missing values are:")
+  print(var_with_NA)
+  print("Apply one of the methods below to fill missing values.")
+  missing <- 1
+}
+
+
+##########################################################################################################################################
 
 ## 1st Method: NULL is replaced with "missing" (character variables) or -1 (numeric variables)
 
 ##########################################################################################################################################
 
-fill_NA_explicit <- function(table = "LengthOfStay"){
+# Get the variables types (character vs. numeric)
+char_names <- c()
+num_names <- c()
+for(name in var_with_NA){
+  if(col[[name]]$type == "numeric" | col[[name]]$type == "integer" ){
+    num_names[length(num_names) + 1] <- name
+  } else{
+    char_names[length(char_names) + 1] <- name
+  }
+}
   
-  # Get the variables names and types. Assumption: no NA in eid. 
-  data_sql <- RxSqlServerData(table = table, connectionString = connection_string)
-  col <- rxCreateColInfo(data_sql)
-  colnames <- names(col)
-  var <- colnames[!colnames %in% c("eid")]
-  
-  char_names <- c()
-  num_names <- c()
-  for(name in var){
-    if(col[[name]]$type == "numeric" | col[[name]]$type == "integer" ){
-      num_names[length(num_names) + 1] <- name
-    } else{
-      char_names[length(char_names) + 1] <- name
+# Function to replace missing values with "missing" (character variables) or -1 (numeric variables).
+fill_NA_explicit <- function(data){
+  data <- data.frame(data)
+  for(j in 1:length(char)){
+    row_na <- which(is.na(data[,char[j]]) == TRUE) 
+    if(length(row_na > 0)){
+      data[row_na, char[j]] <- "missing"
     }
   }
-  
-  
-  # For Characters: replace the missing values with "missing". 
-  for(name in char_names){
-    rxExecuteSQLDDL(outOdbcDS, sSQLString = sprintf("UPDATE %s
-                                                    SET %s = ISNULL(%s, 'missing' )
-                                                    ;",table, name, name))
+  for(j in 1:length(num)){
+    row_na <- which(is.na(data[,num[j]]) == TRUE) 
+    if(length(row_na > 0)){
+      data[row_na, num[j]] <- -1
+    }
   }
-  
-  # For Numerics: replace the missing values with -1.
-  for(name in num_names){
-    rxExecuteSQLDDL(outOdbcDS, sSQLString = sprintf("UPDATE %s
-                                                    SET %s = ISNULL(%s, -1)
-                                                    ;",table, name, name))
-  }
-  
+  return(data)
 }
-
-# Apply the function to LengthOfStay. 
-fill_NA_explicit()  
+  
+# Apply this function to LeangthOfStay by wrapping it up in rxDataStep. Output is written to LoS0.   
+LoS0_sql <- RxSqlServerData(table = "LoS0", connectionString = connection_string)
+rxDataStep(inData = LengthOfStay_sql , outFile = LoS0_sql, overwrite = TRUE, transformFunc = fill_NA_explicit, 
+           transformObjects = list(char = char_names, num = num_names))
 
 ##########################################################################################################################################
 
-
-## 2nd Method: NULL is replaced with the mode (categorical variables) or mean (continuous variables)  
+## 2nd Method: NULL is replaced with the mode (categorical variables: integer or character) or mean (continuous variables)  
 
 ##########################################################################################################################################
 
-fill_NA_mode_mean <- function(table = "LengthOfStay"){
-  
-  # Get the variables names and types. Assumption: no NA in eid. 
-  data_sql <- RxSqlServerData(table = table, connectionString = connection_string)
-  col <- rxCreateColInfo(data_sql)
-  colnames <- names(col)
-  var <- colnames[!colnames %in% c("eid")]
-  
-  categ_names <- c()
-  contin_names <- c()
-  for(name in var){
+# Get the variables types (categortical vs. continuous) 
+categ_names <- c()
+contin_names <- c()
+  for(name in var_with_NA){
     if(col[[name]]$type == "numeric"){
       contin_names[length(contin_names) + 1] <- name
     } else{
@@ -160,67 +181,64 @@ fill_NA_mode_mean <- function(table = "LengthOfStay"){
   }
   
   
-  # For Categoricals: Compute the mode of the variables with SQL queries. We insert them in a table called Modes. 
-  
-  rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("DROP TABLE if exists Modes;"
-                                                , sep=""))
-  
-  rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("CREATE TABLE Modes
-                                                (name varchar(30),
-	                                               mode varchar(30));"
-                                                , sep=""))
-  
-  for(name in categ_names){
-    rxExecuteSQLDDL(outOdbcDS, sSQLString = sprintf("INSERT INTO Modes
-			                                               SELECT '%s', mode
-			                                               FROM (SELECT TOP(1) %s as mode, count(*) as cnt
-                                                           FROM %s
-                                                           GROUP BY %s 
-                                                           ORDER BY cnt desc) as t;",name, name, table, name))
-  }
- ## Import the Modes table.   
-  Modes_sql <- RxSqlServerData(table = "Modes", connectionString = connection_string) 
-  Modes <- rxImport(Modes_sql)
-    
- ## Replace the NULL with the modes. 
-  for(name in categ_names){
-    mode <- Modes[Modes$name == name ,2]
-    rxExecuteSQLDDL(outOdbcDS, sSQLString = sprintf("UPDATE %s
-			                                               SET %s = ISNULL(%s, '%s' )
-                                                      ;",table, name, name, mode))
-  }
-  
-  
-  # For Continuous: Compute the mean of the variables with SQL queries. We insert them in a table called Means. 
-  
-  rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("DROP TABLE if exists Means;"
-                                                , sep=""))
-  
-  rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("CREATE TABLE Means
-                                                (name varchar(30),
-                                                mean float);"
-                                                , sep=""))
-  
-  for(name in contin_names){
-    rxExecuteSQLDDL(outOdbcDS, sSQLString = sprintf("INSERT INTO Means
-                                                    SELECT '%s', mean
-                                                    FROM (SELECT AVG(%s) as mean
-                                                    FROM %s) as t;",name, name, table))
-  }
-  ## Import the Means table.   
-  Means_sql <- RxSqlServerData(table = "Means", connectionString = connection_string) 
-  Means <- rxImport(Means_sql)
-  
-  ## Replace the NULL with the means. 
-  for(name in contin_names){
-    mean <- Means[Means$name == name ,2]
-    rxExecuteSQLDDL(outOdbcDS, sSQLString = sprintf("UPDATE %s
-                                                    SET %s = ISNULL(%s, %s )
-                                                    ;",table, name, name, mean))
-  }
+# For Categoricals: Compute the mode of the variables with SQL queries in table Modes. We then import Modes. 
+rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("DROP TABLE if exists Modes;"
+                                              , sep=""))
 
+rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("CREATE TABLE Modes
+                                              (name varchar(30),
+                                              mode varchar(30));"
+                                              , sep=""))
+
+for(name in categ_names){
+  rxExecuteSQLDDL(outOdbcDS, sSQLString = sprintf("INSERT INTO Modes
+                                                  SELECT '%s', mode
+                                                  FROM (SELECT TOP(1) %s as mode, count(*) as cnt
+                                                  FROM %s
+                                                  GROUP BY %s 
+                                                  ORDER BY cnt desc) as t;",name, name, table, name))
 }
-  
-# Apply the function to LengthOfStay. 
-fill_NA_mode_mean()  
-  
+Modes_sql <- RxSqlServerData(table = "Modes", connectionString = connection_string) 
+Modes <- rxImport(Modes_sql)
+
+# For Continuous: Compute the mode of the variables with SQL queries in table Means. We then import Means. 
+rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("DROP TABLE if exists Means;"
+                                              , sep=""))
+
+rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("CREATE TABLE Means
+                                              (name varchar(30),
+                                              mean float);"
+                                              , sep=""))
+
+for(name in contin_names){
+  rxExecuteSQLDDL(outOdbcDS, sSQLString = sprintf("INSERT INTO Means
+                                                  SELECT '%s', mean
+                                                  FROM (SELECT AVG(%s) as mean
+                                                  FROM %s) as t;",name, name, table))
+}
+Means_sql <- RxSqlServerData(table = "Means", connectionString = connection_string) 
+Means <- rxImport(Means_sql)
+ 
+# Function to replace missing values with the mode (categorical variables) or mean (continuous variables)
+fill_NA_mode_mean <- function(data){
+  data <- data.frame(data)
+  for(j in 1:length(categ)){
+    row_na <- which(is.na(data[,categ[j]]) == TRUE) 
+    if(length(row_na > 0)){
+      data[row_na, categ[j]] <- subset(Mode, name == categ[j])[1,2]
+    }
+  }
+  for(j in 1:length(contin)){
+    row_na <- which(is.na(data[,contin[j]]) == TRUE) 
+    if(length(row_na > 0)){
+      data[row_na, contin[j]] <- subset(Mean, name == contin[j])[1,2]
+    }
+  }
+  return(data)
+}
+
+# Apply this function to LeangthOfStay by wrapping it up in rxDataStep. Output is written to LoS0.   
+LoS0_sql <- RxSqlServerData(table = "LoS0", connectionString = connection_string)
+rxDataStep(inData = LengthOfStay_sql , outFile = LoS0_sql, overwrite = TRUE, transformFunc = fill_NA_mode_mean, 
+           transformObjects = list(categ = categ_names, contin = contin_names, Mode = Modes, Mean = Means))
+

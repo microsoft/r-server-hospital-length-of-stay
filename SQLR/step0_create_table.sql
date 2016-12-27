@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS [dbo].[LengthOfStay]
 CREATE TABLE [dbo].[LengthOfStay](
 	    [eid] [int] NOT NULL,
 	    [vdate] [varchar](255),
-	    [rcount] [int] NULL,
+	    [rcount] [varchar](2) NULL,
 	    [gender] [varchar](1) NULL,
 	    [dialysisrenalendstage] [varchar](1) NULL,
 	    [asthma] [varchar](1) NULL,
@@ -26,8 +26,8 @@ CREATE TABLE [dbo].[LengthOfStay](
 	    [respiration] [float] NULL,
 	    [secondarydiagnosisnonicd9] [varchar](2) NULL,
 	    [discharged] [varchar](255) NULL,
-	    [facid] [int] NULL,
-		[lengthofstay] [varchar](1) NULL
+	    [facid] [varchar](3) NULL,
+		[lengthofstay] [int] NULL
     )
 
 	CREATE CLUSTERED COLUMNSTORE INDEX length_cci ON LengthOfStay WITH (DROP_EXISTING = OFF);

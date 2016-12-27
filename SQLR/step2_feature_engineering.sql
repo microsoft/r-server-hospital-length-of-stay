@@ -19,25 +19,28 @@ BEGIN
 
 -- 1- Standardize the health numeric variables by substracting the mean and dividing by the standard deviation. 
 -- 2- Create number_of_issues variable corresponding to the total number of preidentified medical conditions. 
+-- 3- Create lengthofstay_bucket, which is the bucketed version of the target variable for classification.
 
 	DECLARE @sql2 nvarchar(max);
 	SELECT @sql2 = N'
 		SELECT eid, vdate, rcount, gender, dialysisrenalendstage, asthma, irondef, pneum, substancedependence, psychologicaldisordermajor,
 			   depress, psychother, fibrosisandother, malnutrition,
-			   (hemo - AVG(hemo) OVER())/(STDEV(hemo) OVER())AS hemo_s,
-			   (hematocritic - AVG(hematocritic) OVER())/(STDEV(hematocritic) OVER()) AS hematocritic_s,
-			   (neutrophils - AVG(neutrophils) OVER())/(STDEV(neutrophils) OVER()) AS neutrophils_s,
-			   (sodium - AVG(sodium) OVER())/(STDEV(sodium) OVER()) AS sodium_s,
-			   (glucose - AVG(glucose) OVER())/(STDEV(glucose) OVER()) AS glucose_s,
-			   (bloodureanitro - AVG(bloodureanitro) OVER())/(STDEV(bloodureanitro) OVER()) AS bloodureanitro_s,
-			   (creatinine - AVG(creatinine) OVER())/(STDEV(creatinine) OVER()) AS creatinine_s,
-			   (bmi - AVG(bmi) OVER())/(STDEV(bmi) OVER()) AS bmi_s,
-			   (pulse - AVG(pulse) OVER())/(STDEV(pulse) OVER()) AS pulse_s,
-			   (respiration - AVG(respiration) OVER())/(STDEV(respiration) OVER()) AS respiration_s,
+			   (hemo - AVG(hemo) OVER())/(STDEV(hemo) OVER())AS hemo,
+			   (hematocritic - AVG(hematocritic) OVER())/(STDEV(hematocritic) OVER()) AS hematocritic,
+			   (neutrophils - AVG(neutrophils) OVER())/(STDEV(neutrophils) OVER()) AS neutrophils,
+			   (sodium - AVG(sodium) OVER())/(STDEV(sodium) OVER()) AS sodium,
+			   (glucose - AVG(glucose) OVER())/(STDEV(glucose) OVER()) AS glucose,
+			   (bloodureanitro - AVG(bloodureanitro) OVER())/(STDEV(bloodureanitro) OVER()) AS bloodureanitro,
+			   (creatinine - AVG(creatinine) OVER())/(STDEV(creatinine) OVER()) AS creatinine,
+			   (bmi - AVG(bmi) OVER())/(STDEV(bmi) OVER()) AS bmi,
+			   (pulse - AVG(pulse) OVER())/(STDEV(pulse) OVER()) AS pulse,
+			   (respiration - AVG(respiration) OVER())/(STDEV(respiration) OVER()) AS respiration,
 			   CAST((CAST(dialysisrenalendstage as int) + CAST(asthma as int) + CAST(irondef as int) + CAST(pneum as int) +
 			    CAST(substancedependence as int) + CAST(psychologicaldisordermajor as int) + CAST(depress as int) + CAST(psychother as int) +
                 CAST(fibrosisandother as int) + CAST(malnutrition as int)) as varchar(2)) AS number_of_issues,
-			   secondarydiagnosisnonicd9, discharged, facid, lengthofstay
+			   secondarydiagnosisnonicd9, discharged, facid, lengthofstay,
+			    lengthofstay_bucket = CASE WHEN lengthofstay < 4 THEN ''1'' WHEN lengthofstay < 7 THEN ''2'' WHEN lengthofstay < 10 THEN ''3''  
+									  ELSE ''4'' END
 	    INTO ' + @output + '
 	    FROM ' + @input;
 	EXEC sp_executesql @sql2
@@ -45,7 +48,3 @@ BEGIN
 ;
 END
 GO
-
-exec [feature_engineering]
-
-	

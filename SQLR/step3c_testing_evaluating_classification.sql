@@ -1,39 +1,32 @@
-/****** Stored Procedure to test and evaluate the models trained in step 3-b) ******/
+/****** Stored Procedure to test and evaluate the model trained in step 3-b) ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-DROP PROCEDURE IF EXISTS [dbo].[test_evaluate_models_class]
+DROP PROCEDURE IF EXISTS [dbo].[test_evaluate_model_class]
 GO
 
-CREATE PROCEDURE [test_evaluate_models_class] @modelrf varchar(20),
-											  @modelbtree varchar(20),
-		                                      @connectionString varchar(300), 
+CREATE PROCEDURE [test_evaluate_model_class]  @connectionString varchar(300),
 					                          @metrics_table_name varchar(max) = 'Metrics_Class',
 					                          @dataset_name varchar(max) = 'LoS', 
 					                          @training_name varchar(max) = 'Train_Id'
 AS 
 BEGIN
 
-/*  Make sure that the target variable will be treated as a factor. */
-	DECLARE @sql0 nvarchar(max);
-	SELECT @sql0 = N'
-	ALTER TABLE ' + @dataset_name + ' ALTER COLUMN lengthofstay char(1) ' ;
-	EXEC sp_executesql @sql0;
-
 /* 	Test the models on CM_AD_Test.  */
-	DECLARE @model_rf varbinary(max) = (select model from Models_Class where model_name = @modelrf);
-	DECLARE @model_btree varbinary(max) = (select model from Models_Class where model_name = @modelbtree);
+	DECLARE @model_rf varbinary(max) = (select model from Models_Class where model_name = 'RF');
 	EXECUTE sp_execute_external_script @language = N'R',
      					   @script = N' 
-
 ##########################################################################################################################################
 ##	Specify the types of the features before the testing
 ##########################################################################################################################################
 # Get the variables names, types and levels for factors.
 LoS <- RxSqlServerData(table = dataset_name, connectionString = connection_string, stringsAsFactors = T)
 column_info <- rxCreateColInfo(LoS)
+
+# Reorder the factors for clarity during evaluation.
+column_info$lengthofstay_bucket$levels <- c("1","2","3","4")
 
 ##########################################################################################################################################
 ##	Point to the testing set and use the column_info list to specify the types of the features.
@@ -95,55 +88,31 @@ rxPredict(modelObject = forest_model,
 	      data = LoS_Test,
 		  outData = forest_prediction, 
 		  type = "prob",
-          extraVarsToWrite = c("lengthofstay"),
+          extraVarsToWrite = c("lengthofstay_bucket"),
 		  overwrite = TRUE)
 
 # Importing the predictions to evaluate the metrics. 
 forest_prediction <- rxImport(forest_prediction)
-forest_metrics <- evaluate_model(observed = factor(forest_prediction$lengthofstay, levels = c("1","2","3","4")),
-                                 predicted = factor(forest_prediction$lengthofstay_Pred, levels = c("1","2","3","4")),
+forest_metrics <- evaluate_model(observed = factor(forest_prediction$lengthofstay_bucket, levels = c("1","2","3","4")),
+                                 predicted = factor(forest_prediction$lengthofstay_bucket_Pred, levels = c("1","2","3","4")),
 								 model = "RF")
-
-##########################################################################################################################################
-## Boosted tree scoring
-##########################################################################################################################################
-# Prediction on the testing set.
-boosted_model <- unserialize(boosted_model)
-boosted_prediction <-  RxSqlServerData(table = "Boosted_Prediction_Class", connectionString = connection_string, stringsAsFactors = T,
-				       colInfo = column_info)
-rxPredict(modelObject = boosted_model,
-          data = LoS_Test,
-		  outData = boosted_prediction, 
-          type = "prob",
-		  extraVarsToWrite = c("lengthofstay"),
-          overwrite = TRUE)
-
-# Importing the predictions to evaluate the metrics.
-boosted_prediction <- rxImport(boosted_prediction)
-boosted_metrics <- evaluate_model(observed = factor(boosted_prediction$lengthofstay, levels = c("1","2","3","4")),
-                                  predicted = factor(boosted_prediction$lengthofstay_Pred, levels = c("1","2","3","4")),
-								  model = "GBT")
 
 ##########################################################################################################################################
 ## Combine metrics and write to SQL. Compute Context is kept to Local to export data. 
 ##########################################################################################################################################
-metrics_df <- rbind(forest_metrics, boosted_metrics)
+metrics_df <- rbind(forest_metrics)
 metrics_df <- as.data.frame(metrics_df)
 rownames(metrics_df) <- NULL
-Algorithms <- c("Random Forest",
-                "Boosted Decision Tree")
+Algorithms <- c("Random Forest")
 metrics_df <- cbind(Algorithms, metrics_df)
-
 metrics_table <- RxSqlServerData(table = metrics_table_name,
                                  connectionString = connection_string)
 rxDataStep(inData = metrics_df,
            outFile = metrics_table,
            overwrite = TRUE)	 		   	   	   
 	   '
-, @params = N'@forest_model varbinary(max), @boosted_model varbinary(max), @connection_string varchar(300),
-			  @metrics_table_name varchar(max), @dataset_name varchar(max), @training_name varchar(max)'	  
+, @params = N' @forest_model varbinary(max), @connection_string varchar(300), @metrics_table_name varchar(max), @dataset_name varchar(max), @training_name varchar(max)'	  
 , @forest_model = @model_rf
-, @boosted_model = @model_btree
 , @connection_string = @connectionString
 , @metrics_table_name = @metrics_table_name 
 , @dataset_name =  @dataset_name
@@ -153,3 +122,7 @@ rxDataStep(inData = metrics_df,
 END
 GO
 
+
+
+exec [dbo].[test_evaluate_model_class] @connectionString ="Driver=SQL Server;Server=localhost;Database=Test2;UID=sa;PWD=Alohomora123", 
+								  @metrics_table_name = 'Metrics_Class', @dataset_name = 'LoS', @training_name = 'Train_Id'

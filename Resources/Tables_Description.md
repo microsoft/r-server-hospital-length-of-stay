@@ -22,34 +22,26 @@
   </tr>
   <tr>
     <td>Models_Class</td>
-    <td>Table storing the trained classification models</td>
+    <td>Table storing the trained classification model</td>
   </tr>
     <tr>
     <td>Forest_Prediction_Class</td>
     <td>Prediction results when testing the trained classification random forest</td>
   </tr>
     <tr>
-    <td>Boosted_Prediction_Class</td>
-    <td>Prediction results when testing the trained classification gradient boosted trees</td>
-  </tr>
-    <tr>
     <td>Metrics_Class</td>
-    <td>Performance metrics of the classification models tested</td>
+    <td>Performance metrics of the classification model tested</td>
   </tr>
     <tr>
     <td>Models_Reg</td>
-    <td>Table storing the trained regression models</td>
+    <td>Table storing the trained regression model</td>
   </tr>
     <tr>
     <td>Forest_Prediction_Reg</td>
     <td>Prediction results when testing the trained regression random forest</td>
   </tr>
     <tr>
-    <td>Boosted_Prediction_Reg</td>
-    <td>Prediction results when testing the trained regression gradient boosted trees</td>
-  </tr>
-    <tr>
     <td>Metrics_Reg</td>
-    <td>Performance metrics of the regression models tested</td>
+    <td>Performance metrics of the regression model tested</td>
   </tr>
 </table>

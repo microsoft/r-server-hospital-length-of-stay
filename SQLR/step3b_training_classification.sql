@@ -1,4 +1,4 @@
-/****** Stored Procedure to train models. ******/
+/****** Stored Procedure to train classification RF model. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7,7 +7,7 @@ GO
 DROP PROCEDURE IF EXISTS [dbo].[train_model_class];
 GO
 
-CREATE PROCEDURE [train_model_class] @modelName varchar(20), @connectionString varchar(300),
+CREATE PROCEDURE [train_model_class] @connectionString varchar(300),
 									 @dataset_name varchar(max) = 'LoS', @training_name varchar(max) = 'Train_Id'
 AS 
 BEGIN
@@ -19,14 +19,8 @@ BEGIN
 		model varbinary(max) not null
 		)
 
-/*  Make sure that the target variable will be treated as a factor. */
-	DECLARE @sql0 nvarchar(max);
-	SELECT @sql0 = N'
-	ALTER TABLE ' + @dataset_name + ' ALTER COLUMN lengthofstay char(1) ' ;
-	EXEC sp_executesql @sql0;
-
 /* 	Train the model on CM_AD_Train.  */	
-	DELETE FROM Models_Class WHERE model_name = @modelName;
+	DELETE FROM Models_Class WHERE model_name = 'RF';
 	INSERT INTO Models_Class (model)
 	EXECUTE sp_execute_external_script @language = N'R',
 					   @script = N' 
@@ -45,6 +39,9 @@ rxSetComputeContext(sql)
 LoS <- RxSqlServerData(table = dataset_name, connectionString = connection_string, stringsAsFactors = T)
 column_info <- rxCreateColInfo(LoS)
 
+# Reorder the factors for clarity during evaluation.
+column_info$lengthofstay_bucket$levels <- c("1","2","3","4")
+
 ##########################################################################################################################################
 ##	Point to the training set and use the column_info list to specify the types of the features.
 ##########################################################################################################################################
@@ -57,46 +54,43 @@ LoS_Train <- RxSqlServerData(
 ##########################################################################################################################################
 ##	Specify the variables to keep for the training 
 ##########################################################################################################################################
+# Write the formula after removing variables not used in the modeling.
 variables_all <- rxGetVarNames(LoS_Train)
-# We remove dates and ID variables.
-variables_to_remove <- c("eid", "vdate", "discharged")
-traning_variables <- variables_all[!(variables_all %in% c("lengthofstay", variables_to_remove))]
-formula <- as.formula(paste("lengthofstay ~", paste(traning_variables, collapse = "+")))
+variables_to_remove <- c("eid", "vdate", "discharged", "lengthofstay", "facid")
+traning_variables <- variables_all[!(variables_all %in% c("lengthofstay_bucket", variables_to_remove))]
+formula <- as.formula(paste("lengthofstay_bucket ~", paste(traning_variables, collapse = "+")))
+
+# In order to deal with class imbalance, we do a stratification sampling.
+# We take all observations in the smallest class  and we sample from the three other classes to have the same number.
+summary <- rxSummary(formula = ~ lengthofstay_bucket, LoS_Train)$categorical[[1]]
+strat_sampling <- function(){
+  min <- which.min(summary[,2])
+  return(c(summary[min,2]/summary[1,2], summary[min,2]/summary[2,2], summary[min,2]/summary[3,2],
+           summary[min,2]/summary[4,2]))
+}
+sampling_rate <- strat_sampling()
 
 ##########################################################################################################################################
 ## Training model based on model selection
 ##########################################################################################################################################
-if (model_name == "RF") {
-	# Train the Random Forest.
+# Train the Random Forest.
 	model <- rxDForest(formula = formula,
-	 			       data = LoS_Train,
-				       nTree = 40,
- 				       minBucket = 5,
-				       minSplit = 10,
-				       cp = 0.00005,
-				       seed = 5)
-					   				       
-} else {
-	# Train the GBT.
-	model <- rxBTrees(formula = formula,
 					  data = LoS_Train,
-				      learningRate = 0.05,				    
-				      minBucket = 5,
-				      minSplit = 10,
-				      cp = 0.0005,
-				      nTree = 40,
-				      seed = 5,
-				      lossFunction = "multinomial")
-} 
-
+                       nTree = 40,
+                       minSplit = 10,
+                       minBucket = 5,
+                       cp = 0.00005,
+                       seed = 5, 
+                       strata = c("lengthofstay_bucket"),
+                       sampRate = sampling_rate)
+					   				       
 OutputDataSet <- data.frame(payload = as.raw(serialize(model, connection=NULL)))'
-, @params = N'@model_name varchar(20), @connection_string varchar(300), @dataset_name varchar(max) , @training_name varchar(max) '
-, @model_name = @modelName
+, @params = N'@connection_string varchar(300), @dataset_name varchar(max) , @training_name varchar(max) '
 , @connection_string = @connectionString 
 , @dataset_name =  @dataset_name
 , @training_name = @training_name 
 
-UPDATE Models_Class set model_name = @modelName 
+UPDATE Models_Class set model_name = 'RF'
 WHERE model_name = 'default model'
 
 ;

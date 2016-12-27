@@ -30,7 +30,7 @@ To run the scripts, it requires the following:
 ### Step 1: Pre-Processing and Cleaning
 -------------------------
 
-In this step, the raw data is loaded into SQL in a table called LengthOfStay. Then, the data is cleaned in-place. This assumes that the ID variable (eid) does not contain blanks. 
+In this step, the raw data is loaded into SQL in a table called LengthOfStay. Then, if there are missing values, the data is cleaned in-place. This assumes that the ID variable (eid) does not contain blanks. 
 There are two ways to replace missing values:
 
 The first provided function, fill_NA_explicit, will replace the missing values with "missing" (character variables) or -1 (numeric variables). It should be used if it is important to know where the missing values were.
@@ -45,7 +45,7 @@ Input:
 Output:
 * A SQL Table "LengthOfStay", with missing values replaced.
 
-Related files:
+hRelated files:
 * step1_data_preprocessing.R
 
 ### Step 2: Feature Engineering
@@ -55,6 +55,7 @@ In this step, we design new features:
 
 * The continuous laboratory measurements (e.g. hemo, hematocritic, sodium, glucose etc.) are standardized: we substract the mean and divide by the standard deviation. 
 * number_of_issues: the total number of preidentified medical conditions.
+* lengthofstay_bucket: bucketed version of the target variable for classification.
 
 Input:
 
@@ -74,8 +75,8 @@ In what follows, the problem can be modeled as a classification or a regression.
 -------------------------
 
 In this step, we split the data into a training set and a testing set. The user has to specify a splitting percentage. For example, if the splitting percentage is 70, 70% of the data will be put in the training set, while the other 30% will be assigned to the testing set. The eid that will end in the training set, are stored in the table “Train_Id”.
-Then we train a classification Random Forest (RF) or a classification Gradient Boosted Trees (GBT) on the training set. The trained models are uploaded to SQL if needed later. 
-Finally, we score the two trained models on the testing set, and then compute multi-class performance metrics. 
+Then we train a classification Random Forest (RF) on the training set. The trained model is uploaded to SQL if needed later. The model performs a stratified sampling in order to deal with class imbalance.
+Finally, we score the trained model on the testing set, and then compute multi-class performance metrics. 
 
 Input:
 
@@ -83,7 +84,7 @@ Input:
 
 Output:
 
-* Performance metrics.
+* Performance metrics and RF model.
 _
 Related files:
 
@@ -93,8 +94,8 @@ Related files:
 -------------------------
 
 In this step, we split the data into a training set and a testing set. The user has to specify a splitting percentage. For example, if the splitting percentage is 70, 70% of the data will be put in the training set, while the other 30% will be assigned to the testing set. The eid that will end in the training set, are stored in the table “Train_Id”.
-Then we train a regression Random Forest (RF) or a regression Gradient Boosted Trees (GBT) on the training set. The trained models are uploaded to SQL if needed later. 
-Finally, we score the two trained models on the testing set, and then compute regression performance metrics as well as multi-class performance metrics obtained after rounding the predictions to the nearest integer. 
+Then we train a regression Random Forest (RF) on the training set. The trained model is uploaded to SQL if needed later. 
+Finally, we score the trained model on the testing set, and then compute regression performance metrics.
 
 Input:
 
@@ -102,7 +103,7 @@ Input:
 
 Output:
 
-* Performance metrics.
+* Performance metrics and RF model.
 _
 Related files:
 

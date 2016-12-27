@@ -30,19 +30,15 @@ exec [dbo].[splitting] @splitting_percent = 70, @input = 'LoS',  @output = 'Trai
 
 
 -- If you want to model the problem as a Classification: 
-exec [dbo].[train_model_class] @modelName ="RF", @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", @dataset_name = 'LoS', @training_name = 'Train_Id'
+exec [dbo].[train_model_class] @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", @dataset_name = 'LoS', @training_name = 'Train_Id'
 
-exec [dbo].[train_model_class] @modelName ="GBT", @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", @dataset_name = 'LoS', @training_name = 'Train_Id'
-
-exec [dbo].[test_evaluate_models_class] @modelrf ="RF", @modelbtree ="GBT", @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", 
+exec [dbo].[test_evaluate_model_class] @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", 
 								  @metrics_table_name = 'Metrics_Class', @dataset_name = 'LoS', @training_name = 'Train_Id'
 
 
 -- If you want to model the problem as a Regression: 
-exec [dbo].[train_model_reg] @modelName ="RF", @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", @dataset_name = 'LoS', @training_name = 'Train_Id'
+exec [dbo].[train_model_reg] @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", @dataset_name = 'LoS', @training_name = 'Train_Id'
 
-exec [dbo].[train_model_reg] @modelName ="GBT", @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", @dataset_name = 'LoS', @training_name = 'Train_Id'
-
-exec [dbo].[test_evaluate_models_reg] @modelrf ="RF", @modelbtree ="GBT", @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", 
+exec [dbo].[test_evaluate_model_reg] @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", 
 								  @metrics_table_name = 'Metrics_Reg', @dataset_name = 'LoS', @training_name = 'Train_Id'
 

@@ -187,13 +187,7 @@ if ($uninterrupted -eq 'y' -or $uninterrupted -eq 'Y')
 
     # execute the training (classification)
     Write-Host -ForeGroundColor 'Cyan' (" Training Classification Random Forest (RF)...")
-    $modelName = 'RF'
-    $query = "EXEC train_model_class $modelName, '$connectionString2'"
-    ExecuteSQLQuery $query
-
-    Write-Host -ForeGroundColor 'Cyan' (" Training Classification Gradient Boosted Trees (GBT)...")
-    $modelName = 'GBT'
-    $query = "EXEC train_model_class $modelName, '$connectionString2'"
+    $query = "EXEC train_model_class '$connectionString2'"
     ExecuteSQLQuery $query
 
     # create the stored procedure for predicting (classification)
@@ -201,9 +195,8 @@ if ($uninterrupted -eq 'y' -or $uninterrupted -eq 'Y')
     ExecuteSQL $script
 
     # execute the evaluation (classification)
-    Write-Host -ForeGroundColor 'Cyan' (" Testing and Evaluating Classification Random Forest (RF) and Gradient Boosted Trees (GBT)...")
-    $models = "'RF', 'GBT'"
-    $query = "EXEC test_evaluate_models_class $models, '$connectionString2'"
+    Write-Host -ForeGroundColor 'Cyan' (" Testing and Evaluating Classification Random Forest (RF) ...")
+    $query = "EXEC test_evaluate_model_class '$connectionString2'"
     ExecuteSQLQuery $query
 
     # create the stored procedure for training (regression)
@@ -212,13 +205,7 @@ if ($uninterrupted -eq 'y' -or $uninterrupted -eq 'Y')
 
     # execute the training (regression)
     Write-Host -ForeGroundColor 'Cyan' (" Training Regression Random Forest (RF)...")
-    $modelName = 'RF'
-    $query = "EXEC train_model_reg $modelName, '$connectionString2'"
-    ExecuteSQLQuery $query
-
-    Write-Host -ForeGroundColor 'Cyan' (" Training Regression Gradient Boosted Trees (GBT)...")
-    $modelName = 'GBT'
-    $query = "EXEC train_model_reg $modelName, '$connectionString2'"
+    $query = "EXEC train_model_reg '$connectionString2'"
     ExecuteSQLQuery $query
      
     # create the stored procedure for predicting (regression)
@@ -226,9 +213,8 @@ if ($uninterrupted -eq 'y' -or $uninterrupted -eq 'Y')
     ExecuteSQL $script
 
     # execute the evaluation (regression)
-    Write-Host -ForeGroundColor 'Cyan' (" Testing and Evaluating Regression Random Forest (RF) and Gradient Boosted Trees (GBT)...")
-    $models = "'RF', 'GBT'"
-    $query = "EXEC test_evaluate_models_reg $models, '$connectionString2'"
+    Write-Host -ForeGroundColor 'Cyan' (" Testing and Evaluating Regression Random Forest (RF)...")
+    $query = "EXEC test_evaluate_model_reg '$connectionString2'"
     ExecuteSQLQuery $query
 
     Write-Host -foregroundcolor 'green'("Length of Stay Prediction Workflow Finished Successfully!")
@@ -334,7 +320,10 @@ if ($ans -eq 'y' -or $ans -eq 'Y')
     ExecuteSQLQuery $query
 }
 
-
+if ($ans -eq 's' -or $ans -eq 'S')
+{
+    $output1 = 'LoS'
+}
 ##########################################################################
 # Create and execute the stored procedure to split data into train/test
 ##########################################################################
@@ -364,11 +353,15 @@ if ($ans -eq 'y' -or $ans -eq 'Y')
     ExecuteSQLQuery $query
 }
 
+if ($ans -eq 's' -or $ans -eq 'S')
+{
+    $output2 = 'Train_Id'
+}
 ##########################################################################
 # Create and execute the stored procedure for Training (Classification)
 ##########################################################################
 
-Write-Host -foregroundcolor 'green' ("Step 3b: Models Training for Classification")
+Write-Host -foregroundcolor 'green' ("Step 3b: Model Training for Classification")
 $ans = Read-Host 'Continue [y|Y], Exit [e|E], Skip [s|S]?'
 if ($ans -eq 'E' -or $ans -eq 'e')
 {
@@ -382,21 +375,16 @@ if ($ans -eq 'y' -or $ans -eq 'Y')
 
     # execute the training
     Write-Host -ForeGroundColor 'Cyan' (" Training Classification Random Forest (RF)...")
-    $modelName = 'RF'
-    $query = "EXEC train_model_class $modelName, '$connectionString2', $output1, $output2"
+    $query = "EXEC train_model_class '$connectionString2', $output1, $output2"
     ExecuteSQLQuery $query
 
-    Write-Host -ForeGroundColor 'Cyan' (" Training Classification Gradient Boosted Trees (GBT)...")
-    $modelName = 'GBT'
-    $query = "EXEC train_model_class $modelName, '$connectionString2', $output1, $output2"
-    ExecuteSQLQuery $query
 }
 
 ##########################################################################
 # Create and execute the stored procedure for models evaluation (Classification)
 ##########################################################################
 
-Write-Host -foregroundcolor 'green' ("Step 3c: Models Evaluation for Classification")
+Write-Host -foregroundcolor 'green' ("Step 3c: Model Evaluation for Classification")
 $ans = Read-Host 'Continue [y|Y], Exit [e|E], Skip [s|S]?'
 if ($ans -eq 'E' -or $ans -eq 'e')
 {
@@ -414,17 +402,20 @@ if ($ans -eq 'y' -or $ans -eq 'Y')
     {
         $output3 = 'Metrics_Class'
     }
-    Write-Host -ForeGroundColor 'Cyan' (" Testing and Evaluating Classification Random Forest (RF) and Gradient Boosted Trees (GBT)...")
-    $models = "'RF', 'GBT'"
-    $query = "EXEC test_evaluate_models_class $models, '$connectionString2', $output3, $output1, $output2"
+    Write-Host -ForeGroundColor 'Cyan' (" Testing and Evaluating Classification Random Forest (RF)...")
+    $query = "EXEC test_evaluate_model_class '$connectionString2', $output3, $output1, $output2"
     ExecuteSQLQuery $query
+}
+if ($ans -eq 's' -or $ans -eq 'S')
+{
+    $output3 = 'Metrics_Class'
 }
 
 ##########################################################################
 # Create and execute the stored procedure for Training (Regression)
 ##########################################################################
 
-Write-Host -foregroundcolor 'green' ("Step 3b: Models Training for Regression")
+Write-Host -foregroundcolor 'green' ("Step 3b: Model Training for Regression")
 $ans = Read-Host 'Continue [y|Y], Exit [e|E], Skip [s|S]?'
 if ($ans -eq 'E' -or $ans -eq 'e')
 {
@@ -438,21 +429,16 @@ if ($ans -eq 'y' -or $ans -eq 'Y')
 
     # execute the training
     Write-Host -ForeGroundColor 'Cyan' (" Training Regression Random Forest (RF)...")
-    $modelName = 'RF'
-    $query = "EXEC train_model_reg $modelName, '$connectionString2', $output1, $output2"
+    $query = "EXEC train_model_reg '$connectionString2', $output1, $output2"
     ExecuteSQLQuery $query
 
-    Write-Host -ForeGroundColor 'Cyan' (" Training Regression Gradient Boosted Trees (GBT)...")
-    $modelName = 'GBT'
-    $query = "EXEC train_model_reg $modelName, '$connectionString2', $output1, $output2"
-    ExecuteSQLQuery $query
 }
 
 ##########################################################################
 # Create and execute the stored procedure for models evaluation (Regression)
 ##########################################################################
 
-Write-Host -foregroundcolor 'green' ("Step 3c: Models Evaluation for Regression")
+Write-Host -foregroundcolor 'green' ("Step 3c: Model Evaluation for Regression")
 $ans = Read-Host 'Continue [y|Y], Exit [e|E], Skip [s|S]?'
 if ($ans -eq 'E' -or $ans -eq 'e')
 {
@@ -470,9 +456,8 @@ if ($ans -eq 'y' -or $ans -eq 'Y')
     {
         $output3 = 'Metrics_Reg'
     }
-    Write-Host -ForeGroundColor 'Cyan' (" Testing and Evaluating Regression Random Forest (RF) and Gradient Boosted Trees (GBT)...")
-    $models = "'RF', 'GBT'"
-    $query = "EXEC test_evaluate_models_reg $models, '$connectionString2', $output3, $output1, $output2"
+    Write-Host -ForeGroundColor 'Cyan' (" Testing and Evaluating Regression Random Forest (RF)...")
+    $query = "EXEC test_evaluate_model_reg '$connectionString2', $output3, $output1, $output2"
     ExecuteSQLQuery $query
 
 }
