@@ -32,7 +32,7 @@ In this template with SQL Server R Services, two versions of the implementation:
 
 <table class="table table-striped table-condensed">
 <tr><th> File </th><th> Description </th></tr>
-<tr><td>XXXNOTEBOOK NAME.ipynb  </td><td> Contains the Jupyter Notebook file that runs all the .R scripts. </td></tr>
+<tr><td> {{ site.jupyter_name}}  </td><td> Contains the Jupyter Notebook file that runs all the .R scripts. </td></tr>
 <tr><td>SQL_connection.R </td><td> Contains details of connection to SQL Server used in all other scripts. </td></tr>
 <tr><td>XXNAMEX.R </td><td> XXXDESCRIPTION </td></tr>
   
