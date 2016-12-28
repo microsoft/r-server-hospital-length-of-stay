@@ -9,7 +9,7 @@ title: For the Data Scientist
 <div class="row">
     <div class="col-md-6">
         <div class="toc">
-            <li><a href="#first">(( site.solution_name ))</a></li>
+            <li><a href="#first">{{ site.solution_name }}</a></li>
             <li><a href="#system-requirements">System Requirements</a></li>
             <li><a href="#step1">Step1: Pre-Processing and Cleaning</a></li>
             <li><a href="#step2">Step2: Feature Engineering</a></li>
