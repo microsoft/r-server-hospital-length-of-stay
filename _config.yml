@@ -8,6 +8,7 @@ solution_name: Predicting Hospital Length of Stay
 folder_name: Hospital
 db_name: Hospital
 ps1_name: Length_Of_Stay.ps1
+jupyter_name: Hospital_Length_Of_Stay_Notebook.ipynb
 
 # urls, etc
 code_url: "https://github.com/Microsoft/r-server-hospital-length-of-stay"

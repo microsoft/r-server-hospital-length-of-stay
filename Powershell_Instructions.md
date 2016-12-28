@@ -56,7 +56,7 @@ Running this PowerShell script will create stored procedures for the the operati
 
 4.  Now CD to the **{{ site.code }}/SQLR** directory and run one of the two following commands, inserting your server name (or "." if you are on the same machine as the SQL server), database name, username, and password.
 
-    * XXXIF UNINTERRUPTED MODE: Run with no prompts: XXXCHECK PROMPTS!
+    * Run with no prompts: 
     
         ```
         .\{{ site.ps1_name }} -ServerName "Server Name" -DBName "Database Name" -username "" -password "" -uninterrupted "Y"  
@@ -87,7 +87,7 @@ Hit `Refresh` if necessary.
 
 [Click here](tables.html) to view more information about each of these tables.
 
-Right click on XXXSOMETABLE and select `View Top 1000 Rows` to preview the scored data.
+Right click `Forest_Prediction_Class` and select `View Top 1000 Rows` to preview the scored classification results. Right click `Forest_Prediction_Reg` and select `View Top 1000 Rows` to preview the scored regression results.  
 
 [Click here](tables.html) to view the details all tables created in this solution.
 

@@ -11,11 +11,11 @@ title: For the Data Scientist
         <div class="toc">
             <li><a href="#first">(( site.solution_name ))</a></li>
             <li><a href="#system-requirements">System Requirements</a></li>
-            <li><a href="#pre-processing-and-cleaning">Pre-Processing and Cleaning</a></li>
-            <li><a href="#feature-engineering">Feature Engineering</a></li>
-            <li><a href="#classification-splitting,training,-testing-and-evaluating">Classification Splitting, Training, Testing and Evaluating</a></li>
-            <li><a href="#regression-splitting,training,-testing-and-evaluating">Regression Splitting, Training, Testing and Evaluatings</a></li>
-             <li><a href="#deploy-and-visualize-results">Deploy and Visualize Results</a></li>
+            <li><a href="#step1">Step1: Pre-Processing and Cleaning</a></li>
+            <li><a href="#step2">Step2: Feature Engineering</a></li>
+            <li><a href="#step3">Step3: Splitting, Training, Testing and Evaluating (Classification)</a></li>
+            <li><a href="#step3r">Step3: Splitting, Training, Testing and Evaluating (Regression)</a></li>
+             <li><a href="#step4">Deploy and Visualize Results</a></li>
             <li><a href="#template-contents">Template Contents</a></li>
         </div>
     </div>
@@ -59,8 +59,9 @@ To run the scripts requires the following:
 - For more information about SQL server 2016 and R service, please visit: [https://msdn.microsoft.com/en-us/library/mt604847.aspx](https://msdn.microsoft.com/en-us/library/mt604847.aspx)
 
 
+<a href="step1"></a>
 
-##  Pre-Processing and Cleaning
+##  Step1: Pre-Processing and Cleaning
 -------------------------
 
 In this step, the raw data is loaded into SQL in a table called LengthOfStay. Then, if there are missing values, the data is cleaned in-place. This assumes that the ID variable (eid) does not contain blanks. 
@@ -81,7 +82,9 @@ The user can run the one he prefers.
 ### Related files:
 * **step1_data_preprocessing.R**
 
-## Feature Engineering
+<a href="step2"></a>
+
+## Step2: Feature Engineering
 -------------------------
 
 In this step, we design new features:  
@@ -104,7 +107,9 @@ In this step, we design new features:
 
 In what follows, the problem can be modeled as a classification or a regression. 
 
-## Classification Splitting, Training, Testing and Evaluating
+<a href="step3"></a>
+
+## Step 3:  Splitting, Training, Testing and Evaluating (Classification)
 -------------------------
 
 In this step, we split the data into a training set and a testing set. The user has to specify a splitting percentage. For example, if the splitting percentage is 70, 70% of the data will be put in the training set, while the other 30% will be assigned to the testing set. The `eid` that will end in the training set are stored in the table `Train_Id`.
@@ -123,7 +128,9 @@ Finally, we score the trained model on the testing set, and then compute multi-c
 
 * **step3_training_evaluation_classification.R**
 
-## Regression Splitting, Training, Testing and Evaluating
+<a href="step3r"></a>
+
+## Step3:  Splitting, Training, Testing and Evaluating (Regression)
 -------------------------
 
 In this step, we split the data into a training set and a testing set. The user has to specify a splitting percentage. For example, if the splitting percentage is 70, 70% of the data will be put in the training set, while the other 30% will be assigned to the testing set. The `eid` that will end in the training set are stored in the table `Train_Id`.
@@ -141,8 +148,10 @@ Finally, we score the trained model on the testing set, and then compute regress
 ### Related files:
 
 * **step3_training_evaluation_regression**
+
+<a name="step4"></a>
   
-##  Deploy and Visualize Results
+##  Step 4: Deploy and Visualize Results
 --------------------------------
 
 XXXDESCRIBE DASHBOARD
