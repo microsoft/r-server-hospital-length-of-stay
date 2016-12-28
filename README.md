@@ -1,7 +1,10 @@
-# Healthcare Solution Template 
-### *Predicting Length of Stay in Hospitals*
----
+<img src="Resources/Images/los.png" align="right">
 
-### Summary
-This solution enables a predictive model for Length of Stay for in-hospital admissions. Length of Stay (LOS) is defined in number of days from the initial admit date to the date that the patient is discharged from any given hospital facility. There can be significant variation of LOS across various facilities and across disease conditions and specialties even within the same healthcare system. Advanced LOS prediction at the time of admission can greatly enhance the quality of care as well as operational workload efficiency and help with accurate planning for discharges resulting in lowering of various other quality measures such as readmissions.
+# Predicting Length of Stay in Hospitals 
+## Implemented on SQL Server 2016 R Services
 
+For all documentation, visit the [Hospital Length of Stay website](https://microsoft.github.io/r-server-hospital-length-of-stay/).
+
+**NOTE:** Please don't use "Download ZIP" to get this repository, as it will change the line endings in the data files. Use "git clone" to get a local copy of this repository. 
+ 
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
