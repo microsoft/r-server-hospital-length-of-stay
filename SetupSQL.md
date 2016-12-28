@@ -17,7 +17,7 @@ title: Setup SQL Server 2016
     <div class="col-md-6">
         The instructions on this page will help you to add this solution to your own SQL Server 2016.  
         <p>
-        If you instead would like to try this solution out on a virtual machine, visit the <a href="http://aka.ms/campaignoptimization">Cortana Intelligence Gallery</a> and use the Deploy button.  All the configuration described below will be done for you, as well as the initial deployment of the solution. </p>
+        If you instead would like to try this solution out on a virtual machine, visit the <a href="{{ site.aka_url }}">Cortana Intelligence Gallery</a> and use the Deploy button.  All the configuration described below will be done for you, as well as the initial deployment of the solution. </p>
     </div>
 </div>
 

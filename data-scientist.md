@@ -9,29 +9,35 @@ title: For the Data Scientist
 <div class="row">
     <div class="col-md-6">
         <div class="toc">
-            <li><a href="#campaign-optimization">Campaign Optimization</a></li>
+            <li><a href="#first">(( site.solution_name ))</a></li>
             <li><a href="#system-requirements">System Requirements</a></li>
-            <li><a href="#analytical-dataset-preprocessing-and-feature-engineering">Analytical Dataset Preprocessing and Feature Engineering</a></li>
-            <li><a href="#model-development">Model Development</a></li>
-            <li><a href="#scoring">Scoring</a></li>
-            <li><a href="#deploy-and-visualize-results">Deploy and Visualize Results</a></li>
+            <li><a href="#pre-processing-and-cleaning">Pre-Processing and Cleaning</a></li>
+            <li><a href="#feature-engineering">Feature Engineering</a></li>
+            <li><a href="#classification-splitting,training,-testing-and-evaluating">Classification Splitting, Training, Testing and Evaluating</a></li>
+            <li><a href="#regression-splitting,training,-testing-and-evaluating">Regression Splitting, Training, Testing and Evaluatings</a></li>
+             <li><a href="#deploy-and-visualize-results">Deploy and Visualize Results</a></li>
             <li><a href="#template-contents">Template Contents</a></li>
         </div>
     </div>
     <div class="col-md-6">
         SQL Server R Services takes advantage of the power of SQL Server and RevoScaleR (Microsoft R Server package) by allowing R to run on the same server as the database. It includes a database service that runs outside the SQL Server process and communicates securely with the R runtime. 
         <p>
-        XXXREVIEW THIS: This solution package shows how to pre-process data (cleaning and feature engineering), train prediction models, and perform scoring on the SQL Server machine. </p>
+       This solution package shows how to pre-process data (cleaning and feature engineering), train prediction models, and perform scoring on the SQL Server machine. </p>
     </div>
 </div>
 
 Data scientists who are testing and developing solutions can work from the convenience of their R IDE on their client machine, while <a href="https://msdn.microsoft.com/en-us/library/mt604885.aspx">setting the computation context to SQL</a> (see **R** folder for code).  They can also deploy the completed solutions to SQL Server 2016 by embedding calls to R in stored procedures (see **SQLR** folder for code). These solutions can then be further automated by the use of SQL Server Integration Services and SQL Server agent: a PowerShell script (.ps1 file) automates the running of the SQL code.
 
+<a name="first"></a>
 
 ## {{ site.solution_name }}
 --------------------------
 
-This template is focused on XXXDESCRIBE HIGH LEVEL WHAT THIS DOES. 
+In order for hospitals to optimize resource allocation, it is important to predict accurately how long a newly admitted patient will stay in the hospital.
+
+In this template, we implemented all steps in SQL stored procedures: data preprocessing, and feature engineering are implemented in pure SQL, while data cleaning, and the model training, scoring and evaluation steps are implemented with SQL stored procedures calling R (Microsoft R Server) code. 
+
+All these steps can be executed in an R IDE. 
 
 Among the key variables to learn from data are XXXDESCRIBE.  
 
@@ -54,36 +60,92 @@ To run the scripts requires the following:
 
 
 
-##  Analytical Dataset Preprocessing and Feature Engineering
------------------------------------------------------------
+##  Pre-Processing and Cleaning
+-------------------------
 
-This part simulates input data and performs preprocessing and feature engineering to create the analytical dataset. 
-The **R** code to perform these steps can be run from an R client with the following scripts:
+In this step, the raw data is loaded into SQL in a table called LengthOfStay. Then, if there are missing values, the data is cleaned in-place. This assumes that the ID variable (eid) does not contain blanks. 
+There are two ways to replace missing values:
 
-### step1_data_processing.R
+The first provided function, fill_NA_explicit, will replace the missing values with "missing" (character variables) or -1 (numeric variables). It should be used if it is important to know where the missing values were.
 
-This script XXXDESCRIBE
+The second function, fill_NA_mode_mean, will replace the missing values with the mode (categorical variables) or mean (float variables).
 
+The user can run the one he prefers. 
 
+### Input:
+* Raw data **LengthOfStay.csv**.
 
-## Model Development
---------------------
+### Output:
+* A SQL Table `LengthOfStay`, with missing values replaced.
 
-XXXDESCRIBE
+### Related files:
+* **step1_data_preprocessing.R**
 
+## Feature Engineering
+-------------------------
 
+In this step, we design new features:  
 
+* The continuous laboratory measurements (e.g. hemo, hematocritic, sodium, glucose etc.) are standardized: we substract the mean and divide by the standard deviation. 
+* `number_of_issues`: the total number of preidentified medical conditions.
+* `lengthofstay_bucket`: bucketed version of the target variable for classification.
 
-##  Scoring
---------------
+### Input:
 
-XXXDESCRIBE
+* `LengthOfStay` table.
 
+### Output:
+
+* `LoS` table containing new features.
+
+### Related files:
+
+* **step2_feature_engineering.R**
+
+In what follows, the problem can be modeled as a classification or a regression. 
+
+## Classification Splitting, Training, Testing and Evaluating
+-------------------------
+
+In this step, we split the data into a training set and a testing set. The user has to specify a splitting percentage. For example, if the splitting percentage is 70, 70% of the data will be put in the training set, while the other 30% will be assigned to the testing set. The `eid` that will end in the training set are stored in the table `Train_Id`.
+Then we train a classification Random Forest (RF) on the training set. The trained model is uploaded to SQL if needed later. The model performs a stratified sampling in order to deal with class imbalance.
+Finally, we score the trained model on the testing set, and then compute multi-class performance metrics. 
+
+### Input:
+
+* `LoS` table.
+
+### Output:
+
+* Performance metrics and RF model.
+
+### Related files:
+
+* **step3_training_evaluation_classification.R**
+
+## Regression Splitting, Training, Testing and Evaluating
+-------------------------
+
+In this step, we split the data into a training set and a testing set. The user has to specify a splitting percentage. For example, if the splitting percentage is 70, 70% of the data will be put in the training set, while the other 30% will be assigned to the testing set. The `eid` that will end in the training set are stored in the table `Train_Id`.
+Then we train a regression Random Forest (RF) on the training set. The trained model is uploaded to SQL if needed later. 
+Finally, we score the trained model on the testing set, and then compute regression performance metrics.
+
+### Input:
+
+* `LoS` table.
+
+### Output:
+
+* Performance metrics and RF model.
+
+### Related files:
+
+* **step3_training_evaluation_regression**
   
 ##  Deploy and Visualize Results
 --------------------------------
 
-XXXDESCRIBE
+XXXDESCRIBE DASHBOARD
 
 <img  src="images/XXvisualize.png">
 

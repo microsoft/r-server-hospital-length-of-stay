@@ -6,7 +6,7 @@ title: ODBC Setup
 
 ## Set up Connection between SQL Server and PowerBI  
 
-Follow the instructions below to set up a connection between your SQL Server database and PowerBI.  Perform these steps after you have created the `Campaign` database.
+Follow the instructions below to set up a connection between your SQL Server database and PowerBI.  Perform these steps after you have created the `{{ site.db_name }}` database.
 
 <ol>
 <li>	Push the <code>Windows</code> key on your keyboard</li>
@@ -22,7 +22,7 @@ Follow the instructions below to set up a connection between your SQL Server dat
    <br/>
 <img src="images/odbc2.png" width="50%" >
  </li>
-<li>	Under Name, Enter <code>Campaign</code>. Under Server enter the MachineName from the SQL Server logins set up section. Press <code>Next</code>.
+<li>	Under Name, Enter <code>{{ site.db_name }}</code>. Under Server enter the MachineName from the SQL Server logins set up section. Press <code>Next</code>.
    <br/>
 <img src="images/odbc3.png" width="50%" >
 </li>

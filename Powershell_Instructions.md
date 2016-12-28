@@ -70,7 +70,7 @@ Running this PowerShell script will create stored procedures for the the operati
     * For example, uninterrupted mode for the rdemo user created by the createuser.sql script on your local machine, the command would be: 
 
         ```
-        .\{{ site.ps1_name }} -ServerName "." -DBName "Campaign" -username "rdemo" -password "D@tascience" -uninterrupted "Y"  
+        .\{{ site.ps1_name }} -ServerName "." -DBName "{{ site.db_name }}" -username "rdemo" -password "D@tascience" -uninterrupted "Y"  
         ```
 
 5.  If running with prompts (`-uninterrupted "N"`), you cannot complete a step until the previous step has been completed, so only skip steps that have previously been executed.

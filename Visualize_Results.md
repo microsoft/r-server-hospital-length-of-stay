@@ -15,7 +15,7 @@ skip to step 11</a> to see new results after any new model scoring.
 
 1.  Set up Connection between SQL Server and PowerBI  using [these instructions](ODBC.html).
 
-1.	Open the `{{ site.solution_name }} Dashboard.pbix` file in the Campaign folder. Click on `Get Data` and select `More...`
+1.	Open the `{{ site.solution_name }} Dashboard.pbix` file in the {{ site.folder_name }} folder. Click on `Get Data` and select `More...`
 The PowerBI dashboard will show charts built from cached data. We need to set it up to use the latest available scored dataset in the SQL Server.
  <br/>
  <img src="images/vis1.png" >
