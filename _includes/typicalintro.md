@@ -1,2 +1,2 @@
 
-XXXSHORT STATEMENT OF THE PROBLEM TO BE SOLVED. Machine learning can be used to help XXXSOMETHING OR ANOTHER HERE.   
+This solution enables a predictive model for Length of Stay for in-hospital admissions. Length of Stay (LOS) is defined in number of days from the initial admit date to the date that the patient is discharged from any given hospital facility.  

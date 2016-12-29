@@ -51,7 +51,7 @@ Running this PowerShell script will create stored procedures for the the operati
 3. Create a directory on your computer where you will put this solution.  CD to the directory and then clone the repository into it:
     
     ```
-    git clone {{ site.code_url }}.git
+    git clone {{ site.code_url }}
     ```
 
 4.  Now CD to the **{{ site.code }}/SQLR** directory and run one of the two following commands, inserting your server name (or "." if you are on the same machine as the SQL server), database name, username, and password.
@@ -94,13 +94,13 @@ Right click `Forest_Prediction_Class` and select `View Top 1000 Rows` to preview
 ## Visualizing Results 
 ---------------------
 
-You've now  created and processed data, created models, XXXWHATEVER ELSE as described  [here](data-scientist.html). This PowerShell script also created the stored procedures that can be used to score new data in the future.  
+You've now  created and processed data, created models, and predicted LOS as described  [here](data-scientist.html). This PowerShell script also created the stored procedures that can be used to score new data in the future.  
 
 Let's look at our current results. Proceed to <a href="Visualize_Results.html">Visualizing Results with PowerBI</a>.
 
 ## Other Steps
 ----------------
 
-You've just completed the fully automated solution that simulates the data, trains and scores the models, and provide recommendations by executing PowerShell scripts.  
+You've just completed the fully automated solution that simulates the data, trains and scores the models by executing PowerShell scripts.  
 
 See the [Typical Workflow](Typical.html) for a description of how these files were first created in R by a Data Scientist and then incorporated into the SQL stored procedures that you just deployed.

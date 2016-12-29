@@ -14,7 +14,6 @@ title: For the Database Analyst
         <li><a href="#step0">Step 0: Creating Tables</a></li>
         <li><a href="#step1">Step 1: Pre-Processing and Cleaning</a></li>
         <li><a href="#step2">Step 2: Feature Engineering</a></li>
-        <li><a href="#step3">Step 3: Normalization</a></li>
         <li><a href="#step3a">Step 3a: Splitting the data set</a></li>
         <li><a href="#step3b">Step 3b: Training (Classification)</a></li>
         <li><a href="#step3br">Step 3b: Training (Regression)</a></li>
@@ -79,9 +78,9 @@ In this step, we create a table `LengthOfStay` in a SQL Server database, and the
 In this step, the raw data is cleaned in-place. This assumes that the ID variable (`eid`) does not contain blanks. 
 There are two ways to replace missing values:
 
-* The first provided stored procedure, [`fill_NA_explicit`], will replace the missing values with "missing" (character variables) or -1 (numeric variables). It should be used if it is important to know where the missing values were.
+* The first provided stored procedure, `[fill_NA_explicit]`, will replace the missing values with "missing" (character variables) or -1 (numeric variables). It should be used if it is important to know where the missing values were.
 
-* The second stored procedure, [`fill_NA_mode_mean`], will replace the missing values with the mode (categorical variables) or mean (float variables).
+* The second stored procedure, `[fill_NA_mode_mean]`, will replace the missing values with the mode (categorical variables) or mean (float variables).
 
 If running the stored procedures yourself, or if running **Length_Of_Stay.ps1** with `uninterrupted = "N"`, you will have the opportunity to choose between the two stored procedures. 
 If running **Length_Of_Stay.ps1** with `uninterrupted = "Y"`, [`fill_NA_mode_mean`] will be automatically used.

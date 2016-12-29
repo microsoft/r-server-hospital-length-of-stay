@@ -4,16 +4,16 @@ title: ODBC Setup
 ---
 
 
-## Set up Connection between SQL Server and PowerBI  
+<h2>Set up Connection between SQL Server and PowerBI  </h2>
 
-Follow the instructions below to set up a connection between your SQL Server database and PowerBI.  Perform these steps after you have created the `{{ site.db_name }}` database.
+Follow the instructions below to set up a connection between your SQL Server database and PowerBI.  Perform these steps after you have created the <code>{{ site.db_name }}</code> database.
 
 <ol>
 <li>	Push the <code>Windows</code> key on your keyboard</li>
 <li>	Type <code>ODBC</code> </li>
 <li>	Open the correct app depending on what type of computer you are using (64 bit or 32 bit). To find out if your computer is running 32-bit or 64-bit Windows, do the following:</li>
-<ol><li>	Open System by clicking the <code>Start</code> button, clicking <code>Control Panel</code>, clicking <code>System and Maintenance</code>, and then clicking <code>System</code>.
-<li>.	Under System, you can view the system type</li></ol></li>
+<ul><li>	Open System by clicking the <code>Start</code> button, clicking <code>Control Panel</code>, clicking <code>System and Maintenance</code>, and then clicking <code>System</code>.</li>
+<li>.	Under System, you can view the system type</li></ul>
 <li>	Click on <code>Add</code>
   <br/>
 <img src="images/odbc1.png" width="50%" >

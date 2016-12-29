@@ -13,6 +13,7 @@ img {
     list-style-type:none; 
     padding:0; 
     margin-left:0px; 
+    text-align: left;
 }
 .btn-info {
     background-color: #0072C6;

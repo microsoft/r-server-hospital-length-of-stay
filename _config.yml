@@ -9,12 +9,13 @@ folder_name: Hospital
 db_name: Hospital
 ps1_name: Length_Of_Stay.ps1
 jupyter_name: Hospital_Length_Of_Stay_Notebook.ipynb
+pbi_name: Hospital Dashboard.pbix
 
 # urls, etc
 code_url: "https://github.com/Microsoft/r-server-hospital-length-of-stay"
 code: "r-server-hospital-length-of-stay"
 website_url: "https://microsoft.github.io/r-server-hospital-length-of-stay/"  
-dashboard_url: "PUTDASHBOARDURLHERE"
+pbi_url: "PUTDASHBOARDURLHERE"
 aka_url: "http://aka.ms/hospital" 
 
 

@@ -31,13 +31,8 @@
         SELECT TOP 1000 XXXQUERY HERE
 
 
-4.  Now she is ready for training the models.  She creates and executes the script you can find in **XXXFILENAME.R**.  XXXIF CHAMPION CHALLENGE: This step will train two different models and evaluate each.  
+4.  Now she is ready for training the models.  She creates and executes the script you can find in **XXXFILENAME.R**.  
 
-   The R script draws the ROC or Receiver Operating Characteristic for each prediction model. It shows the performance of the model in terms of true positive rate and false positive rate, when the decision threshold varies. 
-
-    {% include auc.md %}
-
-    Debra will use the AUC to select the champion model to use in the next step.
 
 5.  Finally Debra will create and execute **XXXFILENAME.R** to XXXDO SOMETHING
    *XXXIF NECESSARY: This step may take 10-15 minutes to complete.  Feel free to skip it if you wish, the data already exists in the SQL database.*

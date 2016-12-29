@@ -59,17 +59,17 @@ To run the scripts requires the following:
 - For more information about SQL server 2016 and R service, please visit: [https://msdn.microsoft.com/en-us/library/mt604847.aspx](https://msdn.microsoft.com/en-us/library/mt604847.aspx)
 
 
-<a href="step1"></a>
+<a name="step1"></a>
 
 ##  Step1: Pre-Processing and Cleaning
 -------------------------
 
-In this step, the raw data is loaded into SQL in a table called LengthOfStay. Then, if there are missing values, the data is cleaned in-place. This assumes that the ID variable (eid) does not contain blanks. 
+In this step, the raw data is loaded into SQL in a table called `LengthOfStay`. Then, if there are missing values, the data is cleaned in-place. This assumes that the ID variable (eid) does not contain blanks. 
 There are two ways to replace missing values:
 
-The first provided function, fill_NA_explicit, will replace the missing values with "missing" (character variables) or -1 (numeric variables). It should be used if it is important to know where the missing values were.
+* The first provided function, `fill_NA_explicit`, will replace the missing values with "missing" (character variables) or -1 (numeric variables). It should be used if it is important to know where the missing values were.
 
-The second function, fill_NA_mode_mean, will replace the missing values with the mode (categorical variables) or mean (float variables).
+* The second function, `fill_NA_mode_mean`, will replace the missing values with the mode (categorical variables) or mean (float variables).
 
 The user can run the one he prefers. 
 
@@ -82,14 +82,14 @@ The user can run the one he prefers.
 ### Related files:
 * **step1_data_preprocessing.R**
 
-<a href="step2"></a>
+<a name="step2"></a>
 
 ## Step2: Feature Engineering
 -------------------------
 
 In this step, we design new features:  
 
-* The continuous laboratory measurements (e.g. hemo, hematocritic, sodium, glucose etc.) are standardized: we substract the mean and divide by the standard deviation. 
+* The continuous laboratory measurements (e.g. `hemo`, `hematocritic`, `sodium`, `glucose` etc.) are standardized: we substract the mean and divide by the standard deviation. 
 * `number_of_issues`: the total number of preidentified medical conditions.
 * `lengthofstay_bucket`: bucketed version of the target variable for classification.
 
@@ -107,7 +107,7 @@ In this step, we design new features:
 
 In what follows, the problem can be modeled as a classification or a regression. 
 
-<a href="step3"></a>
+<a name="step3"></a>
 
 ## Step 3:  Splitting, Training, Testing and Evaluating (Classification)
 -------------------------
@@ -128,7 +128,7 @@ Finally, we score the trained model on the testing set, and then compute multi-c
 
 * **step3_training_evaluation_classification.R**
 
-<a href="step3r"></a>
+<a name="step3r"></a>
 
 ## Step3:  Splitting, Training, Testing and Evaluating (Regression)
 -------------------------
