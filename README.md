@@ -1,4 +1,4 @@
-<img src="Resources/Images/los.png" align="right">
+<img src="Resources/Images/los.jpg" align="right">
 
 # Predicting Length of Stay in Hospitals 
 ## Implemented on SQL Server 2016 R Services
