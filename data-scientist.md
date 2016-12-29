@@ -39,7 +39,7 @@ In this template, we implemented all steps in SQL stored procedures: data prepro
 
 All these steps can be executed in an R IDE. 
 
-Among the key variables to learn from data are number of previous admissions as well as various diagnostic codes and lab results.  (View the [full data set description.](input_data.hmtl) )
+Among the key variables to learn from data are number of previous admissions as well as various diagnostic codes and lab results.  (View the [full data set description.](input_data.html) )
 
 In this template, there are two final scored database tables in SQL Server - results from both a classification (`Forest_Prediction_Class`) and regression (`Forest_Prediction_Reg`) model.  This data is then visualized in PowerBI. 
 
