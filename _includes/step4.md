@@ -2,7 +2,7 @@
 ## Step 4: Deploy and Visualize with Caroline and Chris 
 ----------------------------------------------------------------
 
-Now that the models are in place, we will meet our last two personas - Caroline the CMIO and Chris the Care Line Manager.  
+Now that the models are in place and the dashboard is built, we will meet our last two personas - Caroline the CMIO and Chris the Care Line Manager.  
 
 ### Caroline the CMIO
 

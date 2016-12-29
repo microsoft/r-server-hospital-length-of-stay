@@ -39,13 +39,13 @@ In this template, we implemented all steps in SQL stored procedures: data prepro
 
 All these steps can be executed in an R IDE. 
 
-Among the key variables to learn from data are XXXDESCRIBE.  
+Among the key variables to learn from data are number of previous admissions as well as various diagnostic codes and lab results.  (View the [full data set description.](input_data.hmtl) )
 
-In this template, the final scored database table in SQL Server XXXDESCRIBE IT HERE. This data is then visualized in PowerBI. XXXDESCRIBE WHAT YOU SEE IN POWERBI.
+In this template, there are two final scored database tables in SQL Server - results from both a classification (`Forest_Prediction_Class`) and regression (`Forest_Prediction_Reg`) model.  This data is then visualized in PowerBI. 
 
 To try this out yourself, see the [Quick Start](START_HERE.html) section on the main page.  
 
-This page describes what happens in each of the steps: dataset creation, model development, recommendations, and deployment in more detail.
+This page describes what happens in each of the steps: dataset creation, model development, prediction, and deployment in more detail.
 
 
 ## System Requirements
@@ -147,14 +147,14 @@ Finally, we score the trained model on the testing set, and then compute regress
 
 ### Related files:
 
-* **step3_training_evaluation_regression**
+* **step3_training_evaluation_regression.R**
 
 <a name="step4"></a>
   
 ##  Step 4: Deploy and Visualize Results
 --------------------------------
 
-XXXDESCRIBE DASHBOARD
+See [For the Business Manager](business_manager.html) for a description of the personas who will be interested in using these predictions to aid them in their jobs.
 
 <img  src="images/XXvisualize.png">
 

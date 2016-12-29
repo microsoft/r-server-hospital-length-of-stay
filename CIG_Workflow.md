@@ -52,7 +52,7 @@ Debra would work on her own machine, using  [R Client](https://msdn.microsoft.co
 
 Debra uses an IDE to run R.  On your VM, R Tools for Visual Studio is installed.  You will however have to either log in or create a new account for using this tool.  If you prefer, you can <a href="rstudio.html">download and install RStudio</a> on your machine instead. 
   
-OPTIONAL: You can execute the R code on your local computer if you wish, but you must first  <a href="local.html">prepare both the VM and your computer</a>.  XXXIF THERE IS A NOTEBOOK: Or you can <a href="jupyter.html">view and execute the R code in a Jupyter Notebook on the VM</a>.
+OPTIONAL: You can execute the R code on your local computer if you wish, but you must first  <a href="local.html">prepare both the VM and your computer</a>.   Or you can <a href="jupyter.html">view and execute the R code in a Jupyter Notebook on the VM</a>.
 
 Now that Debra's environment is set up, she  opens her IDE and creates a Project.  To follow along with her, open the **{{ site.folder_name }}/R** directory on the VM desktop, (or the **{{ site.code }}/R** directory on your local machine).  There you will see three files with the name `{{ site.solution_name }}`.
 

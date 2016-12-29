@@ -1,7 +1,8 @@
 
 1.  First she'll develop R scripts to prepare the data.  To view the scripts she writes, open the files mentioned below.  If you are using Visual Studio, you will see these file in the `Solution Explorer` tab on the right.  In RStudio, the files can be found in the `Files` tab, also on the right. 
 
-    a.  XXXFILE NAME AND DESCRIPTIONS HERE
+    * **step1_data_preprocessing.R**
+    * **step2_feature_engineering.R**
     
     *You can run these scripts if you wish, but you may also skip them if you want to get right to the modeling.  The data that these scripts create already exists in the SQL database.* 
 
@@ -31,13 +32,13 @@
         SELECT TOP 1000 XXXQUERY HERE
 
 
-4.  Now she is ready for training the models.  She creates and executes the script you can find in **XXXFILENAME.R**.  
+4.  Now she is ready for training the models.  She creates and executes the following scripts to train and score both a classification model (to predict buckets of times) and regression model (to predict actual number of days).
+
+    *  **step3_training_evaluation_classification.R**
+    *  **step3_training_evaluation_regression.R**
 
 
-5.  Finally Debra will create and execute **XXXFILENAME.R** to XXXDO SOMETHING
-   *XXXIF NECESSARY: This step may take 10-15 minutes to complete.  Feel free to skip it if you wish, the data already exists in the SQL database.*
-
-6.  Debra will now use PowerBI to visualize the recommendations created from her model.  She creates the PowerBI Dashboard which you can find in the `{{ site.folder_name }}` directory.  She uses an ODBC connection to connect to the data, so that it will always show the most recently modeled and scored data, using the [instructions here](Visualize_Results.html).
+6.  Debra will now use PowerBI to visualize the predictions created from her model.  She creates the PowerBI Dashboard which you can find in the `{{ site.folder_name }}` directory.  She uses an ODBC connection to connect to the data, so that it will always show the most recently modeled and scored data, using the [instructions here](Visualize_Results.html).
   <img src="images/XXvisualize.png">.  If you want to refresh data in your PowerBI Dashboard, make sure to [follow these instructions](Visualize_Results.html) to setup and use an ODBC connection to the dashboard.
 
 7.  A summary of this process and all the files involved is described in more detail [here](data-scientist.html).

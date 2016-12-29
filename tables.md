@@ -10,7 +10,7 @@ Below are the different data sets that you will find in your database after depl
 
 <table class="table table-striped table-condensed">
    <tr>
-    <th>File</th>
+    <th>Table</th>
     <th>Description</th>
   </tr>
   <tr>

@@ -54,8 +54,6 @@ You can perform these steps by using the instructions in <a href="START_HERE.htm
 
 Debra will work on her own machine, using  [R Client](https://msdn.microsoft.com/en-us/microsoft-r/install-r-client-windows) to execute these R scripts. She will need to [install and configure an R IDE](https://msdn.microsoft.com/en-us/microsoft-r/r-client-get-started#configure-ide) to use with R Client.  
 
-<img src="images/project.png">
-
 Now that Debra's environment is set up, she  opens her IDE and creates a Project.  To follow along with her, open the **{{ site.code }}/R** directory.  There you will see three files with the name `{{ site.solution_name }}`.
 
 * If you use Visual Studio, double click on the Visual Studio SLN file.
