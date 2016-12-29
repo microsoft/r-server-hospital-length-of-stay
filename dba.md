@@ -224,7 +224,7 @@ In this step, we create a stored procedure `[dbo].[test_evaluate_model_reg]` tha
 
 ### Related files:
 
-* ***step3c_testing_evaluating_regression.sql**
+* **step3c_testing_evaluating_regression.sql**
 
 
 
