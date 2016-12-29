@@ -53,9 +53,9 @@ In this template with SQL Server R Services, two versions of the implementation:
 <tr><td> .\SQLR\Length_Of_Stay.ps1  </td><td> Automates execution of all .sql files and creates stored procedures </td></tr>
 <tr><td> .\SQLR\execute_yourself.sql  </td><td> used in Length_Of_Stay.sql </td></tr>
 <tr><td> .\SQLR\load_data.ps1  </td><td> used in Length_Of_Stay.sql </td></tr>
-<tr><td> .\SQLR\step0_create_table.sql  </td><td> Creates initial `LengthOfStay` table </td></tr>
+<tr><td> .\SQLR\step0_create_table.sql  </td><td> Creates initial <code>LengthOfStay</code> table </td></tr>
 <tr><td> .\SQLR\step1_data_processing.sql  </td><td> Handles missing data </td></tr>
-<tr><td> .\SQLR\step2_feature_engineering.sql  </td><td> Standardizes measures and creates `number_of_issues` and `lengthofstay_bucket` </td></tr>
+<tr><td> .\SQLR\step2_feature_engineering.sql  </td><td> Standardizes measures and creates <code>number_of_issues</code> and <code>lengthofstay_bucket</code> </td></tr>
 <tr><td> .\SQLR\step3a_splitting.sql  </td><td> Splits data into train and test </td></tr>
 <tr><td> .\SQLR\step3b_training_classification.sql  </td><td> Trains and stores classification Random Forest (RF) </td></tr>
 <tr><td> .\SQLR\step3b_training_regression.sql  </td><td> Trains and stores classification Random Forest (RF) </td></tr>
