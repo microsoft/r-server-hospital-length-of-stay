@@ -8,7 +8,7 @@ title: Template Contents
 
 The following is the directory structure for this template:
 
-- [**Data**](#copy-of-input-datasets)  This contains the copy of the input data XXXDESCRIBE A LITTLE IF YOU WISH. 
+- [**Data**](#copy-of-input-datasets)  This contains the copy of the input data.
 - [**R**](#model-development-in-r)  This contains the R code to simulate the input datasets, pre-process them, create the analytical datasets, train the models, and score the data.
 - [**Resources**](#resources-for-the-solution-packet) This directory contains other resources for the solution package.
 - [**SQLR**](#operationalize-in-sql-2016) This contains the T-SQL code to pre-process the datasets, train the models, identify the champion model and provide recommendations. It also contains a PowerShell script to automate the entire process, including loading the data into the database (not included in the T-SQL code).

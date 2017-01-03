@@ -26,10 +26,10 @@
       
 
     
- 3.  After running the step1 and step2 scripts, Debra goes to SQL Server Management Studio to log in and view the results of XXXSOMETHING  by running the following query:
+ 3.  After running the step1 and step2 scripts, Debra goes to SQL Server Management Studio to log in and view the results of these steps  by running the following query:
         
 
-        SELECT TOP 1000 XXXQUERY HERE
+        SELECT TOP 1000 *  FROM [Hospital].[dbo].[LengthOfStay]
 
 
 4.  Now she is ready for training the models.  She creates and executes the following scripts to train and score both a classification model (to predict buckets of times) and regression model (to predict actual number of days).
