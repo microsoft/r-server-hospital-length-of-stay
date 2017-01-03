@@ -27,8 +27,8 @@ CREATE TABLE [dbo].[LengthOfStay](
 	    [secondarydiagnosisnonicd9] [varchar](2) NULL,
 	    [discharged] [varchar](255) NULL,
 	    [facid] [varchar](3) NULL,
-		[lengthofstay] [int] NULL
+	    [lengthofstay] [int] NULL
     )
 
-	CREATE CLUSTERED COLUMNSTORE INDEX length_cci ON LengthOfStay WITH (DROP_EXISTING = OFF);
+CREATE CLUSTERED COLUMNSTORE INDEX length_cci ON LengthOfStay WITH (DROP_EXISTING = OFF);
 

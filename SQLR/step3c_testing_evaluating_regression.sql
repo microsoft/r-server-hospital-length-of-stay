@@ -8,9 +8,9 @@ DROP PROCEDURE IF EXISTS [dbo].[test_evaluate_model_reg]
 GO
 
 CREATE PROCEDURE [test_evaluate_model_reg] @connectionString varchar(300), 
-					                       @metrics_table_name varchar(max) = 'Metrics_Reg',
-					                       @dataset_name varchar(max) = 'LoS', 
-					                       @training_name varchar(max) = 'Train_Id'
+					   @metrics_table_name varchar(max) = 'Metrics_Reg',
+					   @dataset_name varchar(max) = 'LoS', 
+					   @training_name varchar(max) = 'Train_Id'
 AS 
 BEGIN
 
@@ -31,8 +31,8 @@ column_info <- rxCreateColInfo(LoS)
 ##########################################################################################################################################
 LoS_Test <- RxSqlServerData(  
   sqlQuery = sprintf( "SELECT *   
-					   FROM %s
-					   WHERE eid NOT IN (SELECT eid from %s)", dataset_name, training_name),
+		       FROM %s
+		       WHERE eid NOT IN (SELECT eid from %s)", dataset_name, training_name),
   connectionString = connection_string, colInfo = column_info)
 
 ##########################################################################################################################################
@@ -69,17 +69,17 @@ forest_model <- unserialize(forest_model)
 forest_prediction  <-  RxSqlServerData(table = "Forest_Prediction_Reg", connectionString = connection_string, stringsAsFactors = T,
 				       colInfo = column_info)
 rxPredict(modelObject = forest_model,
-	      data = LoS_Test,
-		  outData = forest_prediction, 
-		  type = "response",
-          extraVarsToWrite = c("lengthofstay"),
-		  overwrite = TRUE)
+	  data = LoS_Test,
+          outData = forest_prediction, 
+	  type = "response",
+          extraVarsToWrite = c("lengthofstay", "eid"),
+	  overwrite = TRUE)
 
 # Importing the predictions to evaluate the metrics. 
 forest_prediction <- rxImport(forest_prediction)
 forest_metrics <- evaluate_model(observed = forest_prediction$lengthofstay,
                                  predicted = forest_prediction$lengthofstay_Pred,
-								 model = "RF")
+				 model = "RF")
 
 ##########################################################################################################################################
 ## Combine metrics and write to SQL. Compute Context is kept to Local to export data. 
@@ -90,8 +90,7 @@ rownames(metrics_df) <- NULL
 Algorithms <- c("Random Forest")
 metrics_df <- cbind(Algorithms, metrics_df)
 
-metrics_table <- RxSqlServerData(table = metrics_table_name,
-                                 connectionString = connection_string)
+metrics_table <- RxSqlServerData(table = metrics_table_name, connectionString = connection_string)
 rxDataStep(inData = metrics_df,
            outFile = metrics_table,
            overwrite = TRUE)	 		   	   	   

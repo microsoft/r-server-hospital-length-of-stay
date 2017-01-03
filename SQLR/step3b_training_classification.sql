@@ -8,7 +8,8 @@ DROP PROCEDURE IF EXISTS [dbo].[train_model_class];
 GO
 
 CREATE PROCEDURE [train_model_class] @connectionString varchar(300),
-									 @dataset_name varchar(max) = 'LoS', @training_name varchar(max) = 'Train_Id'
+				     @dataset_name varchar(max) = 'LoS', 
+				     @training_name varchar(max) = 'Train_Id'
 AS 
 BEGIN
 
@@ -34,7 +35,6 @@ rxSetComputeContext(sql)
 ##########################################################################################################################################
 ##	Specify the types of the features before the training
 ##########################################################################################################################################
-
 # Get the variables names, types and levels for factors.
 LoS <- RxSqlServerData(table = dataset_name, connectionString = connection_string, stringsAsFactors = T)
 column_info <- rxCreateColInfo(LoS)
@@ -47,8 +47,8 @@ column_info$lengthofstay_bucket$levels <- c("1","2","3","4")
 ##########################################################################################################################################
 LoS_Train <- RxSqlServerData(  
   sqlQuery = sprintf( "SELECT *   
-              FROM %s
-              WHERE eid IN (SELECT eid from %s)", dataset_name, training_name),
+                       FROM %s
+                       WHERE eid IN (SELECT eid from %s)", dataset_name, training_name),
   connectionString = connection_string, colInfo = column_info)
 
 ##########################################################################################################################################
@@ -74,15 +74,15 @@ sampling_rate <- strat_sampling()
 ## Training model based on model selection
 ##########################################################################################################################################
 # Train the Random Forest.
-	model <- rxDForest(formula = formula,
-					  data = LoS_Train,
-                       nTree = 40,
-                       minSplit = 10,
-                       minBucket = 5,
-                       cp = 0.00005,
-                       seed = 5, 
-                       strata = c("lengthofstay_bucket"),
-                       sampRate = sampling_rate)
+model <- rxDForest(formula = formula,
+		   data = LoS_Train,
+                   nTree = 40,
+                   minSplit = 10,
+                   minBucket = 5,
+                   cp = 0.00005,
+                   seed = 5, 
+                   strata = c("lengthofstay_bucket"),
+                   sampRate = sampling_rate)
 					   				       
 OutputDataSet <- data.frame(payload = as.raw(serialize(model, connection=NULL)))'
 , @params = N'@connection_string varchar(300), @dataset_name varchar(max) , @training_name varchar(max) '

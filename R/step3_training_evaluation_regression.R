@@ -129,7 +129,7 @@ forest_model_reg <- rxDForest(formula = formula,
                               minBucket = 5,
                               cp = 0.00005,
                               seed = 5)
-
+,
 # Save the Random Forest in SQL. The compute context is set to Local in order to export the model. 
 rxSetComputeContext(local)
 saveRDS(forest_model_reg, file = "forest_model_reg.rds")
@@ -178,7 +178,7 @@ evaluate_model_reg <- function(observed, predicted, model) {
 # Make Predictions, then import them into R. The observed Conversion_Flag is kept through the argument extraVarsToWrite.
 Prediction_Table_RF_Reg <- RxSqlServerData(table = "Forest_Prediction_Reg", stringsAsFactors = T, connectionString = connection_string)
 rxPredict(forest_model_reg, data = LoS_Test, outData = Prediction_Table_RF_Reg, overwrite = T, type = "response",
-          extraVarsToWrite = c("lengthofstay"))
+          extraVarsToWrite = c("lengthofstay", "eid"))
 
 Prediction_RF_Reg<- rxImport(inData = Prediction_Table_RF_Reg, stringsAsFactors = T, outFile = NULL)
 

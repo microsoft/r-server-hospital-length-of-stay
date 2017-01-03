@@ -47,9 +47,9 @@ BEGIN
 		SELECT @sql00 = N'
 			SELECT @typeOUT = type
 			FROM (SELECT DATA_TYPE as type
-				  FROM INFORMATION_SCHEMA.COLUMNS
-	              WHERE TABLE_NAME = ''' + @input_output + ''' 
-				  AND   COLUMN_NAME = ''' + @name + ''' ) as t ';
+			      FROM INFORMATION_SCHEMA.COLUMNS
+	                      WHERE TABLE_NAME = ''' + @input_output + ''' 
+			      AND   COLUMN_NAME = ''' + @name + ''' ) as t ';
 		SET @Parameter00 = N'@typeOUT varchar(max) OUTPUT';
 		EXEC sp_executesql @sql00, @Parameter00, @typeOUT=@type OUTPUT;
 
@@ -133,9 +133,9 @@ BEGIN
 		SELECT @sql00 = N'
 			SELECT @typeOUT = type
 			FROM (SELECT DATA_TYPE as type
-				  FROM INFORMATION_SCHEMA.COLUMNS
-	              WHERE TABLE_NAME = ''' + @input_output + ''' 
-				  AND   COLUMN_NAME = ''' + @name + ''' ) as t ';
+			      FROM INFORMATION_SCHEMA.COLUMNS
+	                      WHERE TABLE_NAME = ''' + @input_output + ''' 
+			      AND   COLUMN_NAME = ''' + @name + ''' ) as t ';
 		SET @Parameter00 = N'@typeOUT varchar(max) OUTPUT';
 		EXEC sp_executesql @sql00, @Parameter00, @typeOUT=@type OUTPUT;
 
@@ -148,9 +148,9 @@ BEGIN
 			SELECT @sql01 = N'
 				SELECT @modeOUT = mode
 				FROM (SELECT TOP(1) ' + @name + ' as mode, count(*) as cnt
-					FROM ' + @input_output + ' 
-					GROUP BY ' + @name + ' 
-					ORDER BY cnt desc) as t ';
+				      FROM ' + @input_output + ' 
+				      GROUP BY ' + @name + ' 
+				      ORDER BY cnt desc) as t ';
 			SET @Parameter01 = N'@modeOUT varchar(max) OUTPUT';
 			EXEC sp_executesql @sql01, @Parameter01, @modeOUT=@mode OUTPUT;
 
@@ -170,7 +170,7 @@ BEGIN
 			SELECT @sql03 = N'
 				SELECT @meanOUT = mean
 				FROM (SELECT AVG(' + @name + ') as mean
-					  FROM ' + @input_output + ') as t ';
+				      FROM ' + @input_output + ') as t ';
 			SET @Parameter03 = N'@meanOUT float OUTPUT';
 			EXEC sp_executesql @sql03, @Parameter03, @meanOUT=@mean OUTPUT;
 

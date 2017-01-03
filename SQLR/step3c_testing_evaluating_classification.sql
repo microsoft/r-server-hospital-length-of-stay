@@ -8,9 +8,9 @@ DROP PROCEDURE IF EXISTS [dbo].[test_evaluate_model_class]
 GO
 
 CREATE PROCEDURE [test_evaluate_model_class]  @connectionString varchar(300),
-					                          @metrics_table_name varchar(max) = 'Metrics_Class',
-					                          @dataset_name varchar(max) = 'LoS', 
-					                          @training_name varchar(max) = 'Train_Id'
+					      @metrics_table_name varchar(max) = 'Metrics_Class',
+					      @dataset_name varchar(max) = 'LoS', 
+					      @training_name varchar(max) = 'Train_Id'
 AS 
 BEGIN
 
@@ -33,8 +33,8 @@ column_info$lengthofstay_bucket$levels <- c("1","2","3","4")
 ##########################################################################################################################################
 LoS_Test <- RxSqlServerData(  
   sqlQuery = sprintf( "SELECT *   
-					   FROM %s
-					   WHERE eid NOT IN (SELECT eid from %s)", dataset_name, training_name),
+		       FROM %s
+		       WHERE eid NOT IN (SELECT eid from %s)", dataset_name, training_name),
   connectionString = connection_string, colInfo = column_info)
 
 ##########################################################################################################################################
@@ -85,17 +85,17 @@ forest_model <- unserialize(forest_model)
 forest_prediction  <-  RxSqlServerData(table = "Forest_Prediction_Class", connectionString = connection_string, stringsAsFactors = T,
 				       colInfo = column_info)
 rxPredict(modelObject = forest_model,
-	      data = LoS_Test,
-		  outData = forest_prediction, 
-		  type = "prob",
-          extraVarsToWrite = c("lengthofstay_bucket"),
-		  overwrite = TRUE)
+	  data = LoS_Test,
+          outData = forest_prediction, 
+	  type = "prob",
+          extraVarsToWrite = c("lengthofstay_bucket, eid"),
+          overwrite = TRUE)
 
 # Importing the predictions to evaluate the metrics. 
 forest_prediction <- rxImport(forest_prediction)
 forest_metrics <- evaluate_model(observed = factor(forest_prediction$lengthofstay_bucket, levels = c("1","2","3","4")),
                                  predicted = factor(forest_prediction$lengthofstay_bucket_Pred, levels = c("1","2","3","4")),
-								 model = "RF")
+				 model = "RF")
 
 ##########################################################################################################################################
 ## Combine metrics and write to SQL. Compute Context is kept to Local to export data. 
@@ -105,8 +105,7 @@ metrics_df <- as.data.frame(metrics_df)
 rownames(metrics_df) <- NULL
 Algorithms <- c("Random Forest")
 metrics_df <- cbind(Algorithms, metrics_df)
-metrics_table <- RxSqlServerData(table = metrics_table_name,
-                                 connectionString = connection_string)
+metrics_table <- RxSqlServerData(table = metrics_table_name, connectionString = connection_string)
 rxDataStep(inData = metrics_df,
            outFile = metrics_table,
            overwrite = TRUE)	 		   	   	   
@@ -121,8 +120,3 @@ rxDataStep(inData = metrics_df,
 ;
 END
 GO
-
-
-
-exec [dbo].[test_evaluate_model_class] @connectionString ="Driver=SQL Server;Server=localhost;Database=Test2;UID=sa;PWD=Alohomora123", 
-								  @metrics_table_name = 'Metrics_Class', @dataset_name = 'LoS', @training_name = 'Train_Id'

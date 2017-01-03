@@ -112,7 +112,7 @@ variables_all <- rxGetVarNames(LoS)
 variables_to_remove <- c("eid", "vdate", "discharged", "lengthofstay", "facid")
 traning_variables <- variables_all[!(variables_all %in% c("lengthofstay_bucket", variables_to_remove))]
 formula <- as.formula(paste("lengthofstay_bucket ~", paste(traning_variables, collapse = "+")))
-
+,
 # In order to deal with class imbalance, we do a stratification sampling.
 # We take all observations in the smallest class  and we sample from the three other classes to have the same number.
 summary <- rxSummary(formula = ~ lengthofstay_bucket, LoS_Train)$categorical[[1]]
@@ -207,7 +207,7 @@ evaluate_model_class <- function(observed, predicted, model) {
 # Make Predictions, then import them into R. The observed Conversion_Flag is kept through the argument extraVarsToWrite.
 Prediction_Table_RF_Class <- RxSqlServerData(table = "Forest_Prediction_Class", stringsAsFactors = T, connectionString = connection_string)
 rxPredict(forest_model_class, data = LoS_Test, outData = Prediction_Table_RF_Class, overwrite = T, type = "prob",
-          extraVarsToWrite = c("lengthofstay_bucket"))
+          extraVarsToWrite = c("lengthofstay_bucket", "eid"))
 
 Prediction_RF_Class <- rxImport(inData = Prediction_Table_RF_Class, stringsAsFactors = T, outFile = NULL)
 

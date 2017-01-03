@@ -8,7 +8,8 @@ DROP PROCEDURE IF EXISTS [dbo].[train_model_reg];
 GO
 
 CREATE PROCEDURE [train_model_reg]   @connectionString varchar(300),
-									 @dataset_name varchar(max) = 'LoS', @training_name varchar(max) = 'Train_Id'
+				     @dataset_name varchar(max) = 'LoS',
+				     @training_name varchar(max) = 'Train_Id'
 AS 
 BEGIN
 
@@ -43,8 +44,8 @@ column_info <- rxCreateColInfo(LoS)
 ##########################################################################################################################################
 LoS_Train <- RxSqlServerData(  
   sqlQuery = sprintf( "SELECT *   
-              FROM %s
-              WHERE eid IN (SELECT eid from %s)", dataset_name, training_name),
+                       FROM %s
+                       WHERE eid IN (SELECT eid from %s)", dataset_name, training_name),
   connectionString = connection_string, colInfo = column_info)
 
 ##########################################################################################################################################
@@ -60,13 +61,13 @@ formula <- as.formula(paste("lengthofstay ~", paste(traning_variables, collapse 
 ## Training model based on model selection
 ##########################################################################################################################################
 # Train the Random Forest.
-	model <- rxDForest(formula = formula,
-	 			       data = LoS_Train,
-				       nTree = 40,
- 				       minBucket = 5,
-				       minSplit = 10,
-				       cp = 0.00005,
-				       seed = 5)
+model <- rxDForest(formula = formula,
+	 	   data = LoS_Train,
+		   nTree = 40,
+ 		   minBucket = 5,
+		   minSplit = 10,
+		   cp = 0.00005,
+		   seed = 5)
 					   				       
 OutputDataSet <- data.frame(payload = as.raw(serialize(model, connection=NULL)))'
 , @params = N'@connection_string varchar(300), @dataset_name varchar(max) , @training_name varchar(max) '
