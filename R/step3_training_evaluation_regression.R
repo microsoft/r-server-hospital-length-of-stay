@@ -135,7 +135,7 @@ rxSetComputeContext(local)
 saveRDS(forest_model_reg, file = "forest_model_reg.rds")
 forest_model_reg_raw <- readBin("forest_model_reg.rds", "raw", n = file.size("forest_model_reg.rds"))
 forest_model_reg_char <- as.character(forest_model_reg_raw)
-forest_model_reg_sql <- RxSqlServerData(table = "Forest_Model_Reg", connectionString = connection_string) 
+forest_model_reg_sql <- RxSqlServerData(table = "Models_Reg", connectionString = connection_string) 
 rxDataStep(inData = data.frame(x = forest_model_reg_char ), outFile = forest_model_reg_sql, overwrite = TRUE)
 
 
