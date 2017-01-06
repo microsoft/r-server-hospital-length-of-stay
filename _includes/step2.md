@@ -10,11 +10,13 @@
 
 2.  If you are following along, if you have modified any of the default values created by this solution package you will need to replace the connection string in the **SQL_connection.R** file with details of your login and database name.  
    
-       
+       ```
         connection_string <- "Driver=SQL Server;Server=localhost;Database={{ site.db_name }};UID=rdemo;PWD=D@tascience"
-        
+        ```
 
-    *Make sure there are no spaces around the "=" in the connection string - it will not work correctly when spaces are present*
+    <div class = "label label-info">
+        Make sure there are no spaces around the "=" in the connection string - it will not work correctly when spaces are present.
+    </div>
 
     If you are creating a new database by using these scripts, you must first create the database name in SSMS.  Once it exists it can be referenced in the connection string.  (Log into SSMS using the same username/password you supply in the connection string, or `rdemo`, `D@tascience` if you haven't changed the default values.)
 
