@@ -15,9 +15,9 @@ On the VM deployed from <a href="{{ site.aka_url }}">Cortana Intelligence Galler
 <ol type="a">
 <li>From the <code>R Tools</code> menu, choose <code>Options</code>.</li>
 <li>In the R Tools section, update the path to R to point to R Server:</li>
-</ol>
+<ul>
 <li><code>C:\Program Files\Microsoft\R Server\R_SERVER</code>
-</ul>
+</ul></ol>
 <li>Exit Visual Studio.</li>
 <li>When you relaunch Visual Studio, R Client will now be the default R engine.</li>
 </ol>
