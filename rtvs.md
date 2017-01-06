@@ -15,7 +15,7 @@ On the VM deployed from <a href="{{ site.aka_url }}">Cortana Intelligence Galler
 <ol type="a">
 <li>From the <code>R Tools</code> menu, choose <code>Options</code>.</li>
 <li>In the R Tools section, update the path to R to point to R Server:</li>
-<ul>
+</ol>
 <li><code>C:\Program Files\Microsoft\R Server\R_SERVER</code>
 </ul>
 <li>Exit Visual Studio.</li>
