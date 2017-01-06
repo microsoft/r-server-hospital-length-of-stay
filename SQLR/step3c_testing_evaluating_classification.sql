@@ -88,7 +88,7 @@ rxPredict(modelObject = forest_model,
 	  data = LoS_Test,
           outData = forest_prediction, 
 	  type = "prob",
-          extraVarsToWrite = c("lengthofstay_bucket, eid"),
+          extraVarsToWrite = c("lengthofstay_bucket", "eid"),
           overwrite = TRUE)
 
 # Importing the predictions to evaluate the metrics. 
