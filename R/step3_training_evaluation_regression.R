@@ -129,7 +129,7 @@ forest_model_reg <- rxDForest(formula = formula,
                               minBucket = 5,
                               cp = 0.00005,
                               seed = 5)
-,
+
 # Save the Random Forest in SQL. The compute context is set to Local in order to export the model. 
 rxSetComputeContext(local)
 saveRDS(forest_model_reg, file = "forest_model_reg.rds")

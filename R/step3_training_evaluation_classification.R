@@ -112,7 +112,7 @@ variables_all <- rxGetVarNames(LoS)
 variables_to_remove <- c("eid", "vdate", "discharged", "lengthofstay", "facid")
 traning_variables <- variables_all[!(variables_all %in% c("lengthofstay_bucket", variables_to_remove))]
 formula <- as.formula(paste("lengthofstay_bucket ~", paste(traning_variables, collapse = "+")))
-,
+
 # In order to deal with class imbalance, we do a stratification sampling.
 # We take all observations in the smallest class  and we sample from the three other classes to have the same number.
 summary <- rxSummary(formula = ~ lengthofstay_bucket, LoS_Train)$categorical[[1]]
