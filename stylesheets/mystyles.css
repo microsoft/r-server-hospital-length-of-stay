@@ -15,6 +15,9 @@ img {
     margin-left:0px; 
     text-align: left;
 }
+code {
+    text-align: left;
+}
 .btn-info {
     background-color: #0072C6;
     border-color: #0072C6;
