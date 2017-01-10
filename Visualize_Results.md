@@ -4,14 +4,12 @@ title: Visualizing Results with PowerBI
 ---
 
 
-
 ## Visualizing Results with PowerBI
 -----------------------------------
 
 These instructions show you how to replace the cached data in the PowerBI dashboard with data from your SQL Server solution, by using an ODBC connection to the SQL Database table. 
 
-Steps 1-10 only need to be performed once. After you have performed this once, you can simply <a href="#laststep">
-skip to step 11</a> to see new results after any new model scoring. 
+### Configure PowerBI to Access your Data 
 
 
 1.	Open the `{{ site.pbi_name }}` file in the {{ site.folder_name }} folder. Click on `Edit Queries` in the toolbar.  
@@ -27,19 +25,19 @@ skip to step 11</a> to see new results after any new model scoring.
  <br/>
  <img src="images/vis3.png" >
 
- 3. If you are connecting to a SQL Server on a different machine, replace "localhost" with the server IP address in the next three queries.  
+ 3. If you are connecting to a SQL Server on a different machine, replace "localhost" with the server IP address in the next three queries.  For now, ignore the permission alerts.
  <img src="images/vis3b.png">
 
 4.	9.	Next, click on `Close` and `Apply`. If prompted, select `Yes`.
  <br/>
  <img src="images/vis4.png" >
 
-5.	Now in the Dashboard window, click on `Refresh`.
+5.	You may be prompted one or more times for permission to Run Native Database Queries. If you don't see this, select `Refresh` in the Dashboard window.
  <br/>
  <img src="images/vis5.png"  > 
 
 
-6.	You may be prompted one or more times for permission to Run Native Database QUeries.  Select Run.  
+6.	Once you see the Run Native Database Queries, select `Run`.    
  <br/>
  <img src="images/vis6.png"  > 
 
@@ -51,7 +49,20 @@ skip to step 11</a> to see new results after any new model scoring.
  <br/>
  <img src="images/vis8.png"  >
 
-9.	You are now viewing data from your SQL Database, rather than the imported data that was part of the initial solution package.  Updates from the SQL Database will be reflected each time you hit `Refresh`. 
+9.	You may see more than on of the Run Database Queries dialogs.  Continue to select `Run` on each; you will no longer have to supply login information.
+
+10.  You are now viewing data from your SQL Database, rather than the imported data that was part of the initial solution package.  Updates from the SQL Database will be reflected each time you hit `Refresh`. 
+
+### Dashboard Details
+
+This dashboard uses data for the five facilities over the course of a year. For planning purposes, there would be new data incoming each day.  We have simulated this in the current file by selecting a date in our static daa to represent "today".  The variable `ScoredData[Today]` represents this arbitrary date. (`Today = DATEVALUE("7/1/2015")`) If using live data, the calculation would instead use the TODAY() function. (`Today = TODAY()`)
+
+Once `Today` has been created, a second variable is calculated.  A patient is here today if they have been admitted and have not yet been discharged:  `HereToday = ([admitdt] < [Today] ) && ([dischargedt] > [Today])`. 
+
+Finally, the dashboard pages are filtered to display only data for patients that are here today.
+ <br/>
+ <img src="images/vis9.png"  >
+
 
 
 [&lt; Home](index.html)
