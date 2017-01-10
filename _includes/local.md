@@ -16,6 +16,6 @@ If you use your own computer you will also need to have a copy of [R Client](htt
 
 Finally, on your own computer you will need a copy of the solution code.  Open a PowerShell window, navigate to the directory of your choice, and execute the following command:  
 
-    git clone {{ site.code_url}}.git
+    git clone {{ site.code_url}} {{ site.folder_name }}
 
-This will create a folder **{{ site.code }}** containing the full solution package.
+This will create a folder **{{ site.folder_name }}** containing the full solution package.

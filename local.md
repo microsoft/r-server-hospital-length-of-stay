@@ -26,8 +26,8 @@ If you use your local computer you will need to have a copy of R Client on your 
 
 Also, on your local computer you will need a copy of the solution code.  Open a PowerShell window, navigate to the directory of your choice, and execute the following command:  
 
-    git clone {{ site.code_url }}.git
+    git clone {{ site.code_url }} {{ site.folder_name }}
 
-This will create a folder **{{ site.code }}** containing the full solution package.
+This will create a folder **{{ site.folder_name }}** containing the full solution package.
 
 <a href="CIG_Workflow.html#step2">Return to Typical Workflow for Cortana Intelligence Gallery Deployment<a>

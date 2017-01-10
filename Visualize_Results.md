@@ -7,10 +7,20 @@ title: Visualizing Results with PowerBI
 ## Visualizing Results with PowerBI
 -----------------------------------
 
-These instructions show you how to replace the cached data in the PowerBI dashboard with data from your SQL Server solution, by using an ODBC connection to the SQL Database table. 
+This page explains how the data in PowerBI is filtered to show "today's" patient population, and shows how to update the cached data with data from your SQL Server. 
 
-### Configure PowerBI to Access your Data 
+### Dashboard Details
 
+This dashboard uses data for the five facilities over the course of a year. For planning purposes, there would be new data incoming each day.  We have simulated this in the current file by selecting a date in our static daa to represent "today".  The variable `ScoredData[Today]` represents this arbitrary date: `Today = DATEVALUE("7/1/2015")`. If you were instead using live data, the calculation would use the TODAY() function: `Today = TODAY()`.
+
+Once `Today` has been created, a second variable is calculated.  A patient is in the hospital today if they have been admitted and have not yet been discharged:  `HereToday = ([admitdt] < [Today] ) && ([dischargedt] > [Today])`. 
+
+Finally, the dashboard pages are filtered to display only data for patients that are here today.
+ <br/>
+ <img src="images/vis9.png"  >
+
+### Configure PowerBI to Access Data 
+In order to replace the cached data with data from your SQL Server, follow the steps below.
 
 1.	Open the `{{ site.pbi_name }}` file in the {{ site.folder_name }} folder. Click on `Edit Queries` in the toolbar.  
  <br/>
@@ -53,15 +63,7 @@ These instructions show you how to replace the cached data in the PowerBI dashbo
 
 10.  You are now viewing data from your SQL Database, rather than the imported data that was part of the initial solution package.  Updates from the SQL Database will be reflected each time you hit `Refresh`. 
 
-### Dashboard Details
 
-This dashboard uses data for the five facilities over the course of a year. For planning purposes, there would be new data incoming each day.  We have simulated this in the current file by selecting a date in our static daa to represent "today".  The variable `ScoredData[Today]` represents this arbitrary date. (`Today = DATEVALUE("7/1/2015")`) If using live data, the calculation would instead use the TODAY() function. (`Today = TODAY()`)
-
-Once `Today` has been created, a second variable is calculated.  A patient is here today if they have been admitted and have not yet been discharged:  `HereToday = ([admitdt] < [Today] ) && ([dischargedt] > [Today])`. 
-
-Finally, the dashboard pages are filtered to display only data for patients that are here today.
- <br/>
- <img src="images/vis9.png"  >
 
 
 

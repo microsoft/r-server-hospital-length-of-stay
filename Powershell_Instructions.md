@@ -51,10 +51,10 @@ Running this PowerShell script will create stored procedures for the the operati
 3. Create a directory on your computer where you will put this solution.  CD to the directory and then clone the repository into it:
     
     ```
-    git clone {{ site.code_url }}
+    git clone {{ site.code_url }} {{ site.folder_name }}
     ```
 
-4.  Now CD to the **{{ site.code }}/SQLR** directory and run one of the two following commands, inserting your server name (or "." if you are on the same machine as the SQL server), database name, username, and password.
+4.  Now CD to the **{{ site.folder_name }}/SQLR** directory and run one of the two following commands, inserting your server name (or "." if you are on the same machine as the SQL server), database name, username, and password.
 
     * Run with no prompts: 
     

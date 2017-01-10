@@ -54,7 +54,7 @@ Debra uses an IDE to run R. On your VM, R Studio is installed.  R Tools for Visu
   
 OPTIONAL: You can execute the R code on your local computer if you wish, but you must first  <a href="local.html">prepare both the VM and your computer</a>.   Or you can <a href="jupyter.html">view and execute the R code in a Jupyter Notebook on the VM</a>.
 
-Now that Debra's environment is set up, she  opens her IDE and creates a Project.  To follow along with her, open the **{{ site.folder_name }}/R** directory on the VM desktop, (or the **{{ site.code }}/R** directory on your local machine).  There you will see three files with the name `{{ site.solution_name }}`.
+Now that Debra's environment is set up, she  opens her IDE and creates a Project.  To follow along with her, open the **{{ site.folder_name }}/R** directory on the VM desktop, (or wherever you put this folder on your local machine).  There you will see three files with the name `{{ site.solution_name }}`.
 
 * If you are using Visual Studio, double click on the "Visual Studio SLN" file.
 * If you are using RStudio, double click on the "R Project" file.
