@@ -35,8 +35,7 @@ In this template with SQL Server R Services, two versions of the implementation:
 <tr><td> {{ site.jupyter_name}}  </td><td> Contains the Jupyter Notebook file that runs all the .R scripts. </td></tr>
 <tr><td>SQL_connection.R </td><td> Contains details of connection to SQL Server used in all other scripts. </td></tr>
 <tr><td>step1_data_preprocessing.R </td><td> Data loaded and missing values handled </td></tr>
-<tr><td>step2_feature_engineering.R </td><td> Measures standardized and classification buckets created </td></tr>
-<tr><td>step3_training_evaluation_classification.R  </td><td>Trains and scores a classification Random Forest (RF) </td></tr>
+<tr><td>step2_feature_engineering.R </td><td> Measures standardized </td></tr>
 <tr><td>step3_training_evaluation_regression.R  </td><td>Trains and scores a regression Random Forest (RF) </td></tr>
 </table>
 
@@ -57,9 +56,6 @@ In this template with SQL Server R Services, two versions of the implementation:
 <tr><td> .\SQLR\step1_data_processing.sql  </td><td> Handles missing data </td></tr>
 <tr><td> .\SQLR\step2_feature_engineering.sql  </td><td> Standardizes measures and creates <code>number_of_issues</code> and <code>lengthofstay_bucket</code> </td></tr>
 <tr><td> .\SQLR\step3a_splitting.sql  </td><td> Splits data into train and test </td></tr>
-<tr><td> .\SQLR\step3b_training_classification.sql  </td><td> Trains and stores classification Random Forest (RF) </td></tr>
-<tr><td> .\SQLR\step3b_training_regression.sql  </td><td> Trains and stores classification Random Forest (RF) </td></tr>
-<tr><td> .\SQLR\step3c_testing_evaluating_classification.sql  </td><td> Scores and evaluates classification RF </td></tr>
 <tr><td> .\SQLR\step3c_testing_evaluating_regression.sql  </td><td> Scores and evaluates regression RF </td></tr>
 
 

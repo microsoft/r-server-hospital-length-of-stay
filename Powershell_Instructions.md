@@ -87,7 +87,7 @@ Hit `Refresh` if necessary.
 
 [Click here](tables.html) to view more information about each of these tables.
 
-Right click `Forest_Prediction_Class` and select `View Top 1000 Rows` to preview the scored classification results. Right click `Forest_Prediction_Reg` and select `View Top 1000 Rows` to preview the scored regression results.  
+Right click `Forest_Prediction_Reg` and select `View Top 1000 Rows` to preview the scored regression results.  
 
 [Click here](tables.html) to view the details all tables created in this solution.
 

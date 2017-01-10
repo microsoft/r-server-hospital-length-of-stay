@@ -13,7 +13,6 @@ title: For the Data Scientist
             <li><a href="#system-requirements">System Requirements</a></li>
             <li><a href="#step1">Step1: Pre-Processing and Cleaning</a></li>
             <li><a href="#step2">Step2: Feature Engineering</a></li>
-            <li><a href="#step3">Step3: Splitting, Training, Testing and Evaluating (Classification)</a></li>
             <li><a href="#step3r">Step3: Splitting, Training, Testing and Evaluating (Regression)</a></li>
              <li><a href="#step4">Deploy and Visualize Results</a></li>
             <li><a href="#template-contents">Template Contents</a></li>
@@ -41,7 +40,7 @@ All these steps can be executed in an R IDE.
 
 Among the key variables to learn from data are number of previous admissions as well as various diagnostic codes and lab results.  (View the [full data set description.](input_data.html) )
 
-In this template, there are two final scored database tables in SQL Server - results from both a classification (`Forest_Prediction_Class`) and regression (`Forest_Prediction_Reg`) model.  This data is then visualized in PowerBI. 
+In this template, the final scored data is stored in SQL Server -  (`Forest_Prediction_Reg`) model.  This data is then visualized in PowerBI. 
 
 To try this out yourself, see the [Quick Start](START_HERE.html) section on the main page.  
 
@@ -91,7 +90,6 @@ In this step, we design new features:
 
 * The continuous laboratory measurements (e.g. `hemo`, `hematocritic`, `sodium`, `glucose` etc.) are standardized: we substract the mean and divide by the standard deviation. 
 * `number_of_issues`: the total number of preidentified medical conditions.
-* `lengthofstay_bucket`: bucketed version of the target variable for classification.
 
 ### Input:
 
@@ -105,28 +103,6 @@ In this step, we design new features:
 
 * **step2_feature_engineering.R**
 
-In what follows, the problem can be modeled as a classification or a regression. 
-
-<a name="step3"></a>
-
-## Step 3:  Splitting, Training, Testing and Evaluating (Classification)
--------------------------
-
-In this step, we split the data into a training set and a testing set. The user has to specify a splitting percentage. For example, if the splitting percentage is 70, 70% of the data will be put in the training set, while the other 30% will be assigned to the testing set. The `eid` that will end in the training set are stored in the table `Train_Id`.
-Then we train a classification Random Forest (RF) on the training set. The trained model is uploaded to SQL if needed later. The model performs a stratified sampling in order to deal with class imbalance.
-Finally, we score the trained model on the testing set, and then compute multi-class performance metrics. 
-
-### Input:
-
-* `LoS` table.
-
-### Output:
-
-* Performance metrics and RF model.
-
-### Related files:
-
-* **step3_training_evaluation_classification.R**
 
 <a name="step3r"></a>
 

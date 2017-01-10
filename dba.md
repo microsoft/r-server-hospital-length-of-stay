@@ -15,9 +15,7 @@ title: For the Database Analyst
         <li><a href="#step1">Step 1: Pre-Processing and Cleaning</a></li>
         <li><a href="#step2">Step 2: Feature Engineering</a></li>
         <li><a href="#step3a">Step 3a: Splitting the data set</a></li>
-        <li><a href="#step3b">Step 3b: Training (Classification)</a></li>
         <li><a href="#step3br">Step 3b: Training (Regression)</a></li>
-        <li><a href="#step3c"> Step 3c: Testing and Evaluating (Classification)</a></li>
         <li><a href="#step3cr"> Step 3c: Testing and Evaluating (Regression)</a></li>
         </div>
     </div>
@@ -103,7 +101,6 @@ In this step, we create a stored procedure `[dbo].[feature_engineering]` that de
 
 * The continuous laboratory measurements (e.g. hemo, `hematocritic`, `sodium`, `glucose` etc.) are standardized: we substract the mean and divide by the standard deviation. 
 * `number_of_issues`: the total number of preidentified medical conditions.
-* `lengthofstay_bucket`: bucketed version of the target variable for classification.
 
 ### Input:
 
@@ -137,32 +134,7 @@ In this step, we create a stored procedure `[dbo].[splitting]` that splits the d
 
 * **step3a_splitting.sql**
 
-In what follows, the problem can be modeled as a classification or a regression. 
-If running the stored procedures yourself, or if running **Length_Of_Stay.ps1** with `uninterrupted = "N"`, you will have the opportunity to choose between the two approaches. 
-If running **Length_Of_Stay.ps1** with `uninterrupted = "Y"`, the two approaches will be considered. 
 
-
-<a name="step3b"></a>
-
-## Step 3b: Training (Classification)
--------------------------
-
-In this step, we create a stored procedure `[dbo].[train_model_class]` that trains a classification Random Forest (RF) on the training set. The models perform a stratified sampling in order to deal with class imbalance. The trained model is serialized then stored in a table called `Models_Class`.
-
-
-### Input:
-
-* `LoS` and `Train_Id` tables.
-
-### Output:
-
-* `Models_Class` table containing the classification RF trained models. 
-
-### Related files:
-
-* **step3b_training_classification.sql**
-
-<a name="step3br"></a>
 
 ## Step 3b: Training (Regression)
 -------------------------
@@ -181,28 +153,6 @@ In this step, we create a stored procedure `[dbo].[train_model_class]` that trai
 ### Related files:
 
 * **step3b_training_regression.sql**
-
-<a name="step3c"></a>
-
-## Step 3c: Testing and Evaluating (Classification)
--------------------------
-
-In this step, we create a stored procedure `[dbo].[test_evaluate_model_class]` that scores the trained model on the testing set, and then compute multi-class performance metrics. The performance metrics are written in `Metrics_Class`.
-
-
-### Input:
-
-* `LoS`, `Train_Id`, and `Models_Class` tables.
-
-### Output:
-
-* `Metrics_Class` table containing the performance metrics of the model.
-
-
-### Related files:
-
-* **step3c_testing_evaluating_classification.sql**
-
 
 
 <a name="step3cr"></a>

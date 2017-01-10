@@ -34,9 +34,8 @@
         SELECT TOP 1000 *  FROM [Hospital].[dbo].[LengthOfStay]
 
 
-4.  Now she is ready for training the models.  She creates and executes the following scripts to train and score both a classification model (to predict buckets of times) and regression model (to predict actual number of days).
+4.  Now she is ready for training the models.  She creates and executes the following scripts to train and score  a  regression model (to predict actual number of days).
 
-    *  **step3_training_evaluation_classification.R**
     *  **step3_training_evaluation_regression.R**
 
 

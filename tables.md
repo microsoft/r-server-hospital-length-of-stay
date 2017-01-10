@@ -25,18 +25,6 @@ Below are the different data sets that you will find in your database after depl
     <td>Train_Id</td>
     <td>List of encounter IDs that will go to the training set</td>
   </tr>
-  <tr>
-    <td>Models_Class</td>
-    <td>Table storing the trained classification model</td>
-  </tr>
-    <tr>
-    <td>Forest_Prediction_Class</td>
-    <td>Prediction results when testing the trained classification random forest</td>
-  </tr>
-    <tr>
-    <td>Metrics_Class</td>
-    <td>Performance metrics of the classification model tested</td>
-  </tr>
     <tr>
     <td>Models_Reg</td>
     <td>Table storing the trained regression model</td>
