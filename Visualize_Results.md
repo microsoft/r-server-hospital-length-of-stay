@@ -35,7 +35,7 @@ In order to replace the cached data with data from your SQL Server, follow the s
  <br/>
  <img src="images/vis3.png" >
 
- 3. If you are connecting to a SQL Server on a different machine, replace "localhost" with the server IP address in the next three queries.  For now, ignore the permission alerts.
+ 3. (Skip this step if your SQL Server is on the same machine as your PowerBI file.) If you are connecting to a SQL Server on a different machine, in the next three queries replace "localhost" with the SQL Server IP address.  For now, ignore the permission alerts.
  <img src="images/vis3b.png">
 
 4.	9.	Next, click on `Close` and `Apply`. If prompted, select `Yes`.
@@ -51,7 +51,7 @@ In order to replace the cached data with data from your SQL Server, follow the s
  <br/>
  <img src="images/vis6.png"  > 
 
-7.	If prompted to login, select Database in the dialog and enter your login details.  (The default if you have not changed it is user `rdemo`, password `D@tabase`).
+7.	If prompted to login, select Database in the dialog and enter your login details.  (The default if you have not changed it is username `rdemo`, password `D@tabase`).
  <br/>
  <img src="images/vis7.png"  > 
 
