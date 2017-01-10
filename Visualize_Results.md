@@ -27,6 +27,9 @@ skip to step 11</a> to see new results after any new model scoring.
  <br/>
  <img src="images/vis3.png" >
 
+ 3. If you are connecting to a SQL Server on a different machine, replace "localhost" with the server IP address in the next three queries.  
+ <img src="images/vis3b.png">
+
 4.	9.	Next, click on `Close` and `Apply`. If prompted, select `Yes`.
  <br/>
  <img src="images/vis4.png" >
