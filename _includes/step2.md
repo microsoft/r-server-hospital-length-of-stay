@@ -10,9 +10,9 @@
 
 2.  If you are following along, if you have modified any of the default values created by this solution package you will need to replace the connection string in the **SQL_connection.R** file with details of your login and database name.  
    
-       ```
+       
         connection_string <- "Driver=SQL Server;Server=localhost;Database={{ site.db_name }};UID=rdemo;PWD=D@tascience"
-        ```
+         
 
     <div class = "label label-info">
         Make sure there are no spaces around the "=" in the connection string - it will not work correctly when spaces are present.
