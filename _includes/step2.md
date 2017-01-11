@@ -36,10 +36,9 @@
 
 4.  Now she is ready for training the models.  She creates and executes the following scripts to train and score  a  regression model (to predict actual number of days).
 
-    *  **step3_training_evaluation_regression.R**
+    *  **step3_training_evaluation**
 
 
-6.  Debra will now use PowerBI to visualize the predictions created from her model.  She creates the PowerBI Dashboard which you can find in the `{{ site.folder_name }}` directory.  She uses an ODBC connection to connect to the data, so that it will always show the most recently modeled and scored data, using the [instructions here](Visualize_Results.html).
-  <img src="images/XXvisualize.png">.  If you want to refresh data in your PowerBI Dashboard, make sure to [follow these instructions](Visualize_Results.html) to setup and use an ODBC connection to the dashboard.
+6.  Debra will now use PowerBI to visualize the predictions created from her model.  She creates the PowerBI Dashboard which you can find in the `{{ site.folder_name }}` directory.  If you want to refresh data in your PowerBI Dashboard, make sure to [follow these instructions](Visualize_Results.html) to provide the necessary information.
 
 7.  A summary of this process and all the files involved is described in more detail [here](data-scientist.html).
