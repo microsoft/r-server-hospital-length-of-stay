@@ -26,15 +26,24 @@ Below are the different data sets that you will find in your database after depl
     <td>List of encounter IDs that will go to the training set</td>
   </tr>
     <tr>
-    <td>Models_Reg</td>
-    <td>Table storing the trained regression model</td>
+    td>Models</td>
+    <td>Table storing the trained models</td>
   </tr>
     <tr>
-    <td>Forest_Prediction_Reg</td>
-    <td>Prediction results when testing the trained regression random forest</td>
+    <td>Forest_Prediction</td>
+    <td>Prediction results when testing the trained random forest (rxDForest)</td>
+  </tr>
+    <tr>
+    <td>Boosted_Prediction</td>
+    <td>Prediction results when testing the trained boosted trees (rxFastTrees)</td>
   </tr>
     <tr>
-    <td>Metrics_Reg</td>
-    <td>Performance metrics of the regression model tested</td>
+    <td>Metrics</td>
+    <td>Performance metrics of the models tested</td>
   </tr>
+  <tr>
+    <td>LoS_Predictions</td>
+    <td>Testing set with the predicted dates of the two trained models for discharge</td>
+  </tr>
+
 </table>

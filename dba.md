@@ -15,8 +15,8 @@ title: For the Database Analyst
         <li><a href="#step1">Step 1: Pre-Processing and Cleaning</a></li>
         <li><a href="#step2">Step 2: Feature Engineering</a></li>
         <li><a href="#step3a">Step 3a: Splitting the data set</a></li>
-        <li><a href="#step3br">Step 3b: Training (Regression)</a></li>
-        <li><a href="#step3cr"> Step 3c: Testing and Evaluating (Regression)</a></li>
+        <li><a href="#step3br">Step 3b: Training </a></li>
+        <li><a href="#step3cr"> Step 3c: Testing and Evaluating</a></li>
         </div>
     </div>
     <div class="col-md-6">
@@ -36,7 +36,7 @@ All the steps can be executed on SQL Server client environment (SQL Server Manag
 
 To run the scripts requires the following:
 
- * SQL server 2016 with Microsoft R server installed and configured;
+ * SQL server 2016 with Microsoft R Server  (version 9.0.1) installed and configured;
  * The SQL user name and password, and the user is configured properly to execute R scripts in-memory;
  * SQL Database for which the user has write permission and can execute stored procedures;
  * For more information about SQL server 2016 and R service, please visit: [What's New in SQL Server R Services](https://msdn.microsoft.com/en-us/library/mt604847.aspx)
@@ -136,10 +136,10 @@ In this step, we create a stored procedure `[dbo].[splitting]` that splits the d
 
 
 
-## Step 3b: Training (Regression)
+## Step 3b: Training
 -------------------------
 
-In this step, we create a stored procedure `[dbo].[train_model_class]` that trains a regression Random Forest (RF) on the training set. The trained model is serialized then stored in a table called `Models_Reg`. 
+In this step, we create a stored procedure [dbo].[train_model] that trains a regression Random Forest (rxDForest implementation)  on the training set. The trained models are serialized then stored in a table called “Models”. 
 
 
 ### Input:
@@ -148,28 +148,28 @@ In this step, we create a stored procedure `[dbo].[train_model_class]` that trai
 
 ### Output:
 
-* `Models_Reg` table containing the regression RF trained model. 
+* `Models` table containing the regression RF trained models. 
 
 ### Related files:
 
-* **step3b_training_regression.sql**
+* **step3b_training.sql**
 
 
 <a name="step3cr"></a>
 
-### Step 3c: Testing and Evaluating (Regression)
+### Step 3c: Testing and Evaluating 
 -------------------------
 
-In this step, we create a stored procedure `[dbo].[test_evaluate_model_reg]` that scores the trained model on the testing set, and then compute regression performance metrics written in `Metrics_Reg`.
+In this step, we create a stored procedure `[dbo].[test_evaluate_model]` that scores the trained model on the testing set, and then compute regression performance metrics written in `Metrics`.  Finally, a table LoS_Predictions, stores data from the testing set as well as predicted discharge dates from the rxFastTrees model, and will be used for PowerBI.
 
 
 ### Input:
 
-* `LoS` and `Train_Id`, and `Models_Reg` tables.
+* `LoS` and `Train_Id`, and `Models` tables.
 
 ### Output:
 
-* `Metrics_Reg` table containing the performance metrics of the model.
+* `Metrics` table containing the performance metrics of the model.
 
 
 ### Related files:

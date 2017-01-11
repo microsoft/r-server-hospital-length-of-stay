@@ -13,7 +13,7 @@ title: For the Data Scientist
             <li><a href="#system-requirements">System Requirements</a></li>
             <li><a href="#step1">Step1: Pre-Processing and Cleaning</a></li>
             <li><a href="#step2">Step2: Feature Engineering</a></li>
-            <li><a href="#step3r">Step3: Splitting, Training, Testing and Evaluating (Regression)</a></li>
+            <li><a href="#step3r">Step3: Splitting, Training, Testing and Evaluating</a></li>
              <li><a href="#step4">Deploy and Visualize Results</a></li>
             <li><a href="#template-contents">Template Contents</a></li>
         </div>
@@ -52,7 +52,7 @@ This page describes what happens in each of the steps: dataset creation, model d
 
 To run the scripts requires the following:
 
-- SQL Server 2016 with Microsoft R server installed and configured.     
+- SQL Server 2016 with Microsoft R Server  (version 9.0.1) installed and configured.     
 - The SQL user name and password, and the user configured properly to execute R scripts in-memory;
 - SQL Database which the user has write permission and execute stored procedures;
 - For more information about SQL server 2016 and R service, please visit: [https://msdn.microsoft.com/en-us/library/mt604847.aspx](https://msdn.microsoft.com/en-us/library/mt604847.aspx)
@@ -109,9 +109,7 @@ In this step, we design new features:
 ## Step3:  Splitting, Training, Testing and Evaluating (Regression)
 -------------------------
 
-In this step, we split the data into a training set and a testing set. The user has to specify a splitting percentage. For example, if the splitting percentage is 70, 70% of the data will be put in the training set, while the other 30% will be assigned to the testing set. The `eid` that will end in the training set are stored in the table `Train_Id`.
-Then we train a regression Random Forest (RF) on the training set. The trained model is uploaded to SQL if needed later. 
-Finally, we score the trained model on the testing set, and then compute regression performance metrics.
+In this step, we split the data into a training set and a testing set. The user has to specify a splitting percentage. For example, if the splitting percentage is 70, 70% of the data will be put in the training set, while the other 30% will be assigned to the testing set. The `eid` that will end in the training set are stored in the table `Train_Id`.  Then we train a regression Random Forest (rxDForest) and a gradient boosted trees model (rxFastTrees) on the training set. The trained models are uploaded to SQL if needed later. Finally, we score the trained models on the testing set, and then compute regression performance metrics.
 
 ### Input:
 
@@ -119,11 +117,11 @@ Finally, we score the trained model on the testing set, and then compute regress
 
 ### Output:
 
-* Performance metrics and RF model.
+* Performance metrics and trained models.
 
 ### Related files:
 
-* **step3_training_evaluation_regression.R**
+* **step3_training_evaluation**
 
 <a name="step4"></a>
   
@@ -132,7 +130,6 @@ Finally, we score the trained model on the testing set, and then compute regress
 
 See [For the Business Manager](business_manager.html) for a description of the personas who will be interested in using these predictions to aid them in their jobs.
 
-<img  src="images/XXvisualize.png">
 
 Explore the  [online version]({{ site.dashboard_url}}) of the dashboard.
 

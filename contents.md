@@ -36,7 +36,7 @@ In this template with SQL Server R Services, two versions of the implementation:
 <tr><td>SQL_connection.R </td><td> Contains details of connection to SQL Server used in all other scripts. </td></tr>
 <tr><td>step1_data_preprocessing.R </td><td> Data loaded and missing values handled </td></tr>
 <tr><td>step2_feature_engineering.R </td><td> Measures standardized </td></tr>
-<tr><td>step3_training_evaluation_regression.R  </td><td>Trains and scores a regression Random Forest (RF) </td></tr>
+<tr><td>step3_training_evaluation.R  </td><td>Trains and scores a regression Random Forest (RF) </td></tr>
 </table>
 
 
