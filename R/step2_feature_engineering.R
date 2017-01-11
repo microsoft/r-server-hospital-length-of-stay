@@ -2,7 +2,6 @@
 ## This R script will do the following :
 ## 1. Standardize the continuous variables (Z-score).
 ## 2. Create the variable number_of_issues: the number of preidentified medical conditions.
-## 3. Create the variable lengthofstay_bucket: bucketed version of the target variable for classification.
 
 ## Input : Data set before feature engineering LengthOfStay.
 ## Output: Data set with new features LoS.
@@ -21,6 +20,10 @@ source("sql_connection.R")
 
 # Set the Compute Context to local.
 rxSetComputeContext(local)
+
+# Open a connection with SQL Server to be able to write queries with the rxExecuteSQLDDL function.
+outOdbcDS <- RxOdbcData(table = "NewData", connectionString = connection_string, useFastRead=TRUE)
+rxOpen(outOdbcDS, "w") 
 
 
 ##########################################################################################################################################
@@ -62,7 +65,6 @@ if(missing == 0){
 ## 1- Standardization: hemo, hematocritic, neutrophils, sodium, glucose, bloodureanitro, 
 ##                     creatinine, bmi, pulse, respiration.
 ## 2- Number of preidentified medical conditions: number_of_issues.
-## 3- Buckets for lengthofstay to be used for classification: lengthofstay_bucket.
 
 ##########################################################################################################################################
 
@@ -90,20 +92,11 @@ rxDataStep(inData = LengthOfStay_cleaned_sql , outFile = LoS_sql, overwrite = TR
              number_of_issues = as.numeric(dialysisrenalendstage) + as.numeric(asthma) + as.numeric(irondef) + 
                                 as.numeric(pneum) + as.numeric(substancedependence) +
                                 as.numeric(psychologicaldisordermajor) + as.numeric(depress) + as.numeric(psychother) + 
-                                as.numeric(fibrosisandother) + as.numeric(malnutrition),
-             lengthofstay_bucket = ifelse(lengthofstay < 4, "1",
-                                          ifelse(lengthofstay < 7, "2",
-                                                 ifelse(lengthofstay < 10, "3",
-                                                        "4")))))
+                                as.numeric(fibrosisandother) + as.numeric(malnutrition)
+           ))
 
            
 # Converting number_of_issues to character with a SQL query because as.character in rxDataStep is crashing.           
-
-## Open a connection with SQL Server to be able to write queries with the rxExecuteSQLDDL function.
-outOdbcDS <- RxOdbcData(table = "NewData", connectionString = connection_string, useFastRead=TRUE)
-rxOpen(outOdbcDS, "w") 
-
-## Convert number_of_issues to character.
 rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("ALTER TABLE LoS ALTER COLUMN number_of_issues varchar(2);", sep=""))
 
 

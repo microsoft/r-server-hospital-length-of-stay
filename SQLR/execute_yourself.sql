@@ -26,19 +26,28 @@ exec [dbo].[fill_NA_mode_mean] @input_output = 'LengthOfStay'
 exec [dbo].[feature_engineering]  @input = 'LengthOfStay', @output = 'LoS'
 
 /* Step 3 */ 
-exec [dbo].[splitting] @splitting_percent = 70, @input = 'LoS',  @output = 'Train_Id'
 
+-- Split into train and test
+exec [dbo].[splitting] @splitting_percent = 70, @input = 'LoS',  @output = 'Train_Id'  
 
--- If you want to model the problem as a Classification: 
-exec [dbo].[train_model_class] @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", @dataset_name = 'LoS', @training_name = 'Train_Id'
+-- Train the models
+exec [dbo].[train_model] @modelName = 'RF',
+                         @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience",
+						 @dataset_name = 'LoS',
+						 @training_name = 'Train_Id'
 
-exec [dbo].[test_evaluate_model_class] @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", 
-								  @metrics_table_name = 'Metrics_Class', @dataset_name = 'LoS', @training_name = 'Train_Id'
+exec [dbo].[train_model] @modelName = 'GBT',
+                         @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience",
+						 @dataset_name = 'LoS',
+						 @training_name = 'Train_Id'
 
+-- Test and Evaluate the models. 
+exec [dbo].[test_evaluate_models] @modelrf  = 'RF',
+								  @modelbtree  = 'GBT',
+                                  @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", 
+								  @metrics_table_name = 'Metrics',
+								  @dataset_name = 'LoS', 
+								  @training_name = 'Train_Id'
 
--- If you want to model the problem as a Regression: 
-exec [dbo].[train_model_reg] @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", @dataset_name = 'LoS', @training_name = 'Train_Id'
-
-exec [dbo].[test_evaluate_model_reg] @connectionString ="Driver=SQL Server;Server=localhost;Database=Hospital;UID=rdemo;PWD=D@tascience", 
-								  @metrics_table_name = 'Metrics_Reg', @dataset_name = 'LoS', @training_name = 'Train_Id'
-
+		
+		

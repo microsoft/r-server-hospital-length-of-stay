@@ -1,7 +1,8 @@
 ##########################################################################################################################################
 ## This R script will do the following:
 ## 1. Upload the data set to SQL.
-## 2. Clean the table: replace NAs with -1 or 'missing' (1st Method) or with the mean or mode (2nd Method).
+## 2. Determine the variables containing missing values, if any. 
+## 3. Clean the table: replace NAs with -1 or 'missing' (1st Method) or with the mean or mode (2nd Method).
 
 ## Input : CSV file "LengthOfStay.csv".
 ## Output: Cleaned raw data set LengthOfStay. 
@@ -18,8 +19,12 @@ library(RevoScaleR)
 # Load the connection string and compute context definitions.
 source("sql_connection.R")
 
-# Set the Compute Context to Local, to load files in-memory.
+# Set the Compute Context to local.
 rxSetComputeContext(local)
+
+# Open a connection with SQL Server to be able to write queries with the rxExecuteSQLDDL function.
+outOdbcDS <- RxOdbcData(table = "NewData", connectionString = connection_string, useFastRead=TRUE)
+rxOpen(outOdbcDS, "w")
 
 ##########################################################################################################################################
 
@@ -87,9 +92,6 @@ LoS_text <- RxTextData(file = file.path(file_path, "LengthOfStay.csv"), colClass
 LengthOfStay_sql <- RxSqlServerData(table = "LengthOfStay", connectionString = connection_string)
 rxDataStep(inData = LoS_text, outFile = LengthOfStay_sql, overwrite = TRUE)
 
-# Open a connection with SQL Server to be able to write queries with the rxExecuteSQLDDL function.
-outOdbcDS <- RxOdbcData(table = "NewData", connectionString = connection_string, useFastRead=TRUE)
-rxOpen(outOdbcDS, "w")
 
 ##########################################################################################################################################
 

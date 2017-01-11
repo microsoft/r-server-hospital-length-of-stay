@@ -1,8 +1,8 @@
 ##########################################################################################################################################
 ## This R script will do the following:
 ## 1. Split LoS into a Training LoS_Train, and a Testing set LoS_Test.  
-## 2. Train regression model Random Forest (RF) on LoS_Train, and save it to SQL. 
-## 3. Score RF on LoS_Test.
+## 2. Train regression model Random Forest (rxDForest implementation) on LoS_Train, and save it to SQL. 
+## 3. Score the Random Forest on LoS_Test.
 
 ## Input : Data set LoS
 ## Output: Regression Random forest saved to SQL. 
@@ -13,15 +13,19 @@
 
 ##########################################################################################################################################
 
-# Load revolution R library. 
+# Load revolution R library and Microsoft ML packages. 
 library(RevoScaleR)
+library("MicrosoftML")
 
 # Load the connection string and compute context definitions.
 source("sql_connection.R")
 
-# Set the compute context to Local for splitting. It will be changed to sql for modelling.
+# Set the compute context to local. It will be changed to sql for modelling.
 rxSetComputeContext(local)
 
+# Open a connection with SQL Server to be able to write queries with the rxExecuteSQLDDL function.
+outOdbcDS <- RxOdbcData(table = "NewData", connectionString = connection_string, useFastRead=TRUE)
+rxOpen(outOdbcDS, "w")
 
 ##########################################################################################################################################
 
@@ -56,10 +60,6 @@ LoS <- RxSqlServerData(table = "LoS", connectionString = connection_string, stri
 ##	Specify the type of the features before the training. The target variable is converted to integer for regression.
 
 ##########################################################################################################################################
-
-## Open a connection with SQL Server to be able to write queries with the rxExecuteSQLDDL function.
-outOdbcDS <- RxOdbcData(table = "NewData", connectionString = connection_string, useFastRead=TRUE)
-rxOpen(outOdbcDS, "w")
 
 column_info <- rxCreateColInfo(LoS)
 
@@ -107,14 +107,14 @@ LoS_Test <- RxSqlServerData(
 
 # Write the formula after removing variables not used in the modeling.
 variables_all <- rxGetVarNames(LoS)
-variables_to_remove <- c("eid", "vdate", "discharged", "lengthofstay_bucket", "facid")
+variables_to_remove <- c("eid", "vdate", "discharged", "facid")
 traning_variables <- variables_all[!(variables_all %in% c("lengthofstay", variables_to_remove))]
 formula <- as.formula(paste("lengthofstay ~", paste(traning_variables, collapse = "+")))
 
 
 ##########################################################################################################################################
 
-##	Random Forest Training and saving the model to SQL
+##	Random Forest (rxDForest implementation) Training and saving the model to SQL
 
 ##########################################################################################################################################
 
@@ -122,21 +122,48 @@ formula <- as.formula(paste("lengthofstay ~", paste(traning_variables, collapse 
 rxSetComputeContext(sql)
 
 # Train the Random Forest.
-forest_model_reg <- rxDForest(formula = formula,
-                              data = LoS_Train,
-                              nTree = 40,
-                              minSplit = 10,
-                              minBucket = 5,
-                              cp = 0.00005,
-                              seed = 5)
+forest_model <- rxDForest(formula = formula,
+                          data = LoS_Train,
+                          nTree = 40,
+                          minSplit = 10,
+                          minBucket = 5,
+                          cp = 0.00005,
+                          seed = 5)
 
-# Save the Random Forest in SQL. The compute context is set to Local in order to export the model. 
+# Save the Random Forest in SQL. The compute context is set to local in order to export the model. 
 rxSetComputeContext(local)
-saveRDS(forest_model_reg, file = "forest_model_reg.rds")
-forest_model_reg_raw <- readBin("forest_model_reg.rds", "raw", n = file.size("forest_model_reg.rds"))
-forest_model_reg_char <- as.character(forest_model_reg_raw)
-forest_model_reg_sql <- RxSqlServerData(table = "Models_Reg", connectionString = connection_string) 
-rxDataStep(inData = data.frame(x = forest_model_reg_char ), outFile = forest_model_reg_sql, overwrite = TRUE)
+saveRDS(forest_model, file = "forest_model.rds")
+forest_model_raw <- readBin("forest_model.rds", "raw", n = file.size("forest_model.rds"))
+forest_model_char <- as.character(forest_model_raw)
+forest_model_sql <- RxSqlServerData(table = "Models", connectionString = connection_string) 
+rxDataStep(inData = data.frame(x = forest_model_char ), outFile = forest_model_sql, overwrite = TRUE)
+
+##########################################################################################################################################
+
+##	Boosted Trees (rxFastTrees implementation) Training and saving the model to SQL
+
+##########################################################################################################################################
+
+# Set the compute context to SQL for model training. 
+rxSetComputeContext(sql)
+
+# Train the Boosted Trees model.
+boosted_model <- rxFastTrees(formula = formula,
+                             data = LoS_Train,
+                             type = c("regression"),
+                             numTrees = 40,
+                             learningRate = 0.2,
+                             splitFraction = 5/24,
+                             featureFraction = 1,
+                             minSplit = 10)	
+
+# Save the Boosted Trees in SQL. The compute context is set to Local in order to export the model. 
+rxSetComputeContext(local)
+saveRDS(boosted_model, file = "boosted_model.rds")
+boosted_model_raw <- readBin("boosted_model.rds", "raw", n = file.size("boosted_model.rds"))
+boosted_model_char <- as.character(boosted_model_raw)
+boosted_model_sql <- RxSqlServerData(table = "Models", connectionString = connection_string) 
+rxDataStep(inData = data.frame(x = boosted_model_char ), outFile = boosted_model_sql, overwrite = TRUE)
 
 
 ##########################################################################################################################################
@@ -146,7 +173,7 @@ rxDataStep(inData = data.frame(x = forest_model_reg_char ), outFile = forest_mod
 ##########################################################################################################################################
 
 # Write a function that computes regression performance metrics. 
-evaluate_model_reg <- function(observed, predicted, model) {
+evaluate_model <- function(observed, predicted, model) {
   mean_observed <- mean(observed)
   se <- (observed - predicted)^2
   ae <- abs(observed - predicted)
@@ -175,14 +202,64 @@ evaluate_model_reg <- function(observed, predicted, model) {
 
 ##########################################################################################################################################
 
-# Make Predictions, then import them into R. The observed Conversion_Flag is kept through the argument extraVarsToWrite.
-Prediction_Table_RF_Reg <- RxSqlServerData(table = "Forest_Prediction_Reg", stringsAsFactors = T, connectionString = connection_string)
-rxPredict(forest_model_reg, data = LoS_Test, outData = Prediction_Table_RF_Reg, overwrite = T, type = "response",
+# Make Predictions, then import them into R. 
+forest_prediction_sql <- RxSqlServerData(table = "Forest_Prediction", stringsAsFactors = T, connectionString = connection_string)
+
+rxPredict(modelObject = forest_model,
+          data = LoS_Test, 
+          outData = forest_prediction_sql,
+          overwrite = T, 
+          type = "response",
           extraVarsToWrite = c("lengthofstay", "eid"))
 
-Prediction_RF_Reg<- rxImport(inData = Prediction_Table_RF_Reg, stringsAsFactors = T, outFile = NULL)
+# Compute the performance metrics of the model.
+forest_prediction <- rxImport(inData = forest_prediction_sql)
+
+forest_metrics <- evaluate_model(observed = forest_prediction$lengthofstay,
+                                 predicted = forest_prediction$lengthofstay_Pred,
+                                 model = "RF")
+
+##########################################################################################################################################
+
+##	Boosted Trees Scoring
+
+##########################################################################################################################################
+
+# Make Predictions, then import them into R. 
+boosted_prediction_sql <- RxSqlServerData(table = "Boosted_Prediction", stringsAsFactors = T, connectionString = connection_string)
+
+rxPredict(modelObject = boosted_model,
+          data = LoS_Test,
+          outData = boosted_prediction_sql,
+          extraVarsToWrite = c("lengthofstay", "eid"),
+          overwrite = TRUE)
 
 # Compute the performance metrics of the model.
-Metrics_RF_Reg <- evaluate_model_reg(observed = Prediction_RF_Reg$lengthofstay,
-                                    predicted = Prediction_RF_Reg$lengthofstay_Pred,
-                                    model = "RF")
+boosted_prediction <- rxImport(boosted_prediction_sql)
+
+boosted_metrics <- evaluate_model(observed = boosted_prediction$lengthofstay,
+                                  predicted = boosted_prediction$Score,
+                                  model = "GBT")
+
+##########################################################################################################################################
+
+##	Table for PowerBI
+
+##########################################################################################################################################
+
+# We create the variables discharged_pred_forest and discharged_pred_boosted, holding the predicted dates for discharge.
+
+rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("DROP TABLE if exists LoS_Predictions;", sep=""))
+
+rxExecuteSQLDDL(outOdbcDS, sSQLString = paste(
+  "SELECT LoS.eid, CONVERT(DATE, vdate, 110) as vdate, rcount, gender, dialysisrenalendstage, asthma,
+          irondef, pneum, substancedependence, psychologicaldisordermajor, depress, psychother, 
+          fibrosisandother, malnutrition, hemo, hematocritic, neutrophils, sodium,  glucose, 
+          bloodureanitro, creatinine, bmi, pulse, respiration, number_of_issues, secondarydiagnosisnonicd9, 
+          CONVERT(DATE, discharged, 110) as discharged, facid, LoS.lengthofstay, 
+          CONVERT(DATE, CONVERT(DATETIME, vdate, 110) + CAST(ROUND(lengthofstay_pred, 0) as int), 110) as discharged_pred_forest,
+          CONVERT(DATE, CONVERT(DATETIME, vdate, 110) + CAST(ROUND(Score, 0) as int), 110) as discharged_pred_boosted
+  INTO LoS_Predictions
+  FROM Forest_Prediction JOIN LoS ON LoS.eid = Forest_Prediction.eid
+  JOIN Boosted_Prediction ON LoS.eid = Boosted_Prediction.eid;"
+  ,sep = ""))

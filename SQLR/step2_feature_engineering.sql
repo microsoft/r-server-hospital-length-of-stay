@@ -1,4 +1,3 @@
-
 /*** Stored procedure for feature engineering. ***/
 SET ANSI_NULLS ON
 GO
@@ -20,7 +19,6 @@ BEGIN
 
 -- 1- Standardize the health numeric variables by substracting the mean and dividing by the standard deviation. 
 -- 2- Create number_of_issues variable corresponding to the total number of preidentified medical conditions. 
--- 3- Create lengthofstay_bucket, which is the bucketed version of the target variable for classification.
 
 	DECLARE @sql2 nvarchar(max);
 	SELECT @sql2 = N'
@@ -40,9 +38,7 @@ BEGIN
 			     CAST(substancedependence as int) + CAST(psychologicaldisordermajor as int) + CAST(depress as int) +
                              CAST(psychother as int) + CAST(fibrosisandother as int) + CAST(malnutrition as int)) as varchar(2)) 
                        AS number_of_issues,
-		       secondarydiagnosisnonicd9, discharged, facid, lengthofstay,
-		       lengthofstay_bucket = CASE WHEN lengthofstay < 4 THEN ''1'' WHEN lengthofstay < 7 THEN ''2'' 
-		                                  WHEN lengthofstay < 10 THEN ''3'' ELSE ''4'' END
+		       secondarydiagnosisnonicd9, discharged, facid, lengthofstay
 	    INTO ' + @output + '
 	    FROM ' + @input;
 	EXEC sp_executesql @sql2
