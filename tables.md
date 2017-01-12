@@ -29,10 +29,6 @@ Below are the different data sets that you will find in your database after depl
     td>Models</td>
     <td>Table storing the trained models</td>
   </tr>
-    <tr>
-    <td>Forest_Prediction</td>
-    <td>Prediction results when testing the trained random forest (rxDForest)</td>
-  </tr>
     <tr>
     <td>Boosted_Prediction</td>
     <td>Prediction results when testing the trained boosted trees (rxFastTrees)</td>
