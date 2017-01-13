@@ -33,7 +33,7 @@
 
         SELECT TOP 1000 *    FROM [Hospital].[dbo].[LoS]
 
-4.  When she looks at the metrics of both models, she notices that along with a faster performance time, the rxFastTrees model also performs with lower error, so she decides to use this model for prediction.  
+4.  Now she is ready for training the models.  She creates and executes the following script to train and score  a regression Random Forest (rxDForest) and a gradient boosted trees model (rxFastTrees) on the training set. Both models will  predict LOS.  When she looks at the metrics of both models, she notices that along with a faster performance time, the rxFastTrees model also performs with lower error, so she decides to use this model for prediction.  
 
     *  **step3_training_evaluation**
 
