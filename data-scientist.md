@@ -40,7 +40,7 @@ All these steps can be executed in an R IDE.
 
 Among the key variables to learn from data are number of previous admissions as well as various diagnostic codes and lab results.  (View the [full data set description.](input_data.html) )
 
-In this template, the final scored data is stored in SQL Server -  (`Forest_Prediction_Reg`) model.  This data is then visualized in PowerBI. 
+In this template, the final scored data is stored in SQL Server -  (`Boosted_Prediction`) model.  This data is then visualized in PowerBI. 
 
 To try this out yourself, see the [Quick Start](START_HERE.html) section on the main page.  
 
