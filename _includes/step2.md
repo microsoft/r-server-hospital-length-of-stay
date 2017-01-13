@@ -31,10 +31,9 @@
  3.  After running the step1 and step2 scripts, Debra goes to SQL Server Management Studio to log in and view the results of these steps  by running the following query:
         
 
-        SELECT TOP 1000 *  FROM [Hospital].[dbo].[LengthOfStay]
+        SELECT TOP 1000 *    FROM [Hospital].[dbo].[LoS]
 
-
-4.  Now she is ready for training the models.  She creates and executes the following scripts to train and score  a  regression model (to predict actual number of days).
+4.  Now she is ready for training the models.  She creates and executes the following script to train and score  a regression Random Forest (rxDForest) and a gradient boosted trees model (rxFastTrees) on the training set. Both models will  predict LOS.  After looking at the metrics of both and factoring in speed of execution, she decides that the rxFastTrees model is the one she'll use for prediction.  
 
     *  **step3_training_evaluation**
 
