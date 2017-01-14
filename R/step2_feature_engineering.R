@@ -52,12 +52,7 @@ display_head <- function(table_name, n_rows){
 
 ##########################################################################################################################################
 
-if(missing == 0){
-  LengthOfStay_cleaned_sql <- RxSqlServerData(table = "LengthOfStay", connectionString = connection_string)
-} else{
-  LengthOfStay_cleaned_sql <- RxSqlServerData(table = "LoS0", connectionString = connection_string)
-}
-
+LengthOfStay_cleaned_sql <- RxSqlServerData(table = if (missing == 0) "LengthOfStay" else "LoS0", connectionString = connection_string)
 
 ##########################################################################################################################################
 
