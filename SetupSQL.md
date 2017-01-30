@@ -3,7 +3,7 @@ layout: default
 title: On-Prem: Setup SQL Server 2016
 ---
 
-## Setup SQL Server 2016 
+## On-Prem: Setup SQL Server 2016 
 --------------------------
 
 <div class="row">
