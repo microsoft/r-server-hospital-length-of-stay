@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Setup SQL Server 2016
+title: On-Prem: Setup SQL Server 2016
 ---
 
 ## Setup SQL Server 2016 
@@ -15,7 +15,7 @@ title: Setup SQL Server 2016
         </div>
     </div>
     <div class="col-md-6">
-        The instructions on this page will help you to add this solution to your own SQL Server 2016.  
+        The instructions on this page will help you to add this solution to your on premises SQL Server 2016.  
         <p>
         If you instead would like to try this solution out on a virtual machine, visit the <a href="{{ site.aka_url }}">Cortana Intelligence Gallery</a> and use the Deploy button.  All the configuration described below will be done for you, as well as the initial deployment of the solution. </p>
     </div>
@@ -24,7 +24,7 @@ title: Setup SQL Server 2016
 ## Prepare your SQL Server 2016 Installation
 -------------------------------------------
 
-The rest of this page assumes you are configuring your own SQL Server 2016 for this solution.
+The rest of this page assumes you are configuring your on premises SQL Server 2016 for this solution.
 
 If you need a trial version of SQL Server 2016, see [What's New in SQL Server 2016](https://msdn.microsoft.com/en-us/library/bb500435.aspx) for download or VM options. 
 

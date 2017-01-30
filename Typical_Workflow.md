@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Typical Workflow for for On-Premises Deployment
+title: Typical Workflow for for On-Prem Deployment
 ---
 
 
@@ -27,7 +27,7 @@ title: Typical Workflow for for On-Premises Deployment
  {% include typicalintro1.md %}
 
 
-This guide assumes you are using your own SQL Server for this solution.  
+This guide assumes you are using an on premises SQL Server for this solution.  
 
 *If you have deployed the {{ site.solution_name }} solution from the [Cortana Intelligence Gallery]({{ site.aka_url }}) you should instead [use this guide](CIG_Workflow.html).*
 
@@ -42,7 +42,7 @@ If you want to follow along and have *not* run the PowerShell script, you will n
 
      {% include step1.md %} 
      
-You can perform these steps by using the instructions in <a href="START_HERE.html">START HERE</a>. 
+You can perform these steps in your environment by using the instructions in <a href="START_HERE.html">START HERE</a>. 
 
 
  <a name="step2" id="step2"></a>
