@@ -30,7 +30,7 @@ If you are configuring your own server, continue with the steps below to run the
 
 First, make sure you have set up your SQL Server by following the instructions in <a href="START_HERE.html">START HERE</a>.  Then proceed with the steps below to run the solution template using the automated PowerShell files. 
 
-## Execute PowerShell Script
+## Create Data and Train Model
 ----------------------------
 
 Running this PowerShell script will create stored procedures for the the operationalization of this solution.  It will also execute these procedures to create full database with results of the steps  – dataset creation, modeling, and scoring as described  [here](dba.html).
@@ -59,24 +59,28 @@ Running this PowerShell script will create stored procedures for the the operati
     * Run with no prompts: 
     
         ```
-        .\{{ site.ps1_name }} -ServerName "Server Name" -DBName "Database Name" -username "" -password "" -uninterrupted "Y"  
+        .\{{ site.ps1_name }} -ServerName "Server Name" -DBName "Database Name" -username "" -password "" -is_production "N" -uninterrupted "Y"  
         ```
     * Run with prompts:
 
         ```
-        .\{{ site.ps1_name }} -ServerName "Server Name" -DBName "Database Name" -username "" -password "" -uninterrupted "N"  
+        .\{{ site.ps1_name }} -ServerName "Server Name" -DBName "Database Name" -username "" -password "" -is_production "N" -uninterrupted "N"  
         ```
 
-    * For example, uninterrupted mode for the rdemo user created by the createuser.sql script on your local machine, the command would be: 
+    * For example, uninterrupted mode for the rdemo user created by the create_user.sql script on your local machine, the command would be: 
 
         ```
-        .\{{ site.ps1_name }} -ServerName "localhost" -DBName "{{ site.db_name }}" -username "rdemo" -password "D@tascience" -uninterrupted "Y"  
+        .\{{ site.ps1_name }} -ServerName "localhost" -DBName "{{ site.db_name }}" -username "rdemo" -password "D@tascience" -is_production "N" -uninterrupted "Y"  
         ```
 
 5.  If running with prompts (`-uninterrupted "N"`), you cannot complete a step until the previous step has been completed, so only skip steps that have previously been executed.
 
+
 6.  You can also optionally add the parameter -dataPath "your path\to\csv files".  If you omit this, it defaults to the Data folder in the current directory.
 
+
+## Score Production Data
+------------------------
 
 ## Review Data
 --------------
