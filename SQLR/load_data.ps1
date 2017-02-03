@@ -5,13 +5,17 @@ Script to load the data into SQL Server for the Hospital Length of Stay predicti
 
 [CmdletBinding()]
 param(
-# SQL server address
+
+[parameter(Mandatory=$true,ParameterSetName = "LoS")]
+[ValidateNotNullOrEmpty()] 
+[String]    
+$is_production = "",
+
 [parameter(Mandatory=$true,ParameterSetName = "LoS")]
 [ValidateNotNullOrEmpty()] 
 [String]    
 $ServerName = "",
 
-# SQL server database name
 [parameter(Mandatory=$true,ParameterSetName = "LoS")]
 [ValidateNotNullOrEmpty()]
 [String]
@@ -40,12 +44,10 @@ $error = $scriptPath.Path + "\output.log"
 
 if ($dataPath -eq "")
 {
-##########################################################################
-# Script level variables
-##########################################################################
 $parentPath = Split-Path -parent $scriptPath
 $dataPath = $parentPath + "/Data/"
 }
+
 ##########################################################################
 # Function wrapper to invoke SQL command
 ##########################################################################
@@ -57,6 +59,7 @@ $sqlscript
 )
     Invoke-Sqlcmd -ServerInstance $ServerName  -Database $DBName -Username $username -Password $password -InputFile $sqlscript -QueryTimeout 200000
 }
+
 ##########################################################################
 # Function wrapper to invoke SQL query
 ##########################################################################
@@ -68,20 +71,6 @@ $sqlquery
 )
     Invoke-Sqlcmd -ServerInstance $ServerName  -Database $DBName -Username $username -Password $password -Query $sqlquery -QueryTimeout 200000
 }
-
-##########################################################################
-# Get connection string
-##########################################################################
-function GetConnectionString
-{
-    $connectionString = "Driver=SQL Server;Server=$ServerName;Database=$DBName;UID=$username;PWD=$password"
-     $connectionString
-}
-
-##########################################################################
-# Construct the SQL connection strings
-##########################################################################
-$connectionString = GetConnectionString
 
 ##########################################################################
 # Check if the SQL server or database exists
@@ -101,8 +90,11 @@ $query = "USE $DBName;"
 Invoke-Sqlcmd -ServerInstance $ServerName -Username $username -Password $password -Query $query 
 
 
+if($is_production -eq 'n' -or $is_production -eq 'N')
+{
+
 ##########################################################################
-# Loading the data
+# Loading the deployment data
 ##########################################################################
 $startTime= Get-Date
 Write-Host "Start time is:" $startTime
@@ -132,6 +124,58 @@ try{
         Write-Host -ForegroundColor Red $Error[0].Exception 
         throw
     }
+
+    $query = "ALTER TABLE LengthOfStay ALTER COLUMN  vdate Date"
+    ExecuteSQLQuery $query
+
+    $query = "ALTER TABLE LengthOfStay ALTER COLUMN  discharged Date"
+    ExecuteSQLQuery $query
+
+}
+
+    
+  if($is_production -eq 'y' -or $is_production -eq 'Y')
+{
+
+##########################################################################
+# Loading the production data
+##########################################################################
+$startTime= Get-Date
+Write-Host "Start time is:" $startTime
+try{
+
+        # create raw table
+        Write-Host -ForeGroundColor 'green' ("Create SQL table.")
+        $script = $filePath + "create_tables_prod.sql"
+        ExecuteSQL $script
+    
+        Write-Host -ForeGroundColor 'green' ("Populate SQL table.")
+        $dataList = "LengthOfStay_Prod"
+		
+		# upload csv files into SQL tables
+        foreach ($dataFile in $dataList)
+        {
+            $destination = $dataPath + $dataFile + ".csv"
+            $tableName = $DBName + ".dbo." + $dataFile
+            $tableSchema = $dataPath + $dataFile + ".xml"
+            bcp $tableName format nul -c -x -f $tableSchema  -U $username -S $ServerName -P $password  -t ',' -e $error
+            bcp $tableName in $destination -t ',' -S $ServerName -f $tableSchema -F 2 -C "RAW" -b 50000 -U $username -P $password -e $error
+        }
+    }
+    catch
+    {
+        Write-Host -ForegroundColor DarkYellow "Exception in populating database tables:"
+        Write-Host -ForegroundColor Red $Error[0].Exception 
+        throw
+    }
+
+    $query = "ALTER TABLE LengthOfStay_Prod ALTER COLUMN  vdate Date"
+    ExecuteSQLQuery $query
+
+    $query = "ALTER TABLE LengthOfStay_Prod ALTER COLUMN  discharged Date"
+    ExecuteSQLQuery $query
+
+}
 
 
 $endTime =Get-Date

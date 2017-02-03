@@ -62,14 +62,14 @@ if(missing == 0){
 ##########################################################################################################################################
 
 ## Feature Engineering:
-## 1- Standardization: hemo, hematocritic, neutrophils, sodium, glucose, bloodureanitro, 
+## 1- Standardization: hematocritic, neutrophils, sodium, glucose, bloodureanitro, 
 ##                     creatinine, bmi, pulse, respiration.
 ## 2- Number of preidentified medical conditions: number_of_issues.
 
 ##########################################################################################################################################
 
 # Get the mean and standard deviation of those variables.
-names <- c("hemo", "hematocritic", "neutrophils", "sodium", "glucose", "bloodureanitro",
+names <- c("hematocrit", "neutrophils", "sodium", "glucose", "bloodureanitro",
            "creatinine", "bmi", "pulse", "respiration")
 summary <- rxSummary(formula = ~., LengthOfStay_cleaned_sql, byTerm = TRUE)$sDataFrame
 Statistics <- summary[summary$Name %in% names,c("Name","Mean","StdDev")]
@@ -89,14 +89,14 @@ standardize <- function(data){
 LoS_sql <- RxSqlServerData(table = "LoS", connectionString = connection_string)
 rxDataStep(inData = LengthOfStay_cleaned_sql , outFile = LoS_sql, overwrite = TRUE, transformFunc = standardize, 
            transformObjects = list(Stats = Statistics), transforms = list(
-             number_of_issues = as.numeric(dialysisrenalendstage) + as.numeric(asthma) + as.numeric(irondef) + 
+             number_of_issues = as.numeric(hemo) + as.numeric(dialysisrenalendstage) + as.numeric(asthma) + as.numeric(irondef) + 
                                 as.numeric(pneum) + as.numeric(substancedependence) +
                                 as.numeric(psychologicaldisordermajor) + as.numeric(depress) + as.numeric(psychother) + 
-                                as.numeric(fibrosisandother) + as.numeric(malnutrition)
+                                as.numeric(fibrosisandother) + as.numeric(malnutrition) 
+             
            ))
 
            
 # Converting number_of_issues to character with a SQL query because as.character in rxDataStep is crashing.           
 rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("ALTER TABLE LoS ALTER COLUMN number_of_issues varchar(2);", sep=""))
-
 

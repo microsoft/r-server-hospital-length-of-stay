@@ -240,26 +240,3 @@ boosted_prediction <- rxImport(boosted_prediction_sql)
 boosted_metrics <- evaluate_model(observed = boosted_prediction$lengthofstay,
                                   predicted = boosted_prediction$Score,
                                   model = "GBT")
-
-##########################################################################################################################################
-
-##	Table for PowerBI
-
-##########################################################################################################################################
-
-# We create the variables discharged_pred_forest and discharged_pred_boosted, holding the predicted dates for discharge.
-
-rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("DROP TABLE if exists LoS_Predictions;", sep=""))
-
-rxExecuteSQLDDL(outOdbcDS, sSQLString = paste(
-  "SELECT LoS.eid, CONVERT(DATE, vdate, 110) as vdate, rcount, gender, dialysisrenalendstage, asthma,
-          irondef, pneum, substancedependence, psychologicaldisordermajor, depress, psychother, 
-          fibrosisandother, malnutrition, hemo, hematocritic, neutrophils, sodium,  glucose, 
-          bloodureanitro, creatinine, bmi, pulse, respiration, number_of_issues, secondarydiagnosisnonicd9, 
-          CONVERT(DATE, discharged, 110) as discharged, facid, LoS.lengthofstay, 
-          CONVERT(DATE, CONVERT(DATETIME, vdate, 110) + CAST(ROUND(lengthofstay_pred, 0) as int), 110) as discharged_pred_forest,
-          CONVERT(DATE, CONVERT(DATETIME, vdate, 110) + CAST(ROUND(Score, 0) as int), 110) as discharged_pred_boosted
-  INTO LoS_Predictions
-  FROM Forest_Prediction JOIN LoS ON LoS.eid = Forest_Prediction.eid
-  JOIN Boosted_Prediction ON LoS.eid = Boosted_Prediction.eid;"
-  ,sep = ""))

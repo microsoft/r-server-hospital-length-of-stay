@@ -1,220 +1,315 @@
-/* Missing value treatment.  */
-/* Assumption, eid has no missing values.  */
+-- Compute and store data statistics that will be used during production for preprocessing and feature engineering.
 
-/*** 1st Method: NULL is replaced with "missing" (character variables) or -1 (numeric variables)  ***/
+-- @input: specify the name of the raw data set of the Development/Modeling pipeline for which you want to store Statistics. 
+
+DROP PROCEDURE IF EXISTS [dbo].[compute_stats]
+GO
+
+CREATE PROCEDURE [compute_stats]  @input varchar(max) = 'LengthOfStay'
+AS
+BEGIN
+
+	-- Create an empty table that will store the Statistics. 
+	DROP TABLE if exists [dbo].[Stats]
+	CREATE TABLE [dbo].[Stats](
+		[variable_name] [varchar](30) NOT NULL,
+		[type] [varchar](30) NOT NULL,
+		[mode] [varchar](30) NULL, 
+		[mean] [float] NULL,
+		[std] [float] NULL
+	)
+	-- Get the names and variable types of the columns to analyze.
+		DECLARE @sql nvarchar(max);
+		SELECT @sql = N'
+		INSERT INTO Stats(variable_name, type)
+		SELECT *
+		FROM (SELECT COLUMN_NAME as variable_name, DATA_TYPE as type
+			  FROM INFORMATION_SCHEMA.COLUMNS
+	          WHERE TABLE_NAME = ''' + @input + ''' 
+			  AND COLUMN_NAME NOT IN (''eid'', ''lengthofstay'')) as t ';
+		EXEC sp_executesql @sql;
+
+	-- Loops to compute the Mode for categorical variables.
+		DECLARE @name1 NVARCHAR(100)
+		DECLARE @getname1 CURSOR
+
+		SET @getname1 = CURSOR FOR
+		SELECT variable_name FROM [dbo].[Stats] WHERE type IN('varchar', 'nvarchar', 'int')
+	
+		OPEN @getname1
+		FETCH NEXT
+		FROM @getname1 INTO @name1
+		WHILE @@FETCH_STATUS = 0
+		BEGIN	
+
+			DECLARE @sql1 nvarchar(max);
+			SELECT @sql1 = N'
+			UPDATE Stats
+			SET Stats.mode = T.mode
+			FROM (SELECT TOP(1) ' + @name1 + ' as mode, count(*) as cnt
+						 FROM ' + @input + ' 
+						 GROUP BY ' + @name1 + ' 
+						 ORDER BY cnt desc) as T
+			WHERE Stats.variable_name =  ''' + @name1 + '''';
+			EXEC sp_executesql @sql1;
+
+			FETCH NEXT
+		    FROM @getname1 INTO @name1
+		END
+		CLOSE @getname1
+		DEALLOCATE @getname1
+		
+	-- Loops to compute the Mean and Standard Deviation for continuous variables.
+		DECLARE @name2 NVARCHAR(100)
+		DECLARE @getname2 CURSOR
+
+		SET @getname2 = CURSOR FOR
+		SELECT variable_name FROM [dbo].[Stats] WHERE type IN('float')
+	
+		OPEN @getname2
+		FETCH NEXT
+		FROM @getname2 INTO @name2
+		WHILE @@FETCH_STATUS = 0
+		BEGIN	
+
+			DECLARE @sql2 nvarchar(max);
+			SELECT @sql2 = N'
+			UPDATE Stats
+			SET Stats.mean = T.mean,
+				Stats.std = T.std
+			FROM (SELECT  AVG(' + @name2 + ') as mean, STDEV(' + @name2 + ') as std
+				  FROM ' + @input + ') as T
+			WHERE Stats.variable_name =  ''' + @name2 + '''';
+			EXEC sp_executesql @sql2;
+
+			FETCH NEXT
+		    FROM @getname2 INTO @name2
+		END
+		CLOSE @getname2
+		DEALLOCATE @getname2
+
+END
+GO
+;
+
+-- Missing value treatment.  
+-- Assumption, eid and lenghofstay have no missing values. 
+
+-- @input: specify the name of the raw data set to be cleaned. 
+-- @output: specify the name of the View that will hold the cleaned data set.
+
+-- 1st Method: NULL is replaced with "missing" (character variables) or -1 (numeric variables) 
 
 DROP PROCEDURE IF EXISTS [dbo].[fill_NA_explicit]
 GO
 
-CREATE PROCEDURE [fill_NA_explicit]  @input_output varchar(max) = 'LengthOfStay'
+CREATE PROCEDURE [fill_NA_explicit]  @input varchar(max), @output varchar(max)
 AS
 BEGIN
 
- -- Update the statistics of the input table for faster computations. 
-	DECLARE @sql0 nvarchar(max);
-	SELECT @sql0 = N'
-	UPDATE STATISTICS ' + @input_output ;
-	EXEC sp_executesql @sql0;
+	-- Create a View with the raw data. 
+	DECLARE @sqlv1 nvarchar(max);
+	SELECT @sqlv1 = N'
+	IF OBJECT_ID (''' + @output + ''', ''V'') IS NOT NULL  
+	DROP VIEW ' + @output ;  
+	EXEC sp_executesql @sqlv1
 
- -- Get the names of the columns to analyze. 
-	DECLARE @sql nvarchar(max);
-	SELECT @sql = N'
-	DROP TABLE if exists Sql_Columns
-	SELECT name 
-	INTO Sql_Columns
-	FROM syscolumns 
-	WHERE id = object_id(''' + @input_output + ''') AND name NOT IN (''eid'')';
-	EXEC sp_executesql @sql;
+	DECLARE @sqlv2 nvarchar(max);
+	SELECT @sqlv2 = N'
+		CREATE VIEW ' + @output + '
+		AS
+		SELECT *
+	    FROM ' + @input;
+	EXEC sp_executesql @sqlv2
 
-    -- Loops to fill missing values for the variables.
-	DECLARE @name NVARCHAR(100)
-	DECLARE @getname CURSOR
+    -- Loops to fill missing values for the character variables with 'missing'. 
+	DECLARE @name1 NVARCHAR(100)
+	DECLARE @getname1 CURSOR
 
-	SET @getname = CURSOR FOR
-	SELECT name FROM  Sql_Columns
+	SET @getname1 = CURSOR FOR
+	SELECT variable_name FROM [dbo].[Stats] WHERE type IN ('varchar', 'nvarchar')
 
-	OPEN @getname
+	OPEN @getname1
 	FETCH NEXT
-	FROM @getname INTO @name
+	FROM @getname1 INTO @name1
 	WHILE @@FETCH_STATUS = 0
 	BEGIN	
 
 		-- Check whether the variable contains a missing value. We perform cleaning only for variables containing NULL. 
-		DECLARE @missing varchar(50)
-		DECLARE @sql1 nvarchar(max);
-		DECLARE @Parameter1 nvarchar(500);
-		SELECT @sql1 = N'
-			SELECT @missingOUT = missing
-			FROM (SELECT count(*) - count(' + @name + ') as missing
-			      FROM ' + @input_output + ') as t';
-		SET @Parameter1 = N'@missingOUT varchar(max) OUTPUT';
-		EXEC sp_executesql @sql1, @Parameter1, @missingOUT=@missing OUTPUT;
-		IF (@missing > 0)
+		DECLARE @missing1 varchar(50)
+		DECLARE @sql10 nvarchar(max);
+		DECLARE @Parameter10 nvarchar(500);
+		SELECT @sql10 = N'
+			SELECT @missingOUT1 = missing
+			FROM (SELECT count(*) - count(' + @name1 + ') as missing
+			      FROM ' + @output + ') as t';
+		SET @Parameter10 = N'@missingOUT1 varchar(max) OUTPUT';
+		EXEC sp_executesql @sql10, @Parameter10, @missingOUT1=@missing1 OUTPUT;
+
+		IF (@missing1 > 0)
 		BEGIN 
 
-			-- Get the variable type.
-			DECLARE @type varchar(50)
-			DECLARE @sql10 nvarchar(max);
-			DECLARE @Parameter10 nvarchar(500);
-			SELECT @sql10 = N'
-				SELECT @typeOUT = type
-				FROM (SELECT DATA_TYPE as type
-					  FROM INFORMATION_SCHEMA.COLUMNS
-	                  WHERE TABLE_NAME = ''' + @input_output + ''' 
-			          AND COLUMN_NAME = ''' + @name + ''' ) as t ';
-			SET @Parameter10 = N'@typeOUT varchar(max) OUTPUT';
-			EXEC sp_executesql @sql10, @Parameter10, @typeOUT=@type OUTPUT;
-
 			-- Replace character variables with 'missing'. 
-			IF (@type = 'varchar')
-			BEGIN 
-				DECLARE @sql101 nvarchar(max)
-				SET @sql101 = 
-				'UPDATE ' + @input_output + '
-				SET ' + @name + ' = ISNULL(' + @name + ',''missing'')';
-				EXEC sp_executesql @sql101;
-			END;
-
-			-- Replace numeric variables with '-1'. 
-			ELSE
-			BEGIN
-				DECLARE @sql102 nvarchar(max)
-				SET @sql102 = 
-				'UPDATE ' + @input_output + '
-				 SET ' + @name + ' = ISNULL(' + @name + ', -1)';
-				EXEC sp_executesql @sql102;
-			END;
+				DECLARE @sql11 nvarchar(max)
+				SET @sql11 = 
+				'UPDATE ' + @output + '
+				SET ' + @name1 + ' = ISNULL(' + @name1 + ',''missing'')';
+				EXEC sp_executesql @sql11;
 		END;
 		FETCH NEXT
-		FROM @getname INTO @name
+		FROM @getname1 INTO @name1
 	END
-	CLOSE @getname
-	DEALLOCATE @getname
+	CLOSE @getname1
+	DEALLOCATE @getname1
 
-	-- Drop intermediate table.
-	DROP TABLE Sql_Columns
+    -- Loops to fill numeric variables with '-1'.  
+	DECLARE @name2 NVARCHAR(100)
+	DECLARE @getname2 CURSOR
 
+	SET @getname2 = CURSOR FOR
+	SELECT variable_name FROM [dbo].[Stats] WHERE type IN ('int', 'float')
+
+	OPEN @getname2
+	FETCH NEXT
+	FROM @getname2 INTO @name2
+	WHILE @@FETCH_STATUS = 0
+	BEGIN	
+
+		-- Check whether the variable contains a missing value. We perform cleaning only for variables containing NULL. 
+		DECLARE @missing2 varchar(50)
+		DECLARE @sql20 nvarchar(max);
+		DECLARE @Parameter20 nvarchar(500);
+		SELECT @sql20 = N'
+			SELECT @missingOUT2 = missing
+			FROM (SELECT count(*) - count(' + @name2 + ') as missing
+			      FROM ' + @output + ') as t';
+		SET @Parameter20 = N'@missingOUT2 varchar(max) OUTPUT';
+		EXEC sp_executesql @sql20, @Parameter20, @missingOUT2=@missing2 OUTPUT;
+
+		IF (@missing2 > 0)
+		BEGIN 
+
+			-- Replace numeric variables with '-1'. 
+				DECLARE @sql21 nvarchar(max)
+				SET @sql21 = 
+				'UPDATE ' + @output + '
+				 SET ' + @name2 + ' = ISNULL(' + @name2 + ', -1)';
+				EXEC sp_executesql @sql21;
+		END;
+		FETCH NEXT
+		FROM @getname2 INTO @name2
+	END
+	CLOSE @getname2
+	DEALLOCATE @getname2
 END
 GO
 ;
 
 
-/*** 2nd Method: NULL is replaced with the mode (categorical variables) or mean (float variables)  ***/
+-- 2nd Method: NULL is replaced with the mode (categorical variables) or mean (float variables) 
 
 DROP PROCEDURE IF EXISTS [dbo].[fill_NA_mode_mean]
 GO
 
-CREATE PROCEDURE [fill_NA_mode_mean]  @input_output varchar(max) = 'LengthOfStay'
+CREATE PROCEDURE [fill_NA_mode_mean]  @input varchar(max), @output varchar(max)
 AS
 BEGIN
 
- -- Update the statistics of the input table for faster computations. 
-	DECLARE @sql0 nvarchar(max);
-	SELECT @sql0 = N'
-	UPDATE STATISTICS ' + @input_output ;
-	EXEC sp_executesql @sql0;
+	-- Create a View with the raw data. 
+	DECLARE @sqlv1 nvarchar(max);
+	SELECT @sqlv1 = N'
+	IF OBJECT_ID (''' + @output + ''', ''V'') IS NOT NULL  
+	DROP VIEW ' + @output ;  
+	EXEC sp_executesql @sqlv1
 
- -- Select the column names to be filled into the table Sql_Columns.
-	DECLARE @sql nvarchar(max);
-	SELECT @sql = N'
-	DROP TABLE if exists Sql_Columns
-	SELECT name 
-	INTO Sql_Columns
-	FROM syscolumns 
-	WHERE id = object_id(''' + @input_output + ''') AND name NOT IN (''eid'')';
-	EXEC sp_executesql @sql;
+	DECLARE @sqlv2 nvarchar(max);
+	SELECT @sqlv2 = N'
+		CREATE VIEW ' + @output + '
+		AS
+		SELECT *
+	    FROM ' + @input;
+	EXEC sp_executesql @sqlv2
 
-    -- Loops to fill missing values for the variables.
-	DECLARE @name NVARCHAR(100)
-	DECLARE @getname CURSOR
+    -- Loops to fill missing values for the categorical variables with the mode. 
+	DECLARE @name1 NVARCHAR(100)
+	DECLARE @getname1 CURSOR
 
-	SET @getname = CURSOR FOR
-	SELECT name FROM  Sql_Columns
+	SET @getname1 = CURSOR FOR
+	SELECT variable_name FROM  [dbo].[Stats] WHERE type IN ('varchar', 'nvarchar', 'int')
 
-	OPEN @getname
+	OPEN @getname1
 	FETCH NEXT
-	FROM @getname INTO @name
+	FROM @getname1 INTO @name1
 	WHILE @@FETCH_STATUS = 0
 	BEGIN	
 
 		-- Check whether the variable contains a missing value. We perform cleaning only for variables containing NULL. 
-		DECLARE @missing varchar(50)
-		DECLARE @sql1 nvarchar(max);
-		DECLARE @Parameter1 nvarchar(500);
-		SELECT @sql1 = N'
-			SELECT @missingOUT = missing
-			FROM (SELECT count(*) - count(' + @name + ') as missing
-			      FROM ' + @input_output + ') as t';
-		SET @Parameter1 = N'@missingOUT varchar(max) OUTPUT';
-		EXEC sp_executesql @sql1, @Parameter1, @missingOUT=@missing OUTPUT;
-		IF (@missing > 0)
+		DECLARE @missing1 varchar(50)
+		DECLARE @sql10 nvarchar(max);
+		DECLARE @Parameter10 nvarchar(500);
+		SELECT @sql10 = N'
+			SELECT @missingOUT1 = missing
+			FROM (SELECT count(*) - count(' + @name1 + ') as missing
+			      FROM ' + @output + ') as t';
+		SET @Parameter10 = N'@missingOUT1 varchar(max) OUTPUT';
+		EXEC sp_executesql @sql10, @Parameter10, @missingOUT1=@missing1 OUTPUT;
+
+		IF (@missing1 > 0)
 		BEGIN 
-
-			-- Get the variable type.
-			DECLARE @type varchar(50)
-			DECLARE @sql10 nvarchar(max);
-			DECLARE @Parameter10 nvarchar(500);
-			SELECT @sql10 = N'
-				SELECT @typeOUT = type
-				FROM (SELECT DATA_TYPE as type
-					  FROM INFORMATION_SCHEMA.COLUMNS
-	                  WHERE TABLE_NAME = ''' + @input_output + ''' 
-			          AND COLUMN_NAME = ''' + @name + ''' ) as t ';
-			SET @Parameter10 = N'@typeOUT varchar(max) OUTPUT';
-			EXEC sp_executesql @sql10, @Parameter10, @typeOUT=@type OUTPUT;
-
 			-- Replace categorical variables with the mode. 
-			IF (@type = 'varchar' or @type = 'int')
-			BEGIN 
-				DECLARE @mode varchar(50);
-				DECLARE @sql101 nvarchar(max);
-				DECLARE @Parameter101 nvarchar(500);
-				SELECT @sql101 = N'
-					SELECT @modeOUT = mode
-					FROM (SELECT TOP(1) ' + @name + ' as mode, count(*) as cnt
-						  FROM ' + @input_output + ' 
-						  GROUP BY ' + @name + ' 
-						  ORDER BY cnt desc) as t ';
-				SET @Parameter101 = N'@modeOUT varchar(max) OUTPUT';
-				EXEC sp_executesql @sql101, @Parameter101, @modeOUT=@mode OUTPUT;
-
-				DECLARE @sql102 nvarchar(max)
-				SET @sql102 = 
-				'UPDATE ' + @input_output + '
-				SET ' + @name + ' = ISNULL(' + @name + ', (SELECT '''  + @mode + '''))';
-				EXEC sp_executesql @sql102;
-			END;
-
-			-- Replace continuous variables with the mean. 
-			ELSE
-			BEGIN
-				DECLARE @mean float;
-				DECLARE @sql103 nvarchar(max);
-				DECLARE @Parameter103 nvarchar(500);
-				SELECT @sql103= N'
-					SELECT @meanOUT = mean
-					FROM (SELECT AVG(' + @name + ') as mean
-						  FROM ' + @input_output + ') as t ';
-				SET @Parameter103 = N'@meanOUT float OUTPUT';
-				EXEC sp_executesql @sql103, @Parameter103, @meanOUT=@mean OUTPUT;
-
-				DECLARE @sql104 nvarchar(max)
-				SET @sql104 = 
-				'UPDATE ' + @input_output + '
-				SET ' + @name + ' = ISNULL(' + @name + ', (SELECT '  + Convert(Varchar,  @mean) + '))';
-				EXEC sp_executesql @sql104;
-			END;
+			DECLARE @sql11 nvarchar(max)
+			SET @sql11 = 
+			'UPDATE ' + @output + '
+			SET ' + @name1 + ' = ISNULL(' + @name1 + ', (SELECT mode FROM [dbo].[Stats] WHERE variable_name = ''' + @name1 + '''))';
+			EXEC sp_executesql @sql11;
 		END;
 		FETCH NEXT
-		FROM @getname INTO @name
+		FROM @getname1 INTO @name1
 	END
-	CLOSE @getname
-	DEALLOCATE @getname
+	CLOSE @getname1
+	DEALLOCATE @getname1
 
-	-- Drop intermediate table.
-	DROP TABLE Sql_Columns
+    -- Loops to fill continous variables with the mean.  
+	DECLARE @name2 NVARCHAR(100)
+	DECLARE @getname2 CURSOR
 
+	SET @getname2 = CURSOR FOR
+	SELECT variable_name FROM  [dbo].[Stats] WHERE type IN ('float')
+
+	OPEN @getname2
+	FETCH NEXT
+	FROM @getname2 INTO @name2
+	WHILE @@FETCH_STATUS = 0
+	BEGIN	
+
+		-- Check whether the variable contains a missing value. We perform cleaning only for variables containing NULL. 
+		DECLARE @missing2 varchar(50)
+		DECLARE @sql20 nvarchar(max);
+		DECLARE @Parameter20 nvarchar(500);
+		SELECT @sql20 = N'
+			SELECT @missingOUT2 = missing
+			FROM (SELECT count(*) - count(' + @name2 + ') as missing
+			      FROM ' + @output + ') as t';
+		SET @Parameter20 = N'@missingOUT2 varchar(max) OUTPUT';
+		EXEC sp_executesql @sql20, @Parameter20, @missingOUT2=@missing2 OUTPUT;
+
+		IF (@missing2 > 0)
+		BEGIN 
+			-- Replace numeric variables with '-1'. 
+			DECLARE @sql21 nvarchar(max)
+			SET @sql21 = 
+			'UPDATE ' + @output + '
+			SET ' + @name2 + ' = ISNULL(' + @name2 + ', (SELECT mean FROM [dbo].[Stats] WHERE variable_name = ''' + @name2 + '''))';
+			EXEC sp_executesql @sql21;
+		END;
+		FETCH NEXT
+		FROM @getname2 INTO @name2
+	END
+	CLOSE @getname2
+	DEALLOCATE @getname2
 END
 GO
 ;
+
+
 

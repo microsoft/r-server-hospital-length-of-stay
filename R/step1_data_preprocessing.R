@@ -68,8 +68,8 @@ column_types <-  c(eid = "integer",
                    psychother = "factor",        
                    fibrosisandother = "factor",          
                    malnutrition = "factor",                               
-                   hemo = "numeric",            
-                   hematocritic = "numeric",           
+                   hemo = "factor",            
+                   hematocrit = "numeric",           
                    neutrophils = "numeric",           
                    sodium = "numeric",          
                    glucose = "numeric",             
@@ -105,9 +105,9 @@ table <- "LengthOfStay"
 data_sql <- RxSqlServerData(table = table, connectionString = connection_string)
 col <- rxCreateColInfo(data_sql)
 
-# Then, get the names of the variables that actually have missing values. Assumption: no NA in eid. 
+# Then, get the names of the variables that actually have missing values. Assumption: no NA in eid and lengthofstay. 
 colnames <- names(col)
-var <- colnames[!colnames %in% c("eid")]
+var <- colnames[!colnames %in% c("eid", "lengthofstay")]
 formula <- as.formula(paste("~", paste(var, collapse = "+")))
 summary <- rxSummary(formula, data_sql, byTerm = TRUE)
 var_with_NA <- summary$sDataFrame[summary$sDataFrame$MissingObs > 0, 1] 

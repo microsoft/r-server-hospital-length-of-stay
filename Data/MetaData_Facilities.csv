@@ -1,6 +1,6 @@
-"Capacity","Id","Name"
-100,3,"C HealthCare"
-30,5,"E HealthCare"
-125,1,"A HealthCare"
-80,2,"B HealthCare"
-100,4,"D HealthCare"
+Capacity,Id,Name
+100,C,C HealthCare
+30,E,E HealthCare
+125,A,A HealthCare
+80,B,B HealthCare
+100,D,D HealthCare
