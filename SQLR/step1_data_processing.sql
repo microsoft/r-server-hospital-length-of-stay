@@ -26,7 +26,7 @@ BEGIN
 		FROM (SELECT COLUMN_NAME as variable_name, DATA_TYPE as type
 			  FROM INFORMATION_SCHEMA.COLUMNS
 	          WHERE TABLE_NAME = ''' + @input + ''' 
-			  AND COLUMN_NAME NOT IN (''eid'', ''lengthofstay'')) as t ';
+			  AND COLUMN_NAME NOT IN (''eid'', ''lengthofstay'', ''vdate'', ''discharged'')) as t ';
 		EXEC sp_executesql @sql;
 
 	-- Loops to compute the Mode for categorical variables.
