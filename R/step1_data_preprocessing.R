@@ -105,9 +105,9 @@ table <- "LengthOfStay"
 data_sql <- RxSqlServerData(table = table, connectionString = connection_string)
 col <- rxCreateColInfo(data_sql)
 
-# Then, get the names of the variables that actually have missing values. Assumption: no NA in eid and lengthofstay. 
+# Then, get the names of the variables that actually have missing values. Assumption: no NA in eid, lengthofstay, or dates. 
 colnames <- names(col)
-var <- colnames[!colnames %in% c("eid", "lengthofstay")]
+var <- colnames[!colnames %in% c("eid", "lengthofstay", "vdate", "discharged")]
 formula <- as.formula(paste("~", paste(var, collapse = "+")))
 summary <- rxSummary(formula, data_sql, byTerm = TRUE)
 var_with_NA <- summary$sDataFrame[summary$sDataFrame$MissingObs > 0, 1] 

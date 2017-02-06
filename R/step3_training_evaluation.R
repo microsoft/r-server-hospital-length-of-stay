@@ -1,11 +1,12 @@
 ##########################################################################################################################################
 ## This R script will do the following:
 ## 1. Split LoS into a Training LoS_Train, and a Testing set LoS_Test.  
-## 2. Train regression model Random Forest (rxDForest implementation) on LoS_Train, and save it to SQL. 
-## 3. Score the Random Forest on LoS_Test.
+## 2. Train Random Forest (rxDForest implementation) and Boosted Trees (rxFastTrees implementation) and save them to SQL. 
+## 3. Score the models on LoS_Test.
+## 4. Evalaute the scored models. 
 
 ## Input : Data set LoS
-## Output: Regression Random forest saved to SQL. 
+## Output: Regression Random forest and Boosted Trees saved to SQL. 
 
 ##########################################################################################################################################
 
@@ -135,7 +136,7 @@ rxSetComputeContext(local)
 saveRDS(forest_model, file = "forest_model.rds")
 forest_model_raw <- readBin("forest_model.rds", "raw", n = file.size("forest_model.rds"))
 forest_model_char <- as.character(forest_model_raw)
-forest_model_sql <- RxSqlServerData(table = "Models", connectionString = connection_string) 
+forest_model_sql <- RxSqlServerData(table = "Forest_ModelR", connectionString = connection_string) 
 rxDataStep(inData = data.frame(x = forest_model_char ), outFile = forest_model_sql, overwrite = TRUE)
 
 ##########################################################################################################################################
@@ -162,7 +163,7 @@ rxSetComputeContext(local)
 saveRDS(boosted_model, file = "boosted_model.rds")
 boosted_model_raw <- readBin("boosted_model.rds", "raw", n = file.size("boosted_model.rds"))
 boosted_model_char <- as.character(boosted_model_raw)
-boosted_model_sql <- RxSqlServerData(table = "Models", connectionString = connection_string) 
+boosted_model_sql <- RxSqlServerData(table = "Boosted_ModelR", connectionString = connection_string) 
 rxDataStep(inData = data.frame(x = boosted_model_char ), outFile = boosted_model_sql, overwrite = TRUE)
 
 

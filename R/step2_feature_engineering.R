@@ -62,7 +62,7 @@ if(missing == 0){
 ##########################################################################################################################################
 
 ## Feature Engineering:
-## 1- Standardization: hematocritic, neutrophils, sodium, glucose, bloodureanitro, 
+## 1- Standardization: hematocrit, neutrophils, sodium, glucose, bloodureanitro, 
 ##                     creatinine, bmi, pulse, respiration.
 ## 2- Number of preidentified medical conditions: number_of_issues.
 
@@ -72,7 +72,7 @@ if(missing == 0){
 names <- c("hematocrit", "neutrophils", "sodium", "glucose", "bloodureanitro",
            "creatinine", "bmi", "pulse", "respiration")
 summary <- rxSummary(formula = ~., LengthOfStay_cleaned_sql, byTerm = TRUE)$sDataFrame
-Statistics <- summary[summary$Name %in% names,c("Name","Mean","StdDev")]
+Statistics <- summary[summary$Name %in% names,c("Name", "Mean", "StdDev")]
 
 # Function to standardize
 standardize <- function(data){
