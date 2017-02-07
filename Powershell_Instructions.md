@@ -12,6 +12,7 @@ title: PowerShell Instructions
         <div class="toc">
             <li> <a href="#setup">Setup</a></li>
             <li> <a href="#execute-powershell-script">Execute PowerShell Script</a></li>
+            <li> <a href="#score-production-data">Score Production Data</a></li>
             <li> <a href="#review-data">Review Data</a></li>
             <li> <a href="#visualizing-results">Visualizing Results</a> </li>
             <li> <a href="#other-steps">Other Steps</a></li>
@@ -81,6 +82,12 @@ Running this PowerShell script will create stored procedures for the the operati
 
 ## Score Production Data
 ------------------------
+To score production data re-run the [command from step 4](#runcmd) this time using `-is_production "Y"`.  For example, uninterrupted mode for the rdemo user on your local machine would use the code:
+
+        ```
+        .\{{ site.ps1_name }} -ServerName "localhost" -DBName "{{ site.db_name }}" -username "rdemo" -password "D@tascience" -is_production "Y" -uninterrupted "Y"  
+        ```
+
 
 ## Review Data
 --------------
