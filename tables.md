@@ -26,7 +26,7 @@ Below are the different data sets that you will find in your database after depl
     <td>List of encounter IDs that will go to the training set</td>
   </tr>
     <tr>
-    td>Models</td>
+    <td>Models</td>
     <td>Table storing the trained models</td>
   </tr>
     <tr>
