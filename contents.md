@@ -71,7 +71,7 @@ In this template with SQL Server R Services, two versions of the implementation:
 <table class="table table-striped table-condensed">
 <tr><th> File </th><th> Description </th></tr>
 
-<tr><td> .\Resources\createuser.sql </td><td> Used during initial SQL Server setup to create the user and password and grant permissions. </td></tr>
+<tr><td> .\Resources\create_user.sql </td><td> Used during initial SQL Server setup to create the user and password and grant permissions. </td></tr>
 <tr><td> .\Resources\Data_Dictionary.xlsx   </td><td> Description of all variables in the LengthOfStay.csv data file</td></tr>
 <tr><td> .\Resources\Images\ </td><td> Directory of images used for the  Readme.md  in this package. </td></tr>
 </table>

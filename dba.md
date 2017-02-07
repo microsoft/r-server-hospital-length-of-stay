@@ -9,14 +9,16 @@ title: For the Database Analyst
 <div class="row">
     <div class="col-md-6">
         <div class="toc">
-          <li><a href="#system-requirements">System Requirements</a></li>
-          <li><a href="#workflow-automation">Workflow Automation</a></li>
-        <li><a href="#step0">Step 0: Creating Tables</a></li>
-        <li><a href="#step1">Step 1: Pre-Processing and Cleaning</a></li>
-        <li><a href="#step2">Step 2: Feature Engineering</a></li>
-        <li><a href="#step3a">Step 3a: Splitting the data set</a></li>
-        <li><a href="#step3br">Step 3b: Training </a></li>
-        <li><a href="#step3cr"> Step 3c: Testing and Evaluating</a></li>
+            <li><a href="#system-requirements">System Requirements</a></li>
+            <li><a href="#workflow-automation">Workflow Automation</a></li>
+            <li><a href="#step0">Step 0: Creating Tables</a></li>
+            <li><a href="#step1">Step 1: Pre-Processing and Cleaning</a></li>
+            <li><a href="#step2">Step 2: Feature Engineering</a></li>
+            <li><a href="#step3a">Step 3a: Splitting the data set</a></li>
+            <li><a href="#step3br">Step 3b: Training </a></li>
+            <li><a href="#step3cr">Step 3c: Testing and Evaluating</a></li>
+            <li><a href="#stepd">Evaluating</a></li>
+            <li><a href="#stepd">The Production Pipeline/a></li>
         </div>
     </div>
     <div class="col-md-6">
@@ -157,24 +159,51 @@ In this step, we create a stored procedure [dbo].[train_model] that trains a reg
 
 <a name="step3cr"></a>
 
-### Step 3c: Testing and Evaluating 
--------------------------
+### Step 3c: Scoring
 
-In this step, we create a stored procedure `[dbo].[test_evaluate_model]` that scores the trained model on the testing set, and then compute regression performance metrics written in `Metrics`.  Finally, a table LoS_Predictions, stores data from the testing set as well as predicted discharge dates from the rxFastTrees model, and will be used for PowerBI.
+In this step, we create a stored procedure [dbo].[score] that scores a trained model on the testing set. The Predictions are stored in a SQL table.
 
 
 ### Input:
 
-* `LoS` and `Train_Id`, and `Models` tables.
+`LoS`,`Train_Id`, and `Models` tables.
 
 ### Output:
 
-* `Metrics` table containing the performance metrics of the model.
-
+Table(s) storing the predictions from the tested model(s).
 
 ### Related files:
 
-* **step3c_testing_evaluating_regression.sql**
+**step3c_scoring.sql**
+
+<a name="step3d"></a>
+
+### Step 3d: Evaluating
+-------------------------
+
+In this step, we create a stored procedure `[dbo].[evaluate]` that computes regression performance metrics written in `Metrics`.
+
+### Input:
+
+Table(s) storing the predictions from the tested model(s).
+
+### Output:
+
+`Metrics` table containing the performance metrics of the model(s).
+
+### Related files:
+
+**step3d_evaluating.sql** 
+Finally, a table `LoS_Predictions` stores data from the testing set as well as predicted discharge dates from the rxFastTrees model, and will be used for PowerBI. The stored procedure that creates it can be found in the **step4_full_table.sql** file.
+
+<a name="step4"></a>
+
+### Step 4: The Production Pipeline 
+-------------------------------------
+
+In the Production pipeline, the data from the file **LengthOfStay_Prod.csv** is uploaded through PowerShell to the `LengthOfStay_Prod` table. The tables `Stats`, `ColInfo` and `Models`, created during the development pipeline are then moved to the Production database through the stored procedure `[dbo].[copy_modeling_tables]` located in the file **create_tables_prod.sql** .
+
+`LengthOfStay_Prod` is then cleaned as in Step 1, and a feature engineered view is created as in Step 2 (both using the Stats table). Finally, the view is scored on the model(s) stored in the Models table, using the `ColInfo` table information. The predictions are stored in a SQL table.
 
 
 

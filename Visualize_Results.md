@@ -11,7 +11,7 @@ This page explains how the data in PowerBI is filtered to show "today's" patient
 
 ### Dashboard Details
 
-This dashboard uses data for the five facilities over the course of a year. For planning purposes, there would be new data incoming each day.  We have simulated this in the current file by selecting a date in our static daa to represent "today".  The variable `ScoredData[Today]` represents this arbitrary date: `Today = DATEVALUE("7/1/2015")`. If you were instead using live data, the calculation would use the TODAY() function: `Today = TODAY()`.
+This dashboard uses data for the hospital over the course of a year. For planning purposes, there would be new data incoming each day from the production pipeline.  We have simulated this in the current file by selecting a date in our static data to represent "today".  The variable `ScoredData[Today]` represents this arbitrary date: `Today = DATEVALUE("4/1/2012")`. If you were instead using live data, the calculation would use the TODAY() function: `Today = TODAY()`.
 
 Once `Today` has been created, a second variable is calculated.  A patient is in the hospital today if they have been admitted and have not yet been discharged:  `HereToday = ([admitdt] < [Today] ) && ([dischargedt] > [Today])`. 
 
@@ -26,12 +26,12 @@ In order to replace the cached data with data from your SQL Server, follow the s
  <br/>
  <img src="images/vis1.png" >
 
-2.	In the Query Editor, with the first Query selected (Metadata_Facilities), click on the `Advanced Editor`.
+2.	In the Query Editor, with the first Query selected (Metadata_Facilities), if the data table does not appear, click on the `Advanced Editor`.
  <br/>
  <img src="images/vis2.png" >
 
 
-3. In the dialog, replace the pathname with the the path from your computer.  If you are on a VM deployed from Cortana Intelligence Gallery, replace the user name with the name you used to login to the VM. Click `Done` on the dialog.
+3. In the dialog, replace the pathname with the the path from your computer.  Click `Done` on the dialog.
  <br/>
  <img src="images/vis3.png" >
 
