@@ -18,7 +18,7 @@ title: For the Database Analyst
             <li><a href="#step3br">Step 3b: Training </a></li>
             <li><a href="#step3cr">Step 3c: Testing and Evaluating</a></li>
             <li><a href="#stepd">Step 3d: Evaluating</a></li>
-            <li><a href="#step4">Step 4: The Production Pipeline/a></li>
+            <li><a href="#step4">Step 4: The Production Pipeline</a></li>
         </div>
     </div>
     <div class="col-md-6">
