@@ -16,7 +16,7 @@ title: For the Database Analyst
             <li><a href="#step2">Step 2: Feature Engineering</a></li>
             <li><a href="#step3a">Step 3a: Splitting the data set</a></li>
             <li><a href="#step3br">Step 3b: Training </a></li>
-            <li><a href="#step3cr">Step 3c: Testing and Evaluating</a></li>
+            <li><a href="#step3cr">Step 3c: Testing </a></li>
             <li><a href="#stepd">Step 3d: Evaluating</a></li>
             <li><a href="#step4">Step 4: The Production Pipeline</a></li>
         </div>
