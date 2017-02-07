@@ -26,7 +26,7 @@ The **LengthOfStay.csv** file contains the following patient information.
 <tr><td>13</td><td>	fibrosisandother </td><td> String</td><td>	Flag for fibrosis during encounter</td></tr>
 <tr><td>14</td><td>	malnutrition </td><td> String</td><td>	Flag for malnutrituion during encounter</td></tr>
 <tr><td>15</td><td>	hemo </td><td> Float</td><td>	Flag for blood disorder during encounter </td></tr>
-<tr><td>16</td><td>	hematocritic </td><td> Float</td><td>	Average hematocritic value during encounter (g/dL)</td></tr>
+<tr><td>16</td><td>	hematocrit </td><td> Float</td><td>	Average hematocrit value during encounter (g/dL)</td></tr>
 <tr><td>17</td><td>	neutrophils </td><td> Float</td><td>	Average neutrophils value during encounter  (cells/microL)</td></tr>
 <tr><td>18</td><td>	sodium </td><td> Float</td><td>	Average sodium value during encounter (mmol/L)</td></tr>
 <tr><td>19</td><td>	glucose </td><td> Float</td><td>	Average sodium value during encounter (mmol/L)</td></tr>
