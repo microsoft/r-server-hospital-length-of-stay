@@ -19,6 +19,7 @@ title: For the Database Analyst
             <li><a href="#step3cr">Step 3c: Testing and Evaluating</a></li>
             <li><a href="#stepd">Evaluating</a></li>
             <li><a href="#stepd">The Production Pipeline</a></li>
+
         </div>
     </div>
     <div class="col-md-6">
