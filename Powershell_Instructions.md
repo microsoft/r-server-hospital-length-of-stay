@@ -84,9 +84,9 @@ Running this PowerShell script will create stored procedures for the the operati
 ------------------------
 To score production data re-run the [command from step 4](#runcmd) this time using `-is_production "Y"`.  For example, uninterrupted mode for the rdemo user on your local machine would use the code:
 
-        ```
-        .\{{ site.ps1_name }} -ServerName "localhost" -DBName "{{ site.db_name }}" -username "rdemo" -password "D@tascience" -is_production "Y" -uninterrupted "Y"  
-        ```
+    ```
+    .\{{ site.ps1_name }} -ServerName "localhost" -DBName "{{ site.db_name }}" -username "rdemo" -password "D@tascience" -is_production "Y" -uninterrupted "Y"  
+    ```
 
 
 ## Review Data
