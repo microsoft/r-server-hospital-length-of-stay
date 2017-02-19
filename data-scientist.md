@@ -128,7 +128,7 @@ In this step, we split the data into a training set and a testing set. The user 
 ##  Step 4: Deploy and Visualize Results
 --------------------------------
 
-See [For the Business Manager](business_manager.html) for a description of the personas who will be interested in using these predictions to aid them in their jobs.
+See [For the Business Manager](business-manager.html) for a description of the personas who will be interested in using these predictions to aid them in their jobs.
 
 
 Explore the  [online version]({{ site.dashboard_url}}) of the dashboard.
