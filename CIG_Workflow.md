@@ -50,7 +50,9 @@ This has already been done on your deployed Cortana Intelligence Gallery VM.
 
 Debra would work on her own machine, using  [R Client](https://msdn.microsoft.com/en-us/microsoft-r/install-r-client-windows) to execute these R scripts. In case you want to run the code from the VM, R Client has already been installed.
 
-Debra uses an IDE to run R. On your VM, R Studio is installed.  R Tools for Visual Studio is also installed, but you will have to either log in or create a new account to use this tool. (You must also ensure Visual Studio is [configured to run R Server](rtvs.html)). 
+Debra uses an IDE to run R. On your VM, R Studio is installed.  R Tools for Visual Studio is also installed, but you will have to either log in or create a new account to use this tool. 
+
+*If you use Visual Studio on the VM, you must first ensure Visual Studio is [configured to run R Server](rtvs.html).*
   
 OPTIONAL: You can execute the R code on your local computer if you wish, but you must first  <a href="local.html">prepare both the VM and your computer</a>.   Or you can <a href="jupyter.html">view and execute the R code in a Jupyter Notebook on the VM</a>.
 
