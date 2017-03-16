@@ -103,6 +103,7 @@ In this step, we design new features:
 
 * **step2_feature_engineering.R**
 
+<img src="images/ds1.png">
 
 <a name="step3r"></a>
 
@@ -122,6 +123,10 @@ In this step, we split the data into a training set and a testing set. The user 
 ### Related files:
 
 * **step3_training_evaluation**
+
+<img src="images/ds2.png">
+<br/>
+<img src="images/ds2.png">
 
 <a name="step4"></a>
   
