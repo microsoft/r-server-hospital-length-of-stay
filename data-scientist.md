@@ -126,7 +126,7 @@ In this step, we split the data into a training set and a testing set. The user 
 
 <img src="images/ds2.png">
 <br/>
-<img src="images/ds2.png">
+<img src="images/ds3.png">
 
 <a name="step4"></a>
   
