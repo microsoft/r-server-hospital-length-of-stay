@@ -87,6 +87,11 @@ standardize <- function(data){
 # At the same time, we create number_of_issues as the number of preidentified medical conditions.
 # We also create lengthofstay_bucket as the bucketed version of lengthofstay for classification. 
 LoS_sql <- RxSqlServerData(table = "LoS", connectionString = connection_string)
+
+## We drop the LoS view in case the SQL Stored Procedure was executed in the same database before. 
+rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("IF OBJECT_ID ('LoS', 'V') IS NOT NULL DROP VIEW LoS ;"
+                                              , sep=""))
+
 rxDataStep(inData = LengthOfStay_cleaned_sql , outFile = LoS_sql, overwrite = TRUE, transformFunc = standardize, 
            transformObjects = list(Stats = Statistics), transforms = list(
              number_of_issues = as.numeric(hemo) + as.numeric(dialysisrenalendstage) + as.numeric(asthma) + as.numeric(irondef) + 

@@ -99,17 +99,16 @@ rxDataStep(inData = LoS_text, outFile = LengthOfStay_sql, overwrite = TRUE)
 
 ##########################################################################################################################################
 
-table <- "LengthOfStay"
-
 # First, get the names and types of the variables to be treated.
-data_sql <- RxSqlServerData(table = table, connectionString = connection_string)
-col <- rxCreateColInfo(data_sql)
+# For rxSummary to give correct info on characters, stringsAsFactors = T should be used. 
+LengthOfStay_sql2 <- RxSqlServerData(table = table, connectionString = connection_string, stringsAsFactors = T)
+col <- rxCreateColInfo(LengthOfStay_sql2)
 
 # Then, get the names of the variables that actually have missing values. Assumption: no NA in eid, lengthofstay, or dates. 
 colnames <- names(col)
 var <- colnames[!colnames %in% c("eid", "lengthofstay", "vdate", "discharged")]
 formula <- as.formula(paste("~", paste(var, collapse = "+")))
-summary <- rxSummary(formula, data_sql, byTerm = TRUE)
+summary <- rxSummary(formula, LengthOfStay_sql2, byTerm = TRUE)
 var_with_NA <- summary$sDataFrame[summary$sDataFrame$MissingObs > 0, 1] 
 
 if(length(var_with_NA) == 0){
@@ -160,7 +159,11 @@ fill_NA_explicit <- function(data){
   return(data)
 }
   
-# Apply this function to LeangthOfStay by wrapping it up in rxDataStep. Output is written to LoS0.   
+# Apply this function to LeangthOfStay by wrapping it up in rxDataStep. Output is written to LoS0.  
+## We drop the LoS0 view in case the SQL Stored Procedure was executed in the same database before. 
+rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("IF OBJECT_ID ('LoS0', 'V') IS NOT NULL DROP VIEW LoS0 ;"
+                                              , sep=""))
+
 LoS0_sql <- RxSqlServerData(table = "LoS0", connectionString = connection_string)
 rxDataStep(inData = LengthOfStay_sql , outFile = LoS0_sql, overwrite = TRUE, transformFunc = fill_NA_explicit, 
            transformObjects = list(char = char_names, num = num_names))
@@ -239,7 +242,12 @@ fill_NA_mode_mean <- function(data){
   return(data)
 }
 
-# Apply this function to LeangthOfStay by wrapping it up in rxDataStep. Output is written to LoS0.   
+# Apply this function to LeangthOfStay by wrapping it up in rxDataStep. Output is written to LoS0.  
+
+## We drop the LoS0 view in case the SQL Stored Procedure was executed in the same database before. 
+rxExecuteSQLDDL(outOdbcDS, sSQLString = paste("IF OBJECT_ID ('LoS0', 'V') IS NOT NULL DROP VIEW LoS0 ;"
+                                              , sep=""))
+
 LoS0_sql <- RxSqlServerData(table = "LoS0", connectionString = connection_string)
 rxDataStep(inData = LengthOfStay_sql , outFile = LoS0_sql, overwrite = TRUE, transformFunc = fill_NA_mode_mean, 
            transformObjects = list(categ = categ_names, contin = contin_names, Mode = Modes, Mean = Means))
