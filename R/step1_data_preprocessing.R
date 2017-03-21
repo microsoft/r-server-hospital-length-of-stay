@@ -101,7 +101,7 @@ rxDataStep(inData = LoS_text, outFile = LengthOfStay_sql, overwrite = TRUE)
 
 # First, get the names and types of the variables to be treated.
 # For rxSummary to give correct info on characters, stringsAsFactors = T should be used. 
-LengthOfStay_sql2 <- RxSqlServerData(table = table, connectionString = connection_string, stringsAsFactors = T)
+LengthOfStay_sql2 <- RxSqlServerData(table = "LengthOfStay", connectionString = connection_string, stringsAsFactors = T)
 col <- rxCreateColInfo(LengthOfStay_sql2)
 
 # Then, get the names of the variables that actually have missing values. Assumption: no NA in eid, lengthofstay, or dates. 
