@@ -159,7 +159,8 @@ In this step, we create a stored procedure [dbo].[train_model] that trains a reg
 
 <a name="step3cr"></a>
 
-### Step 3c: Scoring
+## Step 3c: Scoring
+-------------------------
 
 In this step, we create a stored procedure [dbo].[score] that scores a trained model on the testing set. The Predictions are stored in a SQL table.
 
@@ -178,7 +179,7 @@ Table(s) storing the predictions from the tested model(s).
 
 <a name="step3d"></a>
 
-### Step 3d: Evaluating
+## Step 3d: Evaluating
 -------------------------
 
 In this step, we create a stored procedure `[dbo].[evaluate]` that computes regression performance metrics written in `Metrics`.
@@ -198,7 +199,7 @@ Finally, a table `LoS_Predictions` stores data from the testing set as well as p
 
 <a name="step4"></a>
 
-### Step 4: The Production Pipeline 
+## Step 4: The Production Pipeline 
 -------------------------------------
 
 In the Production pipeline, the data from the file **LengthOfStay_Prod.csv** is uploaded through PowerShell to the `LengthOfStay_Prod` table. The tables `Stats`, `ColInfo` and `Models`, created during the development pipeline are then moved to the Production database through the stored procedure `[dbo].[copy_modeling_tables]` located in the file **create_tables_prod.sql** .
