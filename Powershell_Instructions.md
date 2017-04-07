@@ -29,7 +29,7 @@ If you are configuring your own server, continue with the steps below to run the
 ## Setup
 -----------
 
-First, make sure you have set up your SQL Server by following the instructions in <a href="START_HERE.html">START HERE</a>.  Then proceed with the steps below to run the solution template using the automated PowerShell files. 
+First, make sure you have set up your SQL Server by  <a href="SetupSQL.html">following these instructions</a>.  Then proceed with the steps below to run the solution template using the automated PowerShell files. 
 
 ## Create Data and Train Model
 ----------------------------
