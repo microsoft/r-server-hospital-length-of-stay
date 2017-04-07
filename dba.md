@@ -3,9 +3,8 @@ layout: default
 title: For the Database Analyst
 ---
 
-## For the Database Analyst
+## For the Database Analyst - Operationalize with SQL
 ------------------------------
-### Operationalize with SQL
 
 <div class="row">
     <div class="col-md-6">

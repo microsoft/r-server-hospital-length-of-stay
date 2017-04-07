@@ -3,9 +3,9 @@ layout: default
 title: For the Data Scientist
 ---
 
-## For the Data Scientist
+## For the Data Scientist - Develop with R
 ----------------------------
-### Develop with R
+
 
 <div class="row">
     <div class="col-md-6">
