@@ -16,14 +16,15 @@ By predicting the length of stay of individual patients, the CMIO can make these
 
 Additionally, the CMIO will need to make recommendations on re-routing specific resources and personnel given demands. By using length of stay predictions, the CMIO is able to see which disease conditions are most prevalent in patients that will be staying in care facilities long term. For example, in seeing that heart failure patients are being predicted to spend a longer amounts of time in a specific facility, the CMIO can recommend additional heart failure resources be diverted to that facility.
 
+<img src="images/pbi.png"/>
+
 ### Care Line Manager
 
 A Care Line Manager is directly involved with the care of patients. This role requires monitoring individual patient statuses as well as ensuring that staff is avilable to meet their patients' specific care requirements. Additionally, a Care Line Manager plans for the discharge of their patients; determining if the patient will be discharged during a low staff time (such as weekends).
 
 Length of stay prediction allows the care line manager to better plan for their patients' care. In the provided dashboard, the user is able to see the number of patients currently in their facility and when they are projected to be discharged. In addition, they cna see which patients are projected to be discharged during the weekend, which would indicate that either additional resources must be made available to ensure discharge occurs, or to plan for additional days of care in the inpatient setting. Additionally, the vitals and condition breakdowns allow the care line manager to closely monitor the status of those patients projected to be in their care for longer periods of time in order to ensure additional complications do not arise during their stay.
 
-![Visualize](images/XXvisualize.png?raw=true)
-
+<img src="images/pbi2.png"/>
 
 You can try out this dashboard in either of the following ways:
 
