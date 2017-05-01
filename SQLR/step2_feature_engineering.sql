@@ -16,6 +16,13 @@ CREATE PROCEDURE [dbo].[feature_engineering]  @input varchar(max), @output varch
 AS
 BEGIN 
 
+-- Drop the output table if it has been created in R in the same database. 
+    DECLARE @sql0 nvarchar(max);
+	SELECT @sql0 = N'
+	IF OBJECT_ID (''' + @output + ''', ''U'') IS NOT NULL  
+	DROP TABLE ' + @output ;  
+	EXEC sp_executesql @sql0
+
 -- Drop the output view if it already exists. 
 	DECLARE @sql1 nvarchar(max);
 	SELECT @sql1 = N'

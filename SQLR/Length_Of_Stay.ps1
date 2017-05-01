@@ -45,7 +45,6 @@ $dataPath = ""
 
 $scriptPath = Get-Location
 $filePath = $scriptPath.Path+ "\"
-$error = $scriptPath.Path + "\output.log"
 
 if ($dataPath -eq "")
 {
@@ -126,8 +125,8 @@ if ($uninterrupted -eq 'y' -or $uninterrupted -eq 'Y')
             $destination = $dataPath + $dataFile + ".csv"
             $tableName = $DBName + ".dbo." + $dataFile
             $tableSchema = $dataPath + $dataFile + ".xml"
-            bcp $tableName format nul -c -x -f $tableSchema  -U $username -S $ServerName -P $password  -t ',' -e $error
-            bcp $tableName in $destination -t ',' -S $ServerName -f $tableSchema -F 2 -C "RAW" -b 50000 -U $username -P $password -e $error
+            bcp $tableName format nul -c -x -f $tableSchema  -U $username -S $ServerName -P $password  -t ',' 
+            bcp $tableName in $destination -t ',' -S $ServerName -f $tableSchema -F 2 -C "RAW" -b 50000 -U $username -P $password 
         }
     }
     catch
@@ -242,8 +241,8 @@ if ($uninterrupted -eq 'y' -or $uninterrupted -eq 'Y')
             $destination = $dataPath + $dataFile + ".csv"
             $tableName = $DBName + ".dbo." + $dataFile
             $tableSchema = $dataPath + $dataFile + ".xml"
-            bcp $tableName format nul -c -x -f $tableSchema  -U $username -S $ServerName -P $password  -t ',' -e $error
-            bcp $tableName in $destination -t ',' -S $ServerName -f $tableSchema -F 2 -C "RAW" -b 50000 -U $username -P $password -e $error
+            bcp $tableName format nul -c -x -f $tableSchema  -U $username -S $ServerName -P $password  -t ',' 
+            bcp $tableName in $destination -t ',' -S $ServerName -f $tableSchema -F 2 -C "RAW" -b 50000 -U $username -P $password 
         }
     }
     catch
@@ -340,7 +339,8 @@ if ($ans -eq 'y' -or $ans -eq 'Y')
             $destination = $dataPath + $dataFile + ".csv"
             $tableName = $DBName + ".dbo." + $dataFile
             $tableSchema = $dataPath + $dataFile + ".xml"
-             bcp $tableName in $destination -t ',' -S $ServerName -f $tableSchema -F 2 -C "RAW" -b 50000 -U $username -P $password -e $error
+             bcp $tableName format nul -c -x -f $tableSchema  -U $username -S $ServerName -P $password  -t ','
+             bcp $tableName in $destination -t ',' -S $ServerName -f $tableSchema -F 2 -C "RAW" -b 50000 -U $username -P $password 
         }
     }
     catch
@@ -380,7 +380,7 @@ if ($ans -eq 'y' -or $ans -eq 'Y')
 
     # execute the NA replacement
     $output0 = Read-Host 'Missing value treatment: Output table name? Type D or d for default (LoS0)'
-    if ($output0 -eq 'D' -or $output1 -eq 'd')
+    if ($output0 -eq 'D' -or $output0 -eq 'd')
     {
         $output0 = 'LoS0'
     }
@@ -676,7 +676,8 @@ if ($ans -eq 'y' -or $ans -eq 'Y')
             $destination = $dataPath + $dataFile + ".csv"
             $tableName = $DBName + ".dbo." + $dataFile
             $tableSchema = $dataPath + $dataFile + ".xml"
-            bcp $tableName in $destination -t ',' -S $ServerName -f $tableSchema -F 2 -C "RAW" -b 50000 -U $username -P $password -e $error
+            bcp $tableName format nul -c -x -f $tableSchema  -U $username -S $ServerName -P $password  -t ',' 
+            bcp $tableName in $destination -t ',' -S $ServerName -f $tableSchema -F 2 -C "RAW" -b 50000 -U $username -P $password 
         }
     }
     catch
@@ -717,7 +718,7 @@ if ($ans -eq 'y' -or $ans -eq 'Y')
 
     # execute the NA replacement
     $output0 = Read-Host 'Missing value treatment: Output table name? Type D or d for default (LoS0_Prod)'
-    if ($output0 -eq 'D' -or $output1 -eq 'd')
+    if ($output0 -eq 'D' -or $output0 -eq 'd')
     {
         $output0 = 'LoS0_Prod'
     }

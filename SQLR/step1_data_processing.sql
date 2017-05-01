@@ -107,6 +107,13 @@ CREATE PROCEDURE [fill_NA_explicit]  @input varchar(max), @output varchar(max)
 AS
 BEGIN
 
+    -- Drop the output table if it has been created in R in the same database. 
+    DECLARE @sql0 nvarchar(max);
+	SELECT @sql0 = N'
+	IF OBJECT_ID (''' + @output + ''', ''U'') IS NOT NULL  
+	DROP TABLE ' + @output ;  
+	EXEC sp_executesql @sql0
+
 	-- Create a View with the raw data. 
 	DECLARE @sqlv1 nvarchar(max);
 	SELECT @sqlv1 = N'
@@ -214,6 +221,13 @@ GO
 CREATE PROCEDURE [fill_NA_mode_mean]  @input varchar(max), @output varchar(max)
 AS
 BEGIN
+
+    -- Drop the output table if it has been created in R in the same database. 
+    DECLARE @sql0 nvarchar(max);
+	SELECT @sql0 = N'
+	IF OBJECT_ID (''' + @output + ''', ''U'') IS NOT NULL  
+	DROP TABLE ' + @output ;  
+	EXEC sp_executesql @sql0
 
 	-- Create a View with the raw data. 
 	DECLARE @sqlv1 nvarchar(max);
