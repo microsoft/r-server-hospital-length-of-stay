@@ -37,12 +37,12 @@ You can create the production pipeline using the following commands in a PowerSh
         .\{{ site.ps1_name }} -ServerName "Server Name" -DBName "Database Name" -username "" -password "" -is_production "Y" -uninterrupted "N"  
         ```
 
-    * For example, uninterrupted mode for the rdemo user created by the create_user.sql script on your local machine, the command would be: 
+    * For example, uninterrupted mode for some user  "rdemo" user with a password of "D@tascience", the command would be: 
 
         ```
         .\{{ site.ps1_name }} -ServerName "localhost" -DBName "{{ site.db_name }}" -username "rdemo" -password "D@tascience" -is_production "Y" -uninterrupted "Y"  
         ```
 
-You can explore these stored procedures by logging into SSMS and opening the `Programmability>Stored Procedures` section of the `{{ site.db_name }}` database.  Log into SSMS using the `rdemo` user with SQL Server Authentication - the default password upon creating the solution was `D@tascience`, unless you changed this password.
+You can explore these stored procedures by logging into SSMS and opening the `Programmability>Stored Procedures` section of the `{{ site.db_name }}` database.
 
 
