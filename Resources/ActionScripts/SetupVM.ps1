@@ -28,27 +28,27 @@ Password for the SQL User
 #>
 [CmdletBinding()]
 param(
-[parameter(Mandatory=$true, Position=1, ParameterSetName = "LCR")]
+[parameter(Mandatory=$true, Position=1, ParameterSetName = "LoS")]
 [ValidateNotNullOrEmpty()] 
 [string]$serverName,
 
-[parameter(Mandatory=$true, Position=2, ParameterSetName = "LCR")]
+[parameter(Mandatory=$true, Position=2, ParameterSetName = "LoS")]
 [ValidateNotNullOrEmpty()] 
 [string]$baseurl,
 
-[parameter(Mandatory=$true, Position=3, ParameterSetName = "LCR")]
+[parameter(Mandatory=$true, Position=3, ParameterSetName = "LoS")]
 [ValidateNotNullOrEmpty()] 
 [string]$username,
 
-[parameter(Mandatory=$true, Position=4, ParameterSetName = "LCR")]
+[parameter(Mandatory=$true, Position=4, ParameterSetName = "LoS")]
 [ValidateNotNullOrEmpty()] 
 [string]$password,
 
-[parameter(Mandatory=$true, Position=5, ParameterSetName = "LCR")]
+[parameter(Mandatory=$true, Position=5, ParameterSetName = "LoS")]
 [ValidateNotNullOrEmpty()] 
 [string]$sqlUsername,
 
-[parameter(Mandatory=$true, Position=6, ParameterSetName = "LCR")]
+[parameter(Mandatory=$true, Position=6, ParameterSetName = "LoS")]
 [ValidateNotNullOrEmpty()] 
 [string]$sqlPassword
 )
