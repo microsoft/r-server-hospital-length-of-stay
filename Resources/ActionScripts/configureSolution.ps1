@@ -94,7 +94,7 @@ Write-Host -ForegroundColor 'Cyan' "Done creating database user"
 
 
 # Run the solution.\Length_Of_Stay.ps1 -ServerName localhost -DBName $dbname -username $sqlUsername -password $sqlPassword
-.\Length_of_Stay.ps1 -ServerName $env:COMPUTERNAME -DBName $dbname -username $sqlUsername -password sqlPassword  -uninterrupted "Y" -is_production "N"
+.\Length_of_Stay.ps1 -ServerName $env:COMPUTERNAME -DBName $dbname -username $sqlUsername -password $sqlPassword  -uninterrupted "Y" -is_production "N"
  
 
 # copy Jupyter Notebook files
