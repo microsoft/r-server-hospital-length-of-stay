@@ -68,7 +68,7 @@ Running this PowerShell script will create stored procedures for the the operati
         .\{{ site.ps1_name }} -ServerName "Server Name" -DBName "Database Name" -username "" -password "" -is_production "N" -uninterrupted "N"  
         ```
 
-    * For example, uninterrupted mode for the rdemo user created by the create_user.sql script on your local machine, the command would be: 
+    * For example, uninterrupted mode for a user named rdemo with password D@tascience, the command would be: 
 
         ```
         .\{{ site.ps1_name }} -ServerName "localhost" -DBName "{{ site.db_name }}" -username "rdemo" -password "D@tascience" -is_production "N" -uninterrupted "Y"  
@@ -82,7 +82,7 @@ Running this PowerShell script will create stored procedures for the the operati
 
 ## Score Production Data
 ------------------------
-To score production data re-run the [command from step 4](#runcmd) this time using `-is_production "Y"`.  For example, uninterrupted mode for the rdemo user on your local machine would use the code:
+To score production data re-run the [command from step 4](#runcmd) this time using `-is_production "Y"`.  For example, uninterrupted mode for a user named rdemo with password D@tascience:
 
 <code class="highlighter-rouge">
 .\{{ site.ps1_name }} -ServerName "localhost" -DBName "{{ site.db_name }}" -username "rdemo" -password "D@tascience" -is_production "Y" -uninterrupted "Y"  

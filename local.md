@@ -14,9 +14,6 @@ You must open the Windows firewall on the VM to allow a connection to the SQL Se
 
     netsh advfirewall firewall add rule name="SQLServer" dir=in action=allow protocol=tcp localport=1433 
 
-SQL Server on the VM has been set up with the username and password you specified when you deployed the VM. If you would like to change the password, log into SSMS with Windows Authentication and execute a query such as the following:
-    
-        ALTER LOGIN rdemo WITH PASSWORD = 'newpassword';  
        
 ## On your local computer:  Install R Client and Obtain Code
 

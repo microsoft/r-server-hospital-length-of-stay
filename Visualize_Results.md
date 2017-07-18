@@ -51,7 +51,7 @@ In order to replace the cached data with data from your SQL Server, follow the s
  <br/>
  <img src="images/vis6.png"  > 
 
-7.	If prompted to login, select Database in the dialog and enter your login details.  (The default if you have not changed it is username `rdemo`, password `D@tabase`).
+7.	If prompted to login, select Database in the dialog and enter your login details.
  <br/>
  <img src="images/vis7.png"  > 
 
