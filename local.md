@@ -12,7 +12,9 @@ Connect to the VM to perform the following steps.
 
 You must open the Windows firewall on the VM to allow a connection to the SQL Server. To open the firewall, execute the following command in a PowerShell window on the VM:
 
-    netsh advfirewall firewall add rule name="SQLServer" dir=in action=allow protocol=tcp localport=1433 
+<code class="highlighter-rouge">
+netsh advfirewall firewall add rule name="SQLServer" dir=in action=allow protocol=tcp localport=1433 
+</code>
 
        
 ## On your local computer:  Install R Client and Obtain Code
