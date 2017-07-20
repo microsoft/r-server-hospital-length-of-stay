@@ -20,7 +20,8 @@ Once the server is running, open the Mozilla Firefox web browser.  Type the foll
 
 You will get a security warning, hit the "Advanced" button and add this to your exceptions to access the Jupyter session.
 
- There are a number of samples available on the VM server.  You can add the **{{ site.jupyter_name }}** by moving or copying it from **Desktop/{{ site.folder_name }}/R** into **C:/`vmname`/notebooks** (for example, if your VM name is "dsvm" the path is **C:/dsvm/notebooks**).  
+ There are a number of samples available on the VM server along with the **Hospital_Length_Of_Stay_Notebook**. 
+
 
  Once the Jupyter server is running on your VM, you can also connect to it from another computer by using the Public IP address in the url:
 
