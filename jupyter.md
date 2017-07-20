@@ -23,15 +23,20 @@ You will get a security warning, hit the "Advanced" button and add this to your 
  There are a number of samples available on the VM server along with the **Hospital_Length_Of_Stay_Notebook**. 
 
 
- Once the Jupyter server is running on your VM, you can also connect to it from another computer by using the Public IP address in the url:
+ Once the Jupyter server is running on your VM, you can also connect to it from another computer by first opening the firewall: 
+
+    netsh advfirewall firewall add rule name="Jupyter" dir=in action=allow protocol=tcp localport=9999
+
+
+ and then using the Public IP address in the url:
 
     https://ipaddress:9999
         
-The ipaddress can be found in the Azure Portal under the "Network interfaces" section - use the Public IP Address.##
+The ipaddress can be found in the Azure Portal under the "Network interfaces" section - use the Public IP Address.
 
 ## Using Jupyter
 
-To execute the code in a cell, ` Shift+Enter` when your cursor is in the cell.  Some of the cells may take a minute or two to work, and must be complete before the next cell can execute.  You can also select the Cell>Run All menu item to execute the entire notebook.
+To execute the code in a cell, `Shift+Enter` when your cursor is in the cell.  Some of the cells may take a minute or two to work, and must be complete before the next cell can execute.  You can also select the `Cell>Run All` menu item to execute the entire notebook.
 
 
 <a href="CIG_Workflow.html#step2">Return to Typical Workflow for Cortana Intelligence Gallery Deployment<a>

@@ -22,7 +22,7 @@ Finally, the dashboard pages are filtered to display only data for patients that
 ### Configure PowerBI to Access Data 
 In order to replace the cached data with data from your SQL Server, follow the steps below.
 
-(Skip steps 1 - 5  if your SQL Server is on the same machine as your PowerBI file.)
+
 
 1.	Open the `{{ site.pbi_name }}` file in the {{ site.folder_name }} folder. Click on `Edit Queries` in the toolbar.  
  <br/>
@@ -31,12 +31,11 @@ In order to replace the cached data with data from your SQL Server, follow the s
 2.	 In the Query Editor, with the first Query selected (Metadata_Facilities), if the data table does not appear, click on the `Advanced Editor`.
  <br/>
  <img src="images/vis2.png" >
-
-3. In the dialog, replace the pathname with the the path from your computer.  Click `Done` on the dialog.
+ In the dialog, replace the pathname with the the path from your computer.  Click `Done` on the dialog.
  <br/>
  <img src="images/vis3.png" >
 
-4. If you are connecting to a SQL Server on a different machine, in the next three queries replace "localhost" with the SQL Server IP address.  For now, ignore the permission alerts.
+4. (Skip this step if your SQL Server is on the same machine as your PowerBI file.) If you are connecting to a SQL Server on a different machine, in the next three queries replace "localhost" with the SQL Server IP address.  For now, ignore the permission alerts.
  <img src="images/vis3b.png">
 
 5.	Next, click on `Close` and `Apply`. If prompted, select `Yes`.
