@@ -1,6 +1,6 @@
 ---
 layout: default
-title: On-Prem: Setup SQL Server 2016
+title: "On-Prem: Setup SQL Server 2016"
 ---
 
 ## On-Prem: Setup SQL Server 2016 
@@ -45,7 +45,7 @@ If you are administering your own server and want to add a user to run the code 
     <br/>
     <img src="images/sqluser.png"  >
  
-4. Create the "rdemo" user  by double clicking on the <code>Resources/create_user.sql</code> file and executing it. (This user login will be used to install data and procedures).  NOTE: the user is set up with a default password of "D@tascience" in this file - you may want to change that to your own password before executing the commands.
+4. Double click on **Resources/exampleuser.sql** file to see how to create a user with all the correct settings to execute R code. (This user login will be used to install data and procedures). Change the username and password to the one you wish to use before executing this query.
 
 5. 	Check to make sure you have set your Server Authentication mode to SQL Server and Windows Authentication mode. 
     *	In SQL Server Management Studio Object Explorer, right-click the server, and then click <code>Properties</code>.
@@ -55,7 +55,7 @@ If you are administering your own server and want to add a user to run the code 
     *	In the SQL Server Management Studio dialog box, click OK.  If you changed the mode in the previous step, you will need to also acknowledge the requirement to restart SQL Server.
     * If you changed the mode, restart the server.  In the Object Explorer, right-click your server, and then click <code>Restart</code>. If SQL Server Agent is running, it must also be restarted.
 
-6.	Now, click on <code>File</code> on the top left corner of the SQL Server window and select <code>Connect Object Explorer…</code> verify that you can connect to the server with this username(<code>rdemo</code>) and password(<code>D@tascience</code>) using the SQL Server Authentication.
+6.	Now, click on `File` on the top left corner of the SQL Server window and select `Connect Object Explorer…` verify that you can connect to the server with the username and password you created using the SQL Server Authentication.
 
 
 ### Ready to Run Code 

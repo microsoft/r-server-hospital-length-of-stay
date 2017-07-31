@@ -30,9 +30,8 @@ This guide assumes you have deployed the {{ site.solution_name }} solution from 
 
 *If you are using your own SQL Server for this solution, [use this guide instead](Typical_Workflow.html).*
 
-{% include password.md %}
 
-To demonstrate a typical workflow, we'll introduce you to a few personas.  You can follow along by performing the same steps for each persona.  While each persona would be working on a different computer, for simplicity, your Virtual Machine (VM) has all the tools each persona would use on the same machine.  (Or you can use your own computer with optional instructions below.  If using your computer make sure to follow the instructions above to change the password and add appropriate firewall rules.)
+To demonstrate a typical workflow, we'll introduce you to a few personas.  You can follow along by performing the same steps for each persona.  While each persona would be working on a different computer, for simplicity, your Virtual Machine (VM) has all the tools each persona would use on the same machine.
 
  <a name="step1" id="step1"></a>
         
