@@ -3,6 +3,8 @@
 # Predicting Length of Stay in Hospitals 
 ## Implemented on SQL Server 2016 R Services
 
+Deploy this solution from the [Cortana Intelligence Gallery](https://aka.ms/hospital-los). 
+
 For all documentation, visit the [Hospital Length of Stay website](https://microsoft.github.io/r-server-hospital-length-of-stay/).
 
 **NOTE:** Please don't use "Download ZIP" to get this repository, as it will change the line endings in the data files. Use "git clone" to get a local copy of this repository. 
