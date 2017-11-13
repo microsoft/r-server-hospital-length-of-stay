@@ -42,4 +42,4 @@ Write-Host -ForegroundColor 'green'  " End time is:" $endTime
 Write-Host -foregroundcolor 'green'(" Length of Stay Development Workflow Finished Successfully!")
 $Duration = New-TimeSpan -Start $StartTime -End $EndTime 
 Write-Host -ForegroundColor 'green'(" Total Deployment Time = $Duration") 
-Stop-Transcript -Path $setupLog
+Stop-Transcript
