@@ -14,6 +14,9 @@ $solutionTemplatePath = "C:\" + $solutionTemplateName
 $checkoutDir = "Hospital"
 $SolutionPath = $solutionTemplatePath +'\' + $checkoutDir
 
+$setupLog = "c:\tmp\setup_log.txt"
+Start-Transcript -Path $setupLog -Append
+
 ### DON'T FORGET TO CHANGE TO MASTER LATER...
 
 if (Test-Path $solutionTemplatePath) 
