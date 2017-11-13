@@ -16,9 +16,13 @@ $SolutionPath = $solutionTemplatePath +'\' + $checkoutDir
 
 ### DON'T FORGET TO CHANGE TO MASTER LATER...
 
-Test-Path $solutionTemplatePath 
+if (Test-Path $solutionTemplatePath) 
 {
-git clone  --branch dev --single-branch https://github.com/Microsoft/r-server-hospital-length-of-stay $solutionPath
-} 
+Write-Host " Solution has already been cloned"
+}
+ELSE   
+{
+    git clone  --branch dev --single-branch https://github.com/Microsoft/r-server-hospital-length-of-stay $solutionPath
+}
 $ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabase.ps1"
 Invoke-Expression $ActionScripts
