@@ -191,8 +191,8 @@ ELSE
 # Deployment Pipeline
 ##########################################################################
 ##Create Shortcuts 
-
-Invoke-Expression $ScriptPath\CreateShortcuts.ps1
+    Copy-Item "$ScriptPath\SolutionHelp.url" C:\Users\Public\Desktop\
+    Write-Host -ForeGroundColor cyan " Help Files Copied to Desktop"
 
 
 ###Copy PowerBI Reportt to Desktop 
