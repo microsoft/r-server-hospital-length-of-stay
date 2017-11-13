@@ -11,13 +11,14 @@ run  Invoke-Expression C:\Solutions\Hospital\Resources\ActionScripts\createdatab
 
 $solutionTemplateName = "Solutions" #change this back to Solutions after done testing 
 $solutionTemplatePath = "C:\" + $solutionTemplateName
-$solutionTemplatePath
-
 $checkoutDir = "Hospital"
+$SolutionPath = $solutionTemplatePath +'\' + $checkoutDir
 
 ### DON'T FORGET TO CHANGE TO MASTER LATER...
-git clone  --branch dev --single-branch https://github.com/Microsoft/r-server-hospital-length-of-stay $solutionTemplatePath
 
-#git clone https://github.com/Microsoft/r-server-hospital-length-of-stay $solutionTemplatePath
-
-Invoke-Expression C:\Solutions\Hospital\Resources\ActionScripts\createdatabase.ps1
+Test-Path $solutionTemplatePath 
+{
+git clone  --branch dev --single-branch https://github.com/Microsoft/r-server-hospital-length-of-stay $solutionPath
+} 
+$ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabase.ps1"
+Invoke-Expression $ActionScripts
