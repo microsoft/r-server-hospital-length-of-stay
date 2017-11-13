@@ -18,7 +18,7 @@ $solutionTemplateName = "Solutions" #change this back to Solutions after done te
 $solutionTemplatePath = "C:\" + $solutionTemplateName
 $checkoutDir = "Hospital"
 $SolutionPath = $solutionTemplatePath +'\' + $checkoutDir
-
+$desktop = "C:\Users\Public\Desktop\"
 
 
 ### DON'T FORGET TO CHANGE TO MASTER LATER...
@@ -33,6 +33,12 @@ ELSE
 }
 $ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabase.ps1"
 Invoke-Expression $ActionScripts
+
+
+$WsShell = New-Object -ComObject WScript.Shell
+$shortcut = $WsShell.CreateShortcut($desktop + $checkoutDir + ".lnk")
+$shortcut.TargetPath = $solutionPath
+$shortcut.Save()
 
 
 $endTime= Get-Date
