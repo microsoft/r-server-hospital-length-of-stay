@@ -196,7 +196,7 @@ ELSE
 
 
 ###Copy PowerBI Reportt to Desktop 
-  Copy-Item  C:\Solutions\*.pbix  C:\Users\Public\Desktop\
+  Copy-Item  "$ScriptPath\*.pbix"  C:\Users\Public\Desktop\
   Write-Host -ForeGroundColor cyan " PowerBI Reports Copied to Desktop"
 
 
