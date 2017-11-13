@@ -5,7 +5,8 @@ Powershell script for setting up the solution template.
 .DESCRIPTION
 This script checks out the solution from github and deploys it to SQL Server on the local Data Science VM (DSVM).
 
-.WARNING: This script is only meant to be run from the solution template deployment process.
+.WARNING: This script is only meant to be run from the solution template deployment process. if you want to set the database back to the intial state 
+run  Invoke-Expression C:\Solutions\Hospital\Resources\ActionScripts\createdatabase.ps1 from a elevated PS window. 
 #>
 
 $solutionTemplateName = "Solutions" #change this back to Solutions after done testing 

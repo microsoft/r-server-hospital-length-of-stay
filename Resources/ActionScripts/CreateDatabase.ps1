@@ -1,9 +1,12 @@
-#####This Script will install the Database and do the First run of scoring the data.
-#####It is conifgured for default settings ie Creating the Hospital Database in the SQL Server 
-#####If you want to choose a different database name , you can call this script from a ps cmd line using this cmd  ./CreateDatabase.ps1 -PromptedInstall Y
-#####run the script from this window.
-##### Created on 10.5.2017 Bob White  
+<#
 
+This Script will install the Database and do the First run of scoring the data.
+This can be run at anytime and will refresh teh Database to the initial state 
+It is conifgured for default settings ie Creating the Hospital Database in the SQL Server 
+If you want to choose a different database name , you can call this script from a ps cmd line using this cmd  ./CreateDatabase.ps1 -PromptedInstall Y
+or run the script from this window.
+Created on 10.5.2017 Bob White  
+#>
 
 param 
 (
