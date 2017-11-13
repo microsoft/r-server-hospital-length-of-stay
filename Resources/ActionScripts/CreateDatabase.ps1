@@ -192,7 +192,7 @@ ELSE
 ##########################################################################
 ##Create Shortcuts and Autostart Help File 
     Copy-Item "$ScriptPath\SolutionHelp.url" C:\Users\Public\Desktop\
-    Copy-Item "$ScriptPath\SolutionHelp.url" C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\
+    Copy-Item "$ScriptPath\SolutionHelp.url" "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\"
     Write-Host -ForeGroundColor cyan " Help Files Copied to Desktop"
 
     
