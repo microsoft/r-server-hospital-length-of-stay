@@ -18,7 +18,7 @@ param
 )
 
 $startTime= Get-Date
-Write-Host -ForegroundColor 'Green'  "  Start time is:" $startTime 
+Write-Host -ForegroundColor 'Green'  "  Start time is for Database Configuration:" $startTime 
 
 ##DSVM Does not have SQLServer Powershell Module , this will try and install it if it is not present it will work , if it is already there it will error out 
 Write-Host " Installing SQLServer Power Shell Module , if it is already installed a warning will be displayed , this is OK........."
@@ -309,8 +309,8 @@ ELSE
         ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
 
     $endTime= Get-Date
-    Write-Host -ForegroundColor 'green'  " End time is:" $endTime
+    #Write-Host -ForegroundColor 'green'  " End time is:" $endTime
     $Duration = New-TimeSpan -Start $StartTime -End $EndTime 
-    Write-Host -ForegroundColor 'green'(" Total Deployment Time = $Duration") 
-    Write-Host -foregroundcolor 'green'(" Length of Stay Development Workflow Finished Successfully!")
+    Write-Host -ForegroundColor 'green'(" SQL Configuration Time = $Duration") 
+    
  
