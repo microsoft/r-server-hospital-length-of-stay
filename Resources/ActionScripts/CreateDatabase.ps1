@@ -242,7 +242,7 @@ ELSE
          Write-Host -ForegroundColor 'cyan' ("         Loading $dataFile.csv into SQL Table, this will take about 30 seconds per file....") 
             Write-SqlTableData -InputData $dataSet  -DatabaseName $dbName -Force -Passthru -SchemaName dbo -ServerInstance $ServerName -TableName $dataFile
               ## Copy data From Hospital to Hopital Py 
-            $Query = "'INSERT INTO '+$dbNamePy+'.dbo.'+$dataFile+' SELECT * FROM '+$dbName+'.dbo.'+$dataFile"
+            $Query = 'INSERT INTO '+ $dbNamePy +'.dbo.'+ $dataFile+ ' SELECT * FROM '+$dbName+'.dbo.'+$dataFile
             Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName  -Query $query
             Write-Host -ForeGroundColor 'cyan' (" Data Copied from $dbName to $dbNamePy.")  
             
