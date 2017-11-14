@@ -118,7 +118,7 @@ invoke-sqlcmd -inputfile $CreateSQLDB -serverinstance $ServerName -database mast
 
 
 Write-Host -ForeGroundColor 'cyan' (" SQLServerDB $dbName_R Created")
-invoke-sqlcmd "USE $dbName;" 
+invoke-sqlcmd "USE $dbName_r;" 
 
 Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the objects in the $dbName_R database")
 invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database $dbName_R
@@ -139,7 +139,7 @@ invoke-sqlcmd -inputfile $CreateSQLDB -serverinstance $ServerName -database mast
 
 
 Write-Host -ForeGroundColor 'cyan' (" SQLServerDB $dbName_Py Created")
-invoke-sqlcmd "USE $dbName;" 
+invoke-sqlcmd "USE $dbName_Py;" 
 
 Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the objects in the $dbName_Py database")
 invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database $dbName_Py
