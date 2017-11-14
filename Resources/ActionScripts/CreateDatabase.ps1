@@ -229,4 +229,4 @@ ELSE
   Copy-Item  "$ScriptPath\*.pbix"  C:\Users\Public\Desktop\
   Write-Host -ForeGroundColor cyan " PowerBI Reports Copied to Desktop"
   $ActionScript = "$SqlRPath\LoadandScoreDataSQLR.ps1"
-  Invoke-Expression $ActionScript -P "$ServerName, $dbName_R, $PromptedInstall, $trustedConnection"
+  Invoke-Expression $ActionScript -P $ServerName, $dbName_R, $PromptedInstall, $trustedConnection
