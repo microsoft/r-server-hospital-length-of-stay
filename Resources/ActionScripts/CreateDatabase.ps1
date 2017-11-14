@@ -133,7 +133,7 @@ $SqlParameters = @("dbName=$dbName_Py")
 
 $CreateSQLDB = "$ScriptPath\CreateDatabase.sql"
 
-$CreateSQLObjects = "$ScriptPath\CreateSQLObjects.sql"
+$CreateSQLObjects = "$ScriptPath\CreateSQLObjectsPy.sql"
 Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the  $dbName_Py database") 
 invoke-sqlcmd -inputfile $CreateSQLDB -serverinstance $ServerName -database master -Variable $SqlParameters
 
@@ -142,7 +142,7 @@ Write-Host -ForeGroundColor 'cyan' (" SQLServerDB $dbName_Py Created")
 invoke-sqlcmd "USE $dbName;" 
 
 Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the objects in the $dbName_Py database")
-invoke-sqlcmd -inputfile $CreateSQLObjectsPY -serverinstance $ServerName -database $dbName_Py
+invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database $dbName_Py
 
 
 Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName_Py Database")
@@ -229,4 +229,4 @@ ELSE
   Copy-Item  "$ScriptPath\*.pbix"  C:\Users\Public\Desktop\
   Write-Host -ForeGroundColor cyan " PowerBI Reports Copied to Desktop"
   $ActionScript = "$SqlRPath\LoadandScoreDataSQLR.ps1"
-  Invoke-Expression $ActionScript $ServerName $dbName_R $PromptedInstall $trustedConnection
+  Invoke-Expression $ActionScript "LOCALHOST" $dbName_R $PromptedInstall $trustedConnection
