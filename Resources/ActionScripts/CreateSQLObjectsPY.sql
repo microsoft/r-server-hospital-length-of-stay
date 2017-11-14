@@ -996,8 +996,4 @@ WHERE model_name = 'default model'
 ;
 END
 
-GO
-USE [master]
-GO
-ALTER DATABASE [HospitalPy3] SET  READ_WRITE 
-GO
+
