@@ -7,7 +7,7 @@ GO
 		CREATE VIEW [dbo].[LoS0]
 		AS
 		SELECT *
-	    FROM LengthOfStay
+	    FROM LoS
 GO
 /****** Object:  Table [dbo].[Boosted_Prediction]    Script Date: 11/14/2017 7:38:13 PM ******/
 SET ANSI_NULLS ON
