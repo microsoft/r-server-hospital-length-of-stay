@@ -196,7 +196,7 @@ ELSE
     invoke-sqlcmd -serverinstance $ServerName -database $dbName_R -Query $Query 
     }
     write-host -ForegroundColor 'Cyan' " Giving SQLRUserGroup access to  $Si Database"
-    $Query = 'USE [' + $dbName + '] CREATE USER [SQLRUserGroup] FOR LOGIN [' + $si + '\SQLRUserGroup]'
+    $Query = 'USE [' + $dbName_R + '] CREATE USER [SQLRUserGroup] FOR LOGIN [' + $si + '\SQLRUserGroup]'
     invoke-sqlcmd -serverinstance $si -database $dbName_R -Query $Query 
 }
 
