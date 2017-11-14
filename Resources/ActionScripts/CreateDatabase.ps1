@@ -75,7 +75,7 @@ $dbName = if ([string]::IsNullOrEmpty($dbName) -and ($Prompt -eq 'Y' -Or $Prompt
             elseif ((![string]::IsNullOrEmpty($dbName)) -and ($Prompt -eq 'Y' -Or $Prompt -eq 'y')) {$dbName}
             else {"Hospital"} 
 
-$dbNamePy = $dbName + "_py"
+
     
 
 ######################################################################## 
@@ -125,24 +125,7 @@ invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database
 
 Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Database")
 
-### Create Python DB 
-$SqlParameters = @("dbName=$dbNamePy")
 
-$CreateSQLDB = "$ScriptPath\CreateDatabase.sql"
-
-$CreateSQLObjects = "$ScriptPath\CreateSQLObjectsPy.sql"
-Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the  $dbNamePy database") 
-invoke-sqlcmd -inputfile $CreateSQLDB -serverinstance $ServerName -database master -Variable $SqlParameters
-
-
-Write-Host -ForeGroundColor 'cyan' (" SQLServerDB $dbNamePy Created")
-invoke-sqlcmd "USE $dbName;" 
-
-Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the objects in the $dbNamePy database")
-invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database $dbNamePy
-
-
-Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbNamePy Database")
 
 
 
@@ -241,10 +224,7 @@ ELSE
             $dataSet = Import-Csv $destination
          Write-Host -ForegroundColor 'cyan' ("         Loading $dataFile.csv into SQL Table, this will take about 30 seconds per file....") 
             Write-SqlTableData -InputData $dataSet  -DatabaseName $dbName -Force -Passthru -SchemaName dbo -ServerInstance $ServerName -TableName $dataFile
-              ## Copy data From Hospital to Hopital Py 
-            $Query = 'INSERT INTO '+ $dbNamePy +'.dbo.'+ $dataFile+ ' SELECT * FROM '+$dbName+'.dbo.'+$dataFile
-            Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName  -Query $query
-            Write-Host -ForeGroundColor 'cyan' (" Data Copied from $dbName to $dbNamePy.")  
+ 
             
          Write-Host -ForeGroundColor 'cyan' (" $datafile table loaded from CSV File(s).")
         }
