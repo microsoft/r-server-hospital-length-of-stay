@@ -8,13 +8,13 @@ This Script Loads and Trains in SQL R
 param 
 (
 
-[Parameter(Mandatory=$false)] [String] $ServerName  =  "",
+[Parameter(Mandatory=$true)] [String] $ServerName  =  "",
 
-[Parameter(Mandatory=$false)] [String] $dbName  =  "",
+[Parameter(Mandatory=$true)] [String] $dbName  =  "",
 
-[Parameter(Mandatory=$false)] [String] $PromptedInstall  =  "",
+[Parameter(Mandatory=$true)] [String] $PromptedInstall  =  "",
 
-[Parameter(Mandatory=$false)] [String] $trustedConnection  =  ""
+[Parameter(Mandatory=$true)] [String] $trustedConnection  =  ""
 )
    
    
