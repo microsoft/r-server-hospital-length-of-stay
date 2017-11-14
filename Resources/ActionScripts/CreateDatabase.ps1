@@ -253,7 +253,11 @@ ELSE
     }
     Write-Host -ForeGroundColor 'cyan' (" Finished loading .csv File(s).")
     
-    
+    ## Copy data From Hospital to Hopital Py 
+    $Query = 'INSERT INTO '+$dbNamePy+'.dbo.LengthOfStay SELECT * FROM '+$dbName+'.dbo.LengthOfStay'
+    {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+    Write-Host -ForeGroundColor 'cyan' (" Data Copied from $dbName to $dbNamePy.")    
+
     # compute statistics for production and faster NA replacement.
     Write-Host -ForeGroundColor 'Cyan' (" Computing statistics on the input table...")
     $query = "EXEC compute_stats"
