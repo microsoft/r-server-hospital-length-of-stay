@@ -243,7 +243,7 @@ ELSE
             Write-SqlTableData -InputData $dataSet  -DatabaseName $dbName -Force -Passthru -SchemaName dbo -ServerInstance $ServerName -TableName $dataFile
               ## Copy data From Hospital to Hopital Py 
             $Query = "'INSERT INTO '+$dbNamePy+'.dbo.'+$dataFile+' SELECT * FROM '+$dbName+'.dbo.'+$dataFile"
-            Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query
+            Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName  -Query $query
             Write-Host -ForeGroundColor 'cyan' (" Data Copied from $dbName to $dbNamePy.")  
             
          Write-Host -ForeGroundColor 'cyan' (" $datafile table loaded from CSV File(s).")
