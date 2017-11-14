@@ -12,12 +12,12 @@ param
 
 [Parameter(Mandatory=$true)] [String] $dbName_r =  "",
 
-[Parameter(Mandatory=$true)] [String] $PromptedInstall  =  "",
+[Parameter(Mandatory=$true)] [String] $Prompt  =  "",
 
 [Parameter(Mandatory=$true)] [String] $trustedConnection  =  ""
 )
    
-   
+ 
   ## $ServerName = "LOCALHOST"
    
    
