@@ -10,7 +10,7 @@ param
 
 [Parameter(Mandatory=$true)] [String] $ServerName  =  "",
 
-[Parameter(Mandatory=$true)] [String] $dbName  =  "",
+[Parameter(Mandatory=$true)] [String] $dbName_r =  "",
 
 [Parameter(Mandatory=$true)] [String] $PromptedInstall  =  "",
 
@@ -34,11 +34,11 @@ param
         foreach ($dataFile in $dataList)
         {
             $destination = $dataPath + "\" + $dataFile + ".csv" 
-            $tableName = $DBName + ".dbo." + $dataFile
+            $tableName = $dbName_r+ ".dbo." + $dataFile
             $tableSchema = $dataPath + "\" + $dataFile + ".xml"
             $dataSet = Import-Csv $destination
          Write-Host -ForegroundColor 'cyan' ("         Loading $dataFile.csv into SQL Table, this will take about 30 seconds per file....") 
-            Write-SqlTableData -InputData $dataSet  -DatabaseName $dbName -Force -Passthru -SchemaName dbo -ServerInstance $ServerName -TableName $dataFile
+            Write-SqlTableData -InputData $dataSet  -DatabaseName $dbName_r-Force -Passthru -SchemaName dbo -ServerInstance $ServerName -TableName $dataFile
  
             
          Write-Host -ForeGroundColor 'cyan' (" $datafile table loaded from CSV File(s).")
@@ -57,9 +57,9 @@ param
     Write-Host -ForeGroundColor 'Cyan' (" Computing statistics on the input table...")
     $query = "EXEC compute_stats"
     if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
-        #ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Credential $Credential  -Query $query}
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-User $UserName -Password $Password  -Query $query}
+        #ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-Credential $Credential  -Query $query}
     
 
     # execute the NA replacement
@@ -71,23 +71,23 @@ param
             
     $query = if ($Replace -eq 'N' -or $Replace -eq 'n') {"EXEC fill_NA_mode_mean 'LengthOfStay', 'LoS0'"}  ELSE {"EXEC fill_NA_explicit 'LengthOfStay', 'LoS0'"} 
     if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-User $UserName -Password $Password  -Query $query}
   
 
     # execute the feature engineering
     Write-Host -ForeGroundColor 'Cyan' (" Computing new features...")
     $query = "EXEC feature_engineering 'LoS0', 'LoS', 0"
     if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-User $UserName -Password $Password  -Query $query}
 
     # get the column information
     Write-Host -ForeGroundColor 'Cyan' (" Getting column information...")
     $query = "EXEC get_column_info 'LoS'"
     if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-User $UserName -Password $Password  -Query $query}
     
 
     # execute the procedure
@@ -96,8 +96,8 @@ param
     Write-Host -ForeGroundColor 'Cyan' (" Splitting the data set at $splitting_percent%...")
     $query = "EXEC splitting $splitting_percent, 'LoS'"
     if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-User $UserName -Password $Password  -Query $query}
 
 
     # execute the training 
@@ -105,32 +105,32 @@ param
     $modelName = 'GBT'
     $query = "EXEC train_model $modelName, 'LoS'"
     if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-User $UserName -Password $Password  -Query $query}
      
 
     # execute the scoring 
     Write-Host -ForeGroundColor 'Cyan' (" Scoring Gradient Boosted Trees (rxFastTrees implementation)...")
     $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'"
     if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database  $dbName -User $UserName -Password $Password  -Query $query}
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database  $dbName_r-User $UserName -Password $Password  -Query $query}
 
 
     # execute the evaluation 
     Write-Host -ForeGroundColor 'Cyan' (" Evaluating Gradient Boosted Trees (rxFastTrees implementation) ...")
     $query = "EXEC evaluate $modelName, 'Boosted_Prediction'"
     if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-User $UserName -Password $Password  -Query $query}
    
 
    
     Write-Host -ForeGroundColor 'Cyan' (" Execute Prediction Results ...")
     $query = "EXEC prediction_results"
     if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName_r-User $UserName -Password $Password  -Query $query}
 
     $endTime= Get-Date
     #Write-Host -ForegroundColor 'green'  " End time is:" $endTime
