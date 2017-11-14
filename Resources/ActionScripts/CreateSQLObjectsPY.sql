@@ -1,59 +1,23 @@
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
-		CREATE VIEW [dbo].[LoS0]
-		AS
-		SELECT *
-	    FROM LoS
-GO
-/****** Object:  Table [dbo].[Boosted_Prediction]    Script Date: 11/14/2017 7:38:13 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Boosted_Prediction](
-	[lengthofstay_Pred] [float] NULL,
-	[lengthofstay] [float] NULL,
-	[eid] [int] NULL
-) ON [PRIMARY]
-
-GO
-/****** Object:  Table [dbo].[Forest_Prediction]    Script Date: 11/14/2017 7:38:13 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Forest_Prediction](
-	[lengthofstay_Pred] [float] NULL,
-	[lengthofstay] [float] NULL,
-	[eid] [int] NULL
-) ON [PRIMARY]
-
-GO
-/****** Object:  Table [dbo].[LoS]    Script Date: 11/14/2017 7:38:13 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[LoS](
-	[eid] [int] NULL,
-	[vdate] [nvarchar](255) NULL,
-	[rcount] [nvarchar](255) NULL,
-	[gender] [nvarchar](255) NULL,
-	[dialysisrenalendstage] [nvarchar](255) NULL,
-	[asthma] [nvarchar](255) NULL,
-	[irondef] [nvarchar](255) NULL,
-	[pneum] [nvarchar](255) NULL,
-	[substancedependence] [nvarchar](255) NULL,
-	[psychologicaldisordermajor] [nvarchar](255) NULL,
-	[depress] [nvarchar](255) NULL,
-	[psychother] [nvarchar](255) NULL,
-	[fibrosisandother] [nvarchar](255) NULL,
-	[malnutrition] [nvarchar](255) NULL,
-	[hemo] [nvarchar](255) NULL,
+CREATE TABLE [dbo].[LengthOfStay](
+	[eid] [int] NOT NULL,
+	[vdate] [date] NULL,
+	[rcount] [varchar](2) NULL,
+	[gender] [varchar](1) NULL,
+	[dialysisrenalendstage] [varchar](1) NULL,
+	[asthma] [varchar](1) NULL,
+	[irondef] [varchar](1) NULL,
+	[pneum] [varchar](1) NULL,
+	[substancedependence] [varchar](1) NULL,
+	[psychologicaldisordermajor] [varchar](1) NULL,
+	[depress] [varchar](1) NULL,
+	[psychother] [varchar](1) NULL,
+	[fibrosisandother] [varchar](1) NULL,
+	[malnutrition] [varchar](1) NULL,
+	[hemo] [varchar](1) NULL,
 	[hematocrit] [float] NULL,
 	[neutrophils] [float] NULL,
 	[sodium] [float] NULL,
@@ -63,38 +27,168 @@ CREATE TABLE [dbo].[LoS](
 	[bmi] [float] NULL,
 	[pulse] [float] NULL,
 	[respiration] [float] NULL,
-	[secondarydiagnosisnonicd9] [nvarchar](255) NULL,
-	[discharged] [nvarchar](255) NULL,
-	[facid] [nvarchar](255) NULL,
-	[lengthofstay] [float] NULL,
-	[number_of_issues] [varchar](2) NULL
+	[secondarydiagnosisnonicd9] [varchar](2) NULL,
+	[discharged] [date] NULL,
+	[facid] [varchar](1) NULL,
+	[lengthofstay] [int] NULL
 ) ON [PRIMARY]
 
 GO
-/****** Object:  Table [dbo].[NN_Prediction]    Script Date: 11/14/2017 7:38:13 PM ******/
+/****** Object:  View [dbo].[LoS0]    Script Date: 11/14/2017 8:14:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[NN_Prediction](
+
+		CREATE VIEW [dbo].[LoS0]
+		AS
+		SELECT *
+	    FROM LengthOfStay
+GO
+/****** Object:  Table [dbo].[Stats]    Script Date: 11/14/2017 8:14:24 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Stats](
+	[variable_name] [varchar](30) NOT NULL,
+	[type] [varchar](30) NOT NULL,
+	[mode] [varchar](30) NULL,
+	[mean] [float] NULL,
+	[std] [float] NULL
+) ON [PRIMARY]
+
+GO
+/****** Object:  View [dbo].[LoS]    Script Date: 11/14/2017 8:14:24 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+		CREATE VIEW [dbo].[LoS]
+		AS
+		SELECT eid, vdate, rcount, gender, dialysisrenalendstage, asthma, irondef, pneum, substancedependence, psychologicaldisordermajor, depress,
+			   psychother, fibrosisandother, malnutrition, hemo,
+		       (hematocrit - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = 'hematocrit'))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = 'hematocrit') AS hematocrit,
+		       (neutrophils - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = 'neutrophils'))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = 'neutrophils') AS neutrophils,
+		       (sodium - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = 'sodium '))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = 'sodium ') AS sodium,
+		       (glucose - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = 'glucose'))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = 'glucose') AS glucose,
+		       (bloodureanitro - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = 'bloodureanitro'))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = 'bloodureanitro') AS bloodureanitro,
+		       (creatinine - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = 'creatinine'))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = 'creatinine') AS creatinine,
+		       (bmi - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = 'bmi'))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = 'bmi') AS bmi,
+		       (pulse - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = 'pulse'))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = 'pulse') AS pulse,
+		       (respiration - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = 'respiration'))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = 'respiration') AS respiration,
+		       CAST((CAST(hemo as int) + CAST(dialysisrenalendstage as int) + CAST(asthma as int) + CAST(irondef as int) + CAST(pneum as int) +
+			        CAST(substancedependence as int) + CAST(psychologicaldisordermajor as int) + CAST(depress as int) +
+                    CAST(psychother as int) + CAST(fibrosisandother as int) + CAST(malnutrition as int)) as varchar(2)) 
+               AS number_of_issues,
+			   secondarydiagnosisnonicd9, discharged, facid, CAST(lengthofstay as float) lengthofstay
+	    FROM LoS0
+GO
+/****** Object:  Table [dbo].[ColInfo]    Script Date: 11/14/2017 8:14:24 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ColInfo](
+	[info] [varbinary](max) NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Fast_Prediction]    Script Date: 11/14/2017 8:14:24 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Fast_Prediction](
 	[eid] [int] NULL,
 	[lengthofstay] [float] NULL,
 	[Score] [float] NULL
 ) ON [PRIMARY]
 
 GO
-/****** Object:  Table [dbo].[RTS]    Script Date: 11/14/2017 7:38:13 PM ******/
+/****** Object:  Table [dbo].[LoS_Predictions]    Script Date: 11/14/2017 8:14:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[RTS](
-	[id] [nvarchar](255) NULL,
-	[value] [varbinary](max) NULL
+CREATE TABLE [dbo].[LoS_Predictions](
+	[eid] [int] NOT NULL,
+	[vdate] [date] NULL,
+	[rcount] [varchar](2) NULL,
+	[gender] [varchar](1) NULL,
+	[dialysisrenalendstage] [varchar](1) NULL,
+	[asthma] [varchar](1) NULL,
+	[irondef] [varchar](1) NULL,
+	[pneum] [varchar](1) NULL,
+	[substancedependence] [varchar](1) NULL,
+	[psychologicaldisordermajor] [varchar](1) NULL,
+	[depress] [varchar](1) NULL,
+	[psychother] [varchar](1) NULL,
+	[fibrosisandother] [varchar](1) NULL,
+	[malnutrition] [varchar](1) NULL,
+	[hemo] [varchar](1) NULL,
+	[hematocrit] [float] NULL,
+	[neutrophils] [float] NULL,
+	[sodium] [float] NULL,
+	[glucose] [float] NULL,
+	[bloodureanitro] [float] NULL,
+	[creatinine] [float] NULL,
+	[bmi] [float] NULL,
+	[pulse] [float] NULL,
+	[respiration] [float] NULL,
+	[number_of_issues] [varchar](2) NULL,
+	[secondarydiagnosisnonicd9] [varchar](2) NULL,
+	[discharged] [date] NULL,
+	[facid] [varchar](1) NULL,
+	[lengthofstay] [float] NULL,
+	[discharged_pred] [date] NULL,
+	[lengthofstay_Pred] [int] NULL
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Metrics]    Script Date: 11/14/2017 8:14:24 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Metrics](
+	[model_name] [varchar](30) NOT NULL,
+	[mean_absolute_error] [float] NULL,
+	[root_mean_squared_error] [float] NULL,
+	[relative_absolute_error] [float] NULL,
+	[relative_squared_error] [float] NULL,
+	[coefficient_of_determination] [float] NULL
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Models]    Script Date: 11/14/2017 8:14:24 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Models](
+	[model_name] [varchar](30) NOT NULL,
+	[model] [varbinary](max) NOT NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
-/****** Object:  StoredProcedure [dbo].[compute_stats]    Script Date: 11/14/2017 7:38:13 PM ******/
+/****** Object:  Table [dbo].[Train_Id]    Script Date: 11/14/2017 8:14:24 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Train_Id](
+	[eid] [int] NOT NULL
+) ON [PRIMARY]
+
+GO
+/****** Object:  Index [length_cci]    Script Date: 11/14/2017 8:14:24 PM ******/
+CREATE CLUSTERED COLUMNSTORE INDEX [length_cci] ON [dbo].[LengthOfStay] WITH (DROP_EXISTING = OFF, COMPRESSION_DELAY = 0) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Models] ADD  DEFAULT ('default model') FOR [model_name]
+GO
+/****** Object:  StoredProcedure [dbo].[compute_stats]    Script Date: 11/14/2017 8:14:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -186,7 +280,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[evaluate]    Script Date: 11/14/2017 7:38:13 PM ******/
+/****** Object:  StoredProcedure [dbo].[evaluate]    Script Date: 11/14/2017 8:14:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -275,7 +369,7 @@ if model_name == "NN":
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[feature_engineering]    Script Date: 11/14/2017 7:38:13 PM ******/
+/****** Object:  StoredProcedure [dbo].[feature_engineering]    Script Date: 11/14/2017 8:14:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -332,7 +426,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[fill_NA_explicit]    Script Date: 11/14/2017 7:38:13 PM ******/
+/****** Object:  StoredProcedure [dbo].[fill_NA_explicit]    Script Date: 11/14/2017 8:14:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -446,7 +540,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[fill_NA_mode_mean]    Script Date: 11/14/2017 7:38:13 PM ******/
+/****** Object:  StoredProcedure [dbo].[fill_NA_mode_mean]    Script Date: 11/14/2017 8:14:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -558,7 +652,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[get_column_info]    Script Date: 11/14/2017 7:38:13 PM ******/
+/****** Object:  StoredProcedure [dbo].[get_column_info]    Script Date: 11/14/2017 8:14:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -621,7 +715,7 @@ OutputDataSet = DataFrame({"payload": dumps(col_info)}, index=[0])
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[prediction_results]    Script Date: 11/14/2017 7:38:13 PM ******/
+/****** Object:  StoredProcedure [dbo].[prediction_results]    Script Date: 11/14/2017 8:14:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -639,15 +733,14 @@ BEGIN
 		   LoS0.malnutrition, LoS0.hemo, LoS0.hematocrit, LoS0.neutrophils, LoS0.sodium, 
 	       LoS0.glucose, LoS0.bloodureanitro, LoS0.creatinine, LoS0.bmi, LoS0.pulse, LoS0.respiration, number_of_issues, LoS0.secondarydiagnosisnonicd9, 
            CONVERT(DATE, LoS0.discharged, 110) as discharged, LoS0.facid, LoS.lengthofstay, 
-	       CONVERT(DATE, CONVERT(DATETIME, LoS0.vdate, 110) + CAST(ROUND(Score, 0) as int), 110) as discharged_pred_boosted,
+	       CONVERT(DATE, CONVERT(DATETIME, LoS0.vdate, 110) + CAST(ROUND(Score, 0) as int), 110) as discharged_pred,
 		   CAST(ROUND(Score, 0) as int) as lengthofstay_Pred
      INTO LoS_Predictions
-     FROM LoS JOIN Fast_Prediction ON LoS.eid = Fast_Prediction.eid JOIN LoS0 ON LoS.eid = LoS0.eid
-;
+     FROM LoS JOIN Fast_Prediction ON LoS.eid = Fast_Prediction.eid JOIN LoS0 ON LoS.eid = LoS0.eid;
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[score]    Script Date: 11/14/2017 7:38:13 PM ******/
+/****** Object:  StoredProcedure [dbo].[score]    Script Date: 11/14/2017 8:14:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -760,7 +853,7 @@ if model_name == "NN" and len(model) > 0:
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[splitting]    Script Date: 11/14/2017 7:38:13 PM ******/
+/****** Object:  StoredProcedure [dbo].[splitting]    Script Date: 11/14/2017 8:14:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -783,7 +876,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[train_model]    Script Date: 11/14/2017 7:38:13 PM ******/
+/****** Object:  StoredProcedure [dbo].[train_model]    Script Date: 11/14/2017 8:14:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -906,5 +999,5 @@ END
 GO
 USE [master]
 GO
-ALTER DATABASE [Hospital_Py] SET  READ_WRITE 
+ALTER DATABASE [HospitalPy3] SET  READ_WRITE 
 GO
