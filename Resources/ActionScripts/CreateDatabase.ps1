@@ -5,7 +5,8 @@ This can be run at anytime and will refresh teh Database to the initial state
 It is conifgured for default settings ie Creating the Hospital Database in the SQL Server 
 If you want to choose a different database name , you can call this script from a ps cmd line using this cmd  ./CreateDatabase.ps1 -PromptedInstall Y
 or run the script from this window.
-Created on 10.5.2017 Bob White  
+Created on 10.5.2017 Bob White 
+Added Python Scripting 11/14/2017 bw  
 #>
 
 param 
@@ -74,7 +75,7 @@ $dbName = if ([string]::IsNullOrEmpty($dbName) -and ($Prompt -eq 'Y' -Or $Prompt
             elseif ((![string]::IsNullOrEmpty($dbName)) -and ($Prompt -eq 'Y' -Or $Prompt -eq 'y')) {$dbName}
             else {"Hospital"} 
 
-
+$dbNamePy = $dbName + "_py"
     
 
 ######################################################################## 
@@ -105,7 +106,7 @@ $trustedConnection = "Y"
 
 Write-Host -ForeGroundColor 'cyan' (" Using $ServerName SQL Instance") 
 
-
+## Create RServer DB 
 $SqlParameters = @("dbName=$dbName")
 
 $CreateSQLDB = "$ScriptPath\CreateDatabase.sql"
@@ -113,6 +114,7 @@ $CreateSQLDB = "$ScriptPath\CreateDatabase.sql"
 $CreateSQLObjects = "$ScriptPath\CreateSQLObjects.sql"
 Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the  $dbName database") 
 invoke-sqlcmd -inputfile $CreateSQLDB -serverinstance $ServerName -database master -Variable $SqlParameters
+
 
 Write-Host -ForeGroundColor 'cyan' (" SQLServerDB $dbName Created")
 invoke-sqlcmd "USE $dbName;" 
@@ -122,6 +124,26 @@ invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database
 
 
 Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Database")
+
+### Create Python DB 
+$SqlParameters = @("dbName=$dbNamePy")
+
+$CreateSQLDB = "$ScriptPath\CreateDatabase.sql"
+
+$CreateSQLObjects = "$ScriptPath\CreateSQLObjectsPy.sql"
+Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the  $dbNamePy database") 
+invoke-sqlcmd -inputfile $CreateSQLDB -serverinstance $ServerName -database master -Variable $SqlParameters
+
+
+Write-Host -ForeGroundColor 'cyan' (" SQLServerDB $dbNamePy Created")
+invoke-sqlcmd "USE $dbName;" 
+
+Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the objects in the $dbNamePy database")
+invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database $dbNamePy
+
+
+Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbNamePy Database")
+
 
 
 
