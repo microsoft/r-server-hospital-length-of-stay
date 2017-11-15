@@ -17,8 +17,7 @@ param
 [Parameter(Mandatory=$false)] [String] $dbName  =  ""
 )
 
-$startTime= Get-Date
-Write-Host -ForegroundColor 'Green'  "  Start time is for Database Configuration:" $startTime 
+
 
 
 
@@ -313,9 +312,5 @@ ELSE
         {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
         ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
 
-    $endTime= Get-Date
-    #Write-Host -ForegroundColor 'green'  " End time is:" $endTime
-    $Duration = New-TimeSpan -Start $StartTime -End $EndTime 
-    Write-Host -ForegroundColor 'green'(" SQL Configuration Time = $Duration") 
     
  
