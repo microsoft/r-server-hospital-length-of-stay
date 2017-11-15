@@ -5,8 +5,6 @@ Powershell script for setting up the solution template.
 .DESCRIPTION
 This script checks out the solution from github and deploys it to SQL Server on the local Data Science VM (DSVM).
 
-.WARNING: This script is only meant to be run from the solution template deployment process. if you want to set the database back to the intial state 
-run  Invoke-Expression C:\Solutions\Hospital\Resources\ActionScripts\createdatabase.ps1 from a elevated PS window. 
 #>
 $setupLog = "c:\tmp\setup_log.txt"
 Start-Transcript -Path $setupLog -Append
@@ -14,13 +12,12 @@ $startTime= Get-Date
 Write-Host -ForegroundColor 'Green'  "  Start time:" $startTime 
 
 
-$solutionTemplateName = "Solutions" #change this back to Solutions after done testing 
+$solutionTemplateName = "Solutions"
 $solutionTemplatePath = "C:\" + $solutionTemplateName
 $checkoutDir = "Hospital"
 $SolutionPath = $solutionTemplatePath +'\' + $checkoutDir
 $desktop = "C:\Users\Public\Desktop\"
-$basePath = "c:\Solutions\Hospital\"
-$scriptPath =  $basePath + "Resources\ActionScripts\"
+$scriptPath =  $SolutionPath + "Resources\ActionScripts\"
 
 
 
@@ -58,8 +55,6 @@ if (!$?)
 Copy-Item "$ScriptPath\SolutionHelp.url" C:\Users\Public\Desktop\
 Copy-Item "$ScriptPath\SolutionHelp.url" "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\"
 Write-Host -ForeGroundColor cyan " Help Files Copied to Desktop"
-
-
 
 
 ###Copy PowerBI Reportt to Desktop 
