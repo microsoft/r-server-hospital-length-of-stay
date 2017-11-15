@@ -127,34 +127,12 @@ Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Databa
 ### Enable implied Authentication for the Launchpad group
 #########################################################################
 
-    Write-Host -ForeGroundColor cyan " Installing latest Power BI..."
-    # Download PowerBI Desktop installer
-    Start-BitsTransfer -Source "https://go.microsoft.com/fwlink/?LinkId=521662&clcid=0x409" -Destination powerbi-desktop.msi
-    
-    # Silently install PowerBI Desktop
-    msiexec.exe /i powerbi-desktop.msi /qn /norestart  ACCEPT_EULA=1
-    
-    if (!$?)
-    {
-        Write-Host -ForeGroundColor Red " Error installing Power BI Desktop. Please install latest Power BI manually."
-    }
 
-    write-host -ForegroundColor 'Green' " SQL Server has been configured, now load and train data...." 
     
 ##########################################################################
 # Deployment Pipeline
 ##########################################################################
-##Create Shortcuts and Autostart Help File 
-    Copy-Item "$ScriptPath\SolutionHelp.url" C:\Users\Public\Desktop\
-    Copy-Item "$ScriptPath\SolutionHelp.url" "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\"
-    Write-Host -ForeGroundColor cyan " Help Files Copied to Desktop"
 
-    
-
-
-###Copy PowerBI Reportt to Desktop 
-  Copy-Item  "$ScriptPath\*.pbix"  C:\Users\Public\Desktop\
-  Write-Host -ForeGroundColor cyan " PowerBI Reports Copied to Desktop"
 
 
    try
@@ -269,86 +247,7 @@ Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Databa
         ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
 
 
-        ### Forrest Prediction  
 
-    # execute the training 
-    Write-Host -ForeGroundColor 'Cyan' (" Training Forrest Prediction  ...")
-    $modelName = 'RF'
-    $query = "EXEC train_model $modelName, 'LoS'"
-    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
-     
-
-   # execute the scoring 
-   Write-Host -ForeGroundColor 'Cyan' (" Scoring Forrest Prediction ...")
-   $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Forest_Prediction'"
-   if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-       {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-       ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database  $dbName -User $UserName -Password $Password  -Query $query}
-
-
-    # execute the evaluation 
-    Write-Host -ForeGroundColor 'Cyan' (" Evaluating Forrest Prediction... ...")
-    $query = "EXEC evaluate $modelName, 'Forest_Prediction'"
-    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
-
-
-            ### Fast Prediction  
-
-    # execute the training 
-    Write-Host -ForeGroundColor 'Cyan' (" Training Fast Prediction   ...")
-    $modelName = 'FT'
-    $query = "EXEC train_model $modelName, 'LoS'"
-    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
-     
-
-   # execute the scoring 
-   Write-Host -ForeGroundColor 'Cyan' (" Scoring Fast Prediction  ...")
-   $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Fast Prediction'"
-   if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-       {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-       ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database  $dbName -User $UserName -Password $Password  -Query $query}
-
-
-    # execute the evaluation 
-    Write-Host -ForeGroundColor 'Cyan' (" Evaluating Fast Prediction ... ...")
-    $query = "EXEC evaluate $modelName, 'Fast_Prediction'"
-    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
- 
-        
-        
-            ### NN_Prediction 
-
-    # execute the training 
-    Write-Host -ForeGroundColor 'Cyan' (" Training NN Prediction    ...")
-    $modelName = 'NN'
-    $query = "EXEC train_model $modelName, 'LoS'"
-    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
-     
-
-   # execute the scoring 
-   Write-Host -ForeGroundColor 'Cyan' (" Scoring NN Prediction  ...")
-   $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'NN_Prediction'"
-   if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-       {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-       ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database  $dbName -User $UserName -Password $Password  -Query $query}
-
-
-    # execute the evaluation 
-    Write-Host -ForeGroundColor 'Cyan' (" Evaluating NN Prediction ... ...")
-    $query = "EXEC evaluate $modelName, 'NN_Prediction'"
-    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
 
    
     Write-Host -ForeGroundColor 'Cyan' (" Execute Prediction Results ...")
