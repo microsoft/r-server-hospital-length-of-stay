@@ -54,7 +54,6 @@ if (!$?)
 }
 
 
-
 ##Create Shortcuts and Autostart Help File 
 Copy-Item "$ScriptPath\SolutionHelp.url" C:\Users\Public\Desktop\
 Copy-Item "$ScriptPath\SolutionHelp.url" "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\"
