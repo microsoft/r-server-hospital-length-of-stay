@@ -32,6 +32,11 @@ ELSE
     git clone  --branch dev --single-branch https://github.com/Microsoft/r-server-hospital-length-of-stay $solutionPath
 }
 
+##DSVM Does not have SQLServer Powershell Module , this will try and install it if it is not present it will work , if it is already there it will error out 
+Write-Host " Installing SQLServer Power Shell Module , if it is already installed a warning will be displayed , this is OK........."
+Install-Module -Name SQLServer -Scope AllUsers -AllowClobber -Force
+Import-Module -Name SQLServer
+
 ###Configure Database for R 
 Write-Host "  Configuring Solution for R"
 $ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabase.ps1"
@@ -39,7 +44,7 @@ Invoke-Expression $ActionScripts
 
 ###Conifgure Database for Py 
 Write-Host "  Configuring Solution for Py"
-$ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabase.ps1"
+$ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabasePy.ps1"
 Invoke-Expression $ActionScripts
 
 $WsShell = New-Object -ComObject WScript.Shell

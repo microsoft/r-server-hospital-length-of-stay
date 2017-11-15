@@ -18,10 +18,6 @@ param
 )
 
 
-##DSVM Does not have SQLServer Powershell Module , this will try and install it if it is not present it will work , if it is already there it will error out 
-Write-Host " Installing SQLServer Power Shell Module , if it is already installed a warning will be displayed , this is OK........."
-Install-Module -Name SQLServer -Scope AllUsers -AllowClobber -Force
-Import-Module -Name SQLServer
 
 
 #Write-Host -ForegroundColor 'Cyan' " Switching SQL Server to Mixed Mode"
@@ -238,6 +234,8 @@ Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Databa
         ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
 
 
+    ### Gradient Boosted Training  
+
     # execute the training 
     Write-Host -ForeGroundColor 'Cyan' (" Training Gradient Boosted Trees (rxFastTrees implementation)...")
     $modelName = 'GBT'
@@ -262,6 +260,95 @@ Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Databa
         {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
         ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
    
+
+   
+    Write-Host -ForeGroundColor 'Cyan' (" Execute Prediction Results ...")
+    $query = "EXEC prediction_results"
+    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+
+
+        ### Forrest Prediction  
+
+    # execute the training 
+    Write-Host -ForeGroundColor 'Cyan' (" Training Forrest Prediction  ...")
+    $modelName = 'RF'
+    $query = "EXEC train_model $modelName, 'LoS'"
+    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+     
+
+   # execute the scoring 
+   Write-Host -ForeGroundColor 'Cyan' (" Scoring Forrest Prediction ...")
+   $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'"
+   if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
+       {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
+       ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database  $dbName -User $UserName -Password $Password  -Query $query}
+
+
+    # execute the evaluation 
+    Write-Host -ForeGroundColor 'Cyan' (" Evaluating Forrest Prediction... ...")
+    $query = "EXEC evaluate $modelName, 'Forest_Prediction'"
+    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+
+
+            ### Fast Prediction  
+
+    # execute the training 
+    Write-Host -ForeGroundColor 'Cyan' (" Training Fast Prediction   ...")
+    $modelName = 'FT'
+    $query = "EXEC train_model $modelName, 'LoS'"
+    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+     
+
+   # execute the scoring 
+   Write-Host -ForeGroundColor 'Cyan' (" Scoring Fast Prediction  ...")
+   $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'"
+   if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
+       {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
+       ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database  $dbName -User $UserName -Password $Password  -Query $query}
+
+
+    # execute the evaluation 
+    Write-Host -ForeGroundColor 'Cyan' (" Evaluating Fast Prediction ... ...")
+    $query = "EXEC evaluate $modelName, 'Fast_Prediction'"
+    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+ 
+        
+        
+            ### NN_Prediction 
+
+    # execute the training 
+    Write-Host -ForeGroundColor 'Cyan' (" Training NN Prediction    ...")
+    $modelName = 'NN'
+    $query = "EXEC train_model $modelName, 'LoS'"
+    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+     
+
+   # execute the scoring 
+   Write-Host -ForeGroundColor 'Cyan' (" Scoring NN Prediction  ...")
+   $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'"
+   if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
+       {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
+       ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database  $dbName -User $UserName -Password $Password  -Query $query}
+
+
+    # execute the evaluation 
+    Write-Host -ForeGroundColor 'Cyan' (" Evaluating NN Prediction ... ...")
+    $query = "EXEC evaluate $modelName, 'NN_Prediction'"
+    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
+        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
+        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
 
    
     Write-Host -ForeGroundColor 'Cyan' (" Execute Prediction Results ...")
