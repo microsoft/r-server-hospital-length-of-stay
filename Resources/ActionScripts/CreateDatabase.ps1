@@ -90,7 +90,6 @@ $trustedConnection = "Y"
  $basePath = "c:\Solutions\Hospital\"
  $dataPath = $basePath+ "Data"
  $scriptPath =  $basePath + "Resources\ActionScripts\"
- $SqlPath = $basePath + "SQLR\"
  
 
 ##########################################################################
