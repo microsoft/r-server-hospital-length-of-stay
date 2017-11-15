@@ -31,9 +31,16 @@ ELSE
 {
     git clone  --branch dev --single-branch https://github.com/Microsoft/r-server-hospital-length-of-stay $solutionPath
 }
+
+###Configure Database for R 
+Write-Host "  Configuring Solution for R"
 $ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabase.ps1"
 Invoke-Expression $ActionScripts
 
+###Conifgure Database for Py 
+Write-Host "  Configuring Solution for Py"
+$ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabase.ps1"
+Invoke-Expression $ActionScripts
 
 $WsShell = New-Object -ComObject WScript.Shell
 $shortcut = $WsShell.CreateShortcut($desktop + $checkoutDir + ".lnk")

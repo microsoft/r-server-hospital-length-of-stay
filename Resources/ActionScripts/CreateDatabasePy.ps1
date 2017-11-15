@@ -17,8 +17,6 @@ param
 [Parameter(Mandatory=$false)] [String] $dbName  =  ""
 )
 
-$startTime= Get-Date
-Write-Host -ForegroundColor 'Green'  "  Start time is for Database Configuration:" $startTime 
 
 ##DSVM Does not have SQLServer Powershell Module , this will try and install it if it is not present it will work , if it is already there it will error out 
 Write-Host " Installing SQLServer Power Shell Module , if it is already installed a warning will be displayed , this is OK........."
@@ -74,8 +72,8 @@ $dbName = if ([string]::IsNullOrEmpty($dbName) -and ($Prompt -eq 'Y' -Or $Prompt
             elseif ((![string]::IsNullOrEmpty($dbName)) -and ($Prompt -eq 'Y' -Or $Prompt -eq 'y')) {$dbName}
             else {"Hospital"} 
 
-$dbName = $dbName + "_R"
-    
+
+$dbName = $dbName + "_py" 
 
 ######################################################################## 
 #Decide whether we are using Trusted or Non Trusted Connections. ........Currently this does not work..............
@@ -105,12 +103,12 @@ $trustedConnection = "Y"
 
 Write-Host -ForeGroundColor 'cyan' (" Using $ServerName SQL Instance") 
 
-## Create RServer DB 
+## Create py DB 
 $SqlParameters = @("dbName=$dbName")
 
 $CreateSQLDB = "$ScriptPath\CreateDatabase.sql"
 
-$CreateSQLObjects = "$ScriptPath\CreateSQLObjects.sql"
+$CreateSQLObjects = "$ScriptPath\CreateSQLObjectsPy.sql"
 Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the  $dbName database") 
 invoke-sqlcmd -inputfile $CreateSQLDB -serverinstance $ServerName -database master -Variable $SqlParameters
 
@@ -132,50 +130,6 @@ Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Databa
 #########################################################################
 ### Enable implied Authentication for the Launchpad group
 #########################################################################
-
-## Check to see if SQLRUser Group already exists 
-
-
-$Query = "SELECT SERVERPROPERTY('ServerName')"
-$si = invoke-sqlcmd -Query $Query
-$si = $si.Item(0)
-$si =  if ($si -like '*\*') 
-
-{
-    $SN,$IN = $si.split('\')
-    $SqlUser = $SN + '\SQLRUserGroup' + $IN
-    if ((Get-SQLLogin -ServerInstance $si -LoginName $SQLUser -EA SilentlyContinue))
-    {
-    Write-Host -ForegroundColor 'Cyan'  ''$SqlUser 'is already created in the Master Database'
-    }
-    ELSE 
-    { 
-    Write-Host -ForegroundColor 'Cyan'  " Setting up SQLRUserGroup for Name Instance "
-    $SN,$IN = $si.split('\')
-    $Query = 'USE [master] CREATE LOGIN ['+$SN + '\SQLRUserGroup' + $IN +'] FROM WINDOWS WITH DEFAULT_DATABASE=[master]' 
-    invoke-sqlcmd -serverinstance $ServerName -database $dbName -Query $Query 
-    }
-    Write-Host -ForegroundColor 'Cyan' " Giving SQLRUser Group access to  Name $Si "
-    $Query = 'USE [' + $dbName +']' + ' CREATE USER [' + $SN + '\SQLRUserGroup' + $IN +'] FOR LOGIN [' +  $SN + '\SQLRUserGroup' + $IN + ']'
-    invoke-sqlcmd -serverinstance $ServerName -database $dbName -Query $Query 
-}
-ELSE 
-{   
-    $SqlUser = $si + '\SQLRUserGroup'
-    if ((Get-SQLLogin -ServerInstance $si -LoginName $SQLUser -EA SilentlyContinue)) 
-    { 
-    Write-Host ''$SqlUser 'has already been given access to the Database' 
-    }
-    ELSE
-    {
-    write-host -ForegroundColor 'Cyan'  " Setting up SQLRUser Group for Default Instance"
-    $Query = 'USE [master] CREATE LOGIN ['+$si+'\SQLRUserGroup] FROM WINDOWS WITH DEFAULT_DATABASE=[master]'
-    invoke-sqlcmd -serverinstance $ServerName -database $dbName -Query $Query 
-    }
-    write-host -ForegroundColor 'Cyan' " Giving SQLRUserGroup access to  $Si Database"
-    $Query = 'USE [' + $dbName + '] CREATE USER [SQLRUserGroup] FOR LOGIN [' + $si + '\SQLRUserGroup]'
-    invoke-sqlcmd -serverinstance $si -database $dbName -Query $Query 
-}
 
     Write-Host -ForeGroundColor cyan " Installing latest Power BI..."
     # Download PowerBI Desktop installer
@@ -293,16 +247,16 @@ ELSE
         ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
      
 
-    # execute the scoring 
-    Write-Host -ForeGroundColor 'Cyan' (" Scoring Gradient Boosted Trees (rxFastTrees implementation)...")
-    $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'"
-    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
-        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
-        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database  $dbName -User $UserName -Password $Password  -Query $query}
+   # execute the scoring 
+   Write-Host -ForeGroundColor 'Cyan' (" Scoring Gradient Boosted Trees (rxFastTrees implementation)...")
+   $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'"
+   if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
+       {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
+       ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database  $dbName -User $UserName -Password $Password  -Query $query}
 
 
     # execute the evaluation 
-    Write-Host -ForeGroundColor 'Cyan' (" Evaluating Gradient Boosted Trees (rxFastTrees implementation) ...")
+    Write-Host -ForeGroundColor 'Cyan' (" Evaluating Gradient Boosted Trees (rxFastTrees implementation)... ...")
     $query = "EXEC evaluate $modelName, 'Boosted_Prediction'"
     if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
         {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
@@ -316,9 +270,6 @@ ELSE
         {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
         ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
 
-    $endTime= Get-Date
-    #Write-Host -ForegroundColor 'green'  " End time is:" $endTime
-    $Duration = New-TimeSpan -Start $StartTime -End $EndTime 
-    Write-Host -ForegroundColor 'green'(" SQL Configuration Time = $Duration") 
+
     
  
