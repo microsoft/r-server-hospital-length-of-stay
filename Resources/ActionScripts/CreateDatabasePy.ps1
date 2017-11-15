@@ -282,7 +282,7 @@ Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Databa
 
    # execute the scoring 
    Write-Host -ForeGroundColor 'Cyan' (" Scoring Forrest Prediction ...")
-   $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'"
+   $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Forest_Prediction'"
    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database  $dbName -User $UserName -Password $Password  -Query $query}
@@ -309,7 +309,7 @@ Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Databa
 
    # execute the scoring 
    Write-Host -ForeGroundColor 'Cyan' (" Scoring Fast Prediction  ...")
-   $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'"
+   $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Fast Prediction'"
    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database  $dbName -User $UserName -Password $Password  -Query $query}
@@ -337,7 +337,7 @@ Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Databa
 
    # execute the scoring 
    Write-Host -ForeGroundColor 'Cyan' (" Scoring NN Prediction  ...")
-   $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'"
+   $query = "EXEC score $modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'NN_Prediction'"
    if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
        {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
        ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database  $dbName -User $UserName -Password $Password  -Query $query}
