@@ -53,7 +53,6 @@ if (!$?)
     Write-Host -ForeGroundColor Red " Error installing Power BI Desktop. Please install latest Power BI manually."
 }
 
-write-host -ForegroundColor 'Green' " SQL Server has been configured, now load and train data...." 
 
 
 ##Create Shortcuts and Autostart Help File 

@@ -119,7 +119,7 @@ invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database
 Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Database")
 
 
-
+write-host -ForegroundColor 'Green' " SQL Server has been configured for Py, now load and train data...." 
 
 
 

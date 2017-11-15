@@ -174,6 +174,8 @@ ELSE
 }
 
 
+write-host -ForegroundColor 'Green' " SQL Server has been configured for R , now load and train data...." 
+
     
 ##########################################################################
 # Deployment Pipeline
