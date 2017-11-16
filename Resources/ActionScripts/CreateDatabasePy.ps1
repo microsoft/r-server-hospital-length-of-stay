@@ -325,7 +325,7 @@ write-host -ForegroundColor 'Green' " SQL Server has been configured for Py , no
         {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
         ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
 
-    Write-Host -ForegroundColor 'Green' ( "SQLPy has been set up on the SQL Server" )
+    Write-Host -ForegroundColor 'Green' ( "  Solution has been configured for SQLPy " )
 
     } 
     
