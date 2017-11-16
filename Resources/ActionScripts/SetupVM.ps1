@@ -7,10 +7,23 @@ This script checks out the solution from github and deploys it to SQL Server on 
 ---Need to add pass thru for Prompted install 
 
 #>
+
+param 
+(
+[Parameter(Mandatory=$false)] [String] $PromptedInstall  =  ""
+) 
+
+$PromptedInstall = "y" ###just using this for testing 
+
+
+if ($PromptedInstall -eq 'Y' -or $PromptedInstall -eq 'y') {'Y'} 
+elseif ([string]::IsNullOrEmpty($PromptedInstall) -or $PromptedInstall -eq 'N' -or $PromptedInstall -eq 'n' ) {'N'}
+
 $setupLog = "c:\tmp\setup_log.txt"
 Start-Transcript -Path $setupLog -Append
 $startTime= Get-Date
 Write-Host -ForegroundColor 'Green'  "  Start time:" $startTime 
+
 
 
 $solutionTemplateName = "Solutions"
@@ -66,14 +79,14 @@ Write-Host -ForeGroundColor cyan " PowerBI Reports Copied to Desktop"
 Write-Host "  
         Configuring Solution for R
         "
-$ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabase.ps1"
+$ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabase.ps1" + $PromptedInstall
 Invoke-Expression $ActionScripts
 
 ###Conifgure Database for Py 
 Write-Host "  
         Configuring Solution for Py
         "
-$ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabasePy.ps1"
+$ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabasePy.ps1" + $PromptedInstall
 Invoke-Expression $ActionScripts
 
 $WsShell = New-Object -ComObject WScript.Shell
@@ -90,6 +103,9 @@ Write-Host -foregroundcolor 'green'(" Length of Stay Development Workflow Finish
 $Duration = New-TimeSpan -Start $StartTime -End $EndTime 
 Write-Host -ForegroundColor 'green'(" Total Deployment Time = $Duration") 
 Stop-Transcript
+
+##Launch HelpURL 
+Start-Process "https://microsoft.github.io/r-server-hospital-length-of-stay/Typical.html"
 
 ## Close Powershell 
 Exit-PSHostProcess
