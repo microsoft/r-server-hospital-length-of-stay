@@ -76,7 +76,6 @@ $dbName = $dbName + "_py"
 # Check to see If SQL Version is at least SQL 2017 and Not SQL Express 
 ####################################################################
 
-$ServerName = "bobsql2017-05"
 
 $query = 
     "select 
