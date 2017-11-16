@@ -4,6 +4,7 @@ Powershell script for setting up the solution template.
 
 .DESCRIPTION
 This script checks out the solution from github and deploys it to SQL Server on the local Data Science VM (DSVM).
+---Need to add pass thru for Prompted install 
 
 #>
 $setupLog = "c:\tmp\setup_log.txt"
