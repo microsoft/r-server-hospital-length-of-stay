@@ -90,8 +90,9 @@ $query =
 
  $isCompatible = Invoke-Sqlcmd -ServerInstance $ServerName -Database Master -Query $query
  $isCompatible = $isCompatible.Item(0)
- if($isCompatible -eq 'Yes') 
- {Write-Host " This Version of SQL is Compatible with SQL Py "
+ if(!$isCompatible -eq 'Yes') 
+ {
+     Write-Host " This Version of SQL is Compatible with SQL Py "
 
 
 
@@ -146,13 +147,6 @@ invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database
 Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Database")
 
 
-write-host -ForegroundColor 'Green' " SQL Server has been configured for Py, now load and train data...." 
-
-
-
-#########################################################################
-### Enable implied Authentication for the Launchpad group
-#########################################################################
 #########################################################################
 ### Enable implied Authentication for the Launchpad group
 #########################################################################
@@ -202,7 +196,7 @@ ELSE
 }
 
 
-write-host -ForegroundColor 'Green' " SQL Server has been configured for R , now load and train data...." 
+write-host -ForegroundColor 'Green' " SQL Server has been configured for Py , now load and train data...." 
 
     
 ##########################################################################
@@ -331,6 +325,8 @@ write-host -ForegroundColor 'Green' " SQL Server has been configured for R , now
     if($trustedConnection -eq 'Y' -or $trustedConnection -eq 'y') 
         {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
         ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
+
+    Write-Host -ForegroundColor 'Green' ( "SQLPy has been set up on the SQL Server" )
 
     } 
     
