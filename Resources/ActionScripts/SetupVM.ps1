@@ -89,5 +89,7 @@ Write-Host -foregroundcolor 'green'(" Length of Stay Development Workflow Finish
 $Duration = New-TimeSpan -Start $StartTime -End $EndTime 
 Write-Host -ForegroundColor 'green'(" Total Deployment Time = $Duration") 
 Stop-Transcript
+
+## Close Powershell 
 Exit-PSHostProcess
 EXIT 
