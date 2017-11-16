@@ -89,7 +89,7 @@ $query =
 
  $isCompatible = Invoke-Sqlcmd -ServerInstance $ServerName -Database Master -Query $query
  $isCompatible = $isCompatible.Item(0)
- if(!$isCompatible -eq 'Yes') 
+ if($isCompatible -eq 'Yes') 
  {
      Write-Host " This Version of SQL is Compatible with SQL Py "
 
