@@ -71,6 +71,33 @@ $dbName = if ([string]::IsNullOrEmpty($dbName) -and ($Prompt -eq 'Y' -Or $Prompt
 
 $dbName = $dbName + "_py" 
 
+
+####################################################################
+# Check to see If SQL Version is at least SQL 2017 and Not SQL Express 
+####################################################################
+
+$ServerName = "bobsql2017-05"
+
+$query = 
+    "select 
+        case 
+        when 
+	        cast(left(cast(serverproperty('productversion') as varchar), 4) as numeric(4,2)) >= 14 
+	        and CAST(SERVERPROPERTY ('edition') as varchar) Not like 'Express%' 
+       	then 'Yes'
+	    else 'No'
+        end as 'isSQL17'"
+
+ $isCompatible = Invoke-Sqlcmd -ServerInstance $ServerName -Database Master -Query $query
+ $isCompatible = $isCompatible.Item(0)
+ if($isCompatible -eq 'Yes') 
+ {Write-Host " This Version of SQL is Compatible with SQL Py "
+
+
+
+
+
+
 ######################################################################## 
 #Decide whether we are using Trusted or Non Trusted Connections. ........Currently this does not work..............
 ########################################################################
@@ -305,6 +332,8 @@ write-host -ForegroundColor 'Green' " SQL Server has been configured for R , now
         {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
         ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
 
-
+    } 
+    
+    else {Write-Host -ForeGroundColor 'Red' " This Version of SQL is not able to run SQL Python, Please Install SQL 2017 or Greater , It will not work on an Express Edition"}
     
  
