@@ -60,7 +60,7 @@ $Prompt =
 # If Prompted Install is Invoked, Prompt For SQLServer and dbName
 ########################################################################
 
-$ServerName = if ([string]::IsNullOrEmpty($ServerName) -and ($Prompt -eq 'Y' -Or $Prompt -eq 'y')) {Read-Host  -Prompt "Enter Desired SQL Server Name"} 
+$ServerName = if ([string]::IsNullOrEmpty($ServerName) -and ($Prompt -eq 'Y' -Or $Prompt -eq 'y')) {Read-Host  -Prompt "Enter SQL Server Name Or SQL InstanceName you are installing on"} 
                 elseif ((![string]::IsNullOrEmpty($ServerName)) -and ($Prompt -eq 'Y' -Or $Prompt -eq 'y')) {$ServerName}
                 else {"LOCALHOST"}
 

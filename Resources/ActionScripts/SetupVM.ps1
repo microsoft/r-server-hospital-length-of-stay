@@ -13,7 +13,6 @@ param
 [Parameter(Mandatory=$false)] [String] $PromptedInstall  =  ""
 ) 
 
-$PromptedInstall = "y" ###just using this for testing 
 
 
 if ($PromptedInstall -eq 'Y' -or $PromptedInstall -eq 'y') {'Y'} 
@@ -79,14 +78,14 @@ Write-Host -ForeGroundColor cyan " PowerBI Reports Copied to Desktop"
 Write-Host "  
         Configuring Solution for R
         "
-$ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabase.ps1" + $PromptedInstall
-Invoke-Expression $ActionScripts
+$ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabase.ps1 " + $PromptedInstall
+Invoke-Expression $ActionScripts  
 
 ###Conifgure Database for Py 
 Write-Host "  
         Configuring Solution for Py
         "
-$ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabasePy.ps1" + $PromptedInstall
+$ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabasePy.ps1 " + $PromptedInstall 
 Invoke-Expression $ActionScripts
 
 $WsShell = New-Object -ComObject WScript.Shell
