@@ -62,12 +62,16 @@ Copy-Item  "$ScriptPath\*.pbix"  C:\Users\Public\Desktop\
 Write-Host -ForeGroundColor cyan " PowerBI Reports Copied to Desktop"
 
 ###Configure Database for R 
-Write-Host "  Configuring Solution for R"
+Write-Host "  
+        Configuring Solution for R
+        "
 $ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabase.ps1"
 Invoke-Expression $ActionScripts
 
 ###Conifgure Database for Py 
-Write-Host "  Configuring Solution for Py"
+Write-Host "  
+        Configuring Solution for Py
+        "
 $ActionScripts = $SolutionPath + "\Resources\ActionScripts\CreateDatabasePy.ps1"
 Invoke-Expression $ActionScripts
 

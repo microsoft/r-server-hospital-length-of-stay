@@ -292,11 +292,11 @@ write-host -ForegroundColor 'Green' " SQL Server has been configured for R , now
         ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
 
 
-    Write-host -ForegroundColor 'Green' 
-    ( " Solution has been Configured for SQLR 
-    
-    
-    ")
+    Write-host -ForegroundColor 'Green' (
+        " 
+        Solution has been Configured for SQLR 
+        "
+        )
 
     
  
