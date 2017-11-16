@@ -18,7 +18,7 @@ $solutionTemplatePath = "C:\" + $solutionTemplateName
 $checkoutDir = "Hospital"
 $SolutionPath = $solutionTemplatePath +'\' + $checkoutDir
 $desktop = "C:\Users\Public\Desktop\"
-$scriptPath =  $SolutionPath + "Resources\ActionScripts\"
+$scriptPath =  $SolutionPath + "\Resources\ActionScripts\"
 
 
 
