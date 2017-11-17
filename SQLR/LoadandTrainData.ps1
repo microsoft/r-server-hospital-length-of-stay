@@ -10,170 +10,23 @@ Created on 10.5.2017 Bob White
 
 param 
 (
-[Parameter(Mandatory=$false)] [String] $PromptedInstall  =  "",
-
-[Parameter(Mandatory=$false)] [String] $ServerName  =  "",
-
-[Parameter(Mandatory=$false)] [String] $dbName  =  ""
+    [Parameter(Mandatory=$false)] [String] $ServerName  =  "",
+    
+    [Parameter(Mandatory=$false)] [String] $dbName  =  "",
+    
+    [Parameter(Mandatory=$false)] [String] $Prompt =  ""
 )
 
 
+$SolutionName = "Hospital"
 
-
-
-
-#Write-Host -ForegroundColor 'Cyan' " Switching SQL Server to Mixed Mode"
-
-
-### Change Authentication From Windows Auth to Mixed Mode 
-#Invoke-Sqlcmd -Query "EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'LoginMode', REG_DWORD, 2;" -ServerInstance "LocalHost" 
-
-Write-Host -ForeGroundColor 'cyan' " Configuring SQL to allow running of External Scripts "
-### Allow Running of External Scripts , this is to allow R Services to Connect to SQL (new feature on SQL 2017)
-Invoke-Sqlcmd -Query "EXEC sp_configure  'external scripts enabled', 1"
-
-### Force Change in SQL Policy on External Scripts 
-Invoke-Sqlcmd -Query "RECONFIGURE WITH OVERRIDE" 
-Write-Host -ForeGroundColor 'cyan' " SQL Server Configured to allow running of External Scripts "
-
-Write-Host -ForeGroundColor 'cyan' " Restarting SQL Services "
-### Changes Above Require Services to be cycled to take effect 
-### Stop the SQL Service and Launchpad wild cards are used to account for named instances  
-Stop-Service -Name "MSSQ*" -Force
-
-### Start the SQL Service 
-Start-Service -Name "MSSQ*"
-Write-Host -ForegroundColor 'Cyan' " SQL Services Restarted"
-
-
-Write-Host -ForegroundColor 'Cyan' " Done with configuration changes to SQL Server"
-
-
-########################################################################
-#Check Install Type Prompted Or Not Prompted, Not Prompted is Default
-########################################################################
-$Prompt = $PromptedInstall
-
-#$Prompt = 'Y'
-$Prompt = 
-        if ($Prompt -eq 'Y' -or $Prompt -eq 'y') {'Y'} 
-        elseif ([string]::IsNullOrEmpty($Prompt) -or $Prompt -eq 'N' -or $Prompt -eq 'n' ) {'N'}  
-######################################################################## 
-# If Prompted Install is Invoked, Prompt For SQLServer and dbName
-########################################################################
-
-$ServerName = if ([string]::IsNullOrEmpty($ServerName) -and ($Prompt -eq 'Y' -Or $Prompt -eq 'y')) {Read-Host  -Prompt "Enter SQL Server Name Or SQL InstanceName you are installing on"} 
-                elseif ((![string]::IsNullOrEmpty($ServerName)) -and ($Prompt -eq 'Y' -Or $Prompt -eq 'y')) {$ServerName}
-                else {"LOCALHOST"}
-
-$dbName = if ([string]::IsNullOrEmpty($dbName) -and ($Prompt -eq 'Y' -Or $Prompt -eq 'y')) {Read-Host  -Prompt "Enter Desired Database Name"} 
-            elseif ((![string]::IsNullOrEmpty($dbName)) -and ($Prompt -eq 'Y' -Or $Prompt -eq 'y')) {$dbName}
-            else {"Hospital"} 
-
-$dbName = $dbName + "_R"
-    
-
-######################################################################## 
-#Decide whether we are using Trusted or Non Trusted Connections. ........Currently this does not work..............
-########################################################################
-
-$trustedConnection = "Y"
-##$trustedConnection = if ($Prompt -eq 'y' -or $Prompt -eq 'Y') {"Y"} ELSE {Read-Host  -Prompt "Use Trusted Connection? Type in 'Y' or 'N'"}
-##$UserName = if ($trustedConnection -eq 'n' -or $trustedConnection -eq 'N') {Read-Host  -Prompt "Enter UserName"}
-##$Password = if ($trustedConnection -eq 'n' -or $trustedConnection -eq 'N') {Read-Host  -Prompt "Enter Password" -AsSecureString} 
- 
-
- 
-
-
- ##$ServerName = "LOCALHOST"
- $basePath = "c:\Solutions\Hospital\"
- $dataPath = $basePath+ "Data"
- $scriptPath =  $basePath + "Resources\ActionScripts\"
- 
-
-##########################################################################
-
-# Create Database and BaseTables 
-
-#########################################################################
-
-Write-Host -ForeGroundColor 'cyan' (" Using $ServerName SQL Instance") 
-
-## Create RServer DB 
-$SqlParameters = @("dbName=$dbName")
-
-$CreateSQLDB = "$ScriptPath\CreateDatabase.sql"
-
-$CreateSQLObjects = "$ScriptPath\CreateSQLObjects.sql"
-Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the  $dbName database") 
-invoke-sqlcmd -inputfile $CreateSQLDB -serverinstance $ServerName -database master -Variable $SqlParameters
-
-
-Write-Host -ForeGroundColor 'cyan' (" SQLServerDB $dbName Created")
-invoke-sqlcmd "USE $dbName;" 
-
-Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the objects in the $dbName database")
-invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database $dbName
-
-
-Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Database")
-
-
-
-
-
-
-#########################################################################
-### Enable implied Authentication for the Launchpad group
-#########################################################################
-
-## Check to see if SQLRUser Group already exists 
-
-
-$Query = "SELECT SERVERPROPERTY('ServerName')"
-$si = invoke-sqlcmd -Query $Query
-$si = $si.Item(0)
-$si =  if ($si -like '*\*') 
-
-{
-    $SN,$IN = $si.split('\')
-    $SqlUser = $SN + '\SQLRUserGroup' + $IN
-    if ((Get-SQLLogin -ServerInstance $si -LoginName $SQLUser -EA SilentlyContinue))
-    {
-    Write-Host -ForegroundColor 'Cyan'  ''$SqlUser 'is already created in the Master Database'
-    }
-    ELSE 
-    { 
-    Write-Host -ForegroundColor 'Cyan'  " Setting up SQLRUserGroup for Name Instance "
-    $SN,$IN = $si.split('\')
-    $Query = 'USE [master] CREATE LOGIN ['+$SN + '\SQLRUserGroup' + $IN +'] FROM WINDOWS WITH DEFAULT_DATABASE=[master]' 
-    invoke-sqlcmd -serverinstance $ServerName -database $dbName -Query $Query 
-    }
-    Write-Host -ForegroundColor 'Cyan' " Giving SQLRUser Group access to  Name $Si "
-    $Query = 'USE [' + $dbName +']' + ' CREATE USER [' + $SN + '\SQLRUserGroup' + $IN +'] FOR LOGIN [' +  $SN + '\SQLRUserGroup' + $IN + ']'
-    invoke-sqlcmd -serverinstance $ServerName -database $dbName -Query $Query 
-}
-ELSE 
-{   
-    $SqlUser = $si + '\SQLRUserGroup'
-    if ((Get-SQLLogin -ServerInstance $si -LoginName $SQLUser -EA SilentlyContinue)) 
-    { 
-    Write-Host ''$SqlUser 'has already been given access to the Database' 
-    }
-    ELSE
-    {
-    write-host -ForegroundColor 'Cyan'  " Setting up SQLRUser Group for Default Instance"
-    $Query = 'USE [master] CREATE LOGIN ['+$si+'\SQLRUserGroup] FROM WINDOWS WITH DEFAULT_DATABASE=[master]'
-    invoke-sqlcmd -serverinstance $ServerName -database $dbName -Query $Query 
-    }
-    write-host -ForegroundColor 'Cyan' " Giving SQLRUserGroup access to  $Si Database"
-    $Query = 'USE [' + $dbName + '] CREATE USER [SQLRUserGroup] FOR LOGIN [' + $si + '\SQLRUserGroup]'
-    invoke-sqlcmd -serverinstance $si -database $dbName -Query $Query 
-}
-
-
-write-host -ForegroundColor 'Green' " SQL Server has been configured for R , now load and train data...." 
+$solutionTemplateName = "Solutions"
+$solutionTemplatePath = "C:\" + $solutionTemplateName
+$checkoutDir = $SolutionName
+$SolutionPath = $solutionTemplatePath + '\' + $checkoutDir
+$desktop = "C:\Users\Public\Desktop\"
+$scriptPath = $SolutionPath + "\Resources\ActionScripts\"
+$SolutionData = $SolutionPath +"\Data\"
 
     
 ##########################################################################
@@ -192,7 +45,7 @@ write-host -ForegroundColor 'Green' " SQL Server has been configured for R , now
 		# upload csv files into SQL tables
         foreach ($dataFile in $dataList)
         {
-            $destination = $dataPath + "\" + $dataFile + ".csv" 
+            $destination = $SolutionData + $dataFile + ".csv" 
             $tableName = $DBName + ".dbo." + $dataFile
             $tableSchema = $dataPath + "\" + $dataFile + ".xml"
             $dataSet = Import-Csv $destination
