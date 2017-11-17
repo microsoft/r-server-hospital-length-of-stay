@@ -90,22 +90,27 @@ Write-Host -ForegroundColor 'Cyan' " Done with configuration changes to SQL Serv
 ########################################################################
 
 
+$Query = "SELECT SERVERPROPERTY('ServerName')"
+$si = invoke-sqlcmd -Query $Query
+$si = $si.Item(0)
 
-$ServerName = if ($Prompt -eq 'Y') {Read-Host  -Prompt "Enter SQL Server Name Or SQL InstanceName you are installing on"} else {"LOCALHOST"}
+
+
+$ServerName = if ($Prompt -eq 'Y') {Read-Host  -Prompt "Enter SQL Server Name Or SQL InstanceName you are installing on"} else {$si}
 
 
 WRITE-HOST " ServerName set to $ServerName"
 
-$dbName = if ($Prompt -eq 'Y') {Read-Host  -Prompt "Enter Desired Database Base Name"} else {"Hospital"} 
+$db = if ($Prompt -eq 'Y') {Read-Host  -Prompt "Enter Desired Database Base Name"} else {$SolutionName} 
 
 
-$dbName_R = $dbName + "_R"
+#$dbName_R = $dbName + "_R"
 
-WRITE-HOST " Database for R Services set to $dbName_R "
+#WRITE-HOST " Database for R Services set to $dbName_R "
 
-$dbName_Py = $dbName + "_Py"
+#$dbName_Py = $dbName + "_Py"
 
-WRITE-HOST " Database for Py Services set to $dbName_Py "
+#WRITE-HOST " Database for Py Services set to $dbName_Py "
 
 
 
@@ -123,9 +128,9 @@ $trustedConnection = "Y"
 ##########################################################################
 #Set up SQL User Group for R 
 ##########################################################################
-$Query = "SELECT SERVERPROPERTY('ServerName')"
-$si = invoke-sqlcmd -Query $Query
-$si = $si.Item(0)
+##$Query = "SELECT SERVERPROPERTY('ServerName')"
+##$si = invoke-sqlcmd -Query $Query
+##$si = $si.Item(0)
 $si = if ($si -like '*\*') 
 {
     $SN, $IN = $si.split('\')
@@ -137,7 +142,7 @@ $si = if ($si -like '*\*')
         Write-Host -ForegroundColor 'Cyan'  " Setting up SQLRUserGroup for Name Instance "
         $SN, $IN = $si.split('\')
         $Query = 'USE [master] CREATE LOGIN [' + $SN + '\SQLRUserGroup' + $IN + '] FROM WINDOWS WITH DEFAULT_DATABASE=[master]' 
-        invoke-sqlcmd -serverinstance $ServerName -database [Master] -Query $Query 
+        invoke-sqlcmd -serverinstance $ServerName -database Master -Query $Query 
     }
     Write-Host -ForegroundColor 'Cyan' " Giving SQLRUser Group access to  Name $Si "
 }
@@ -149,7 +154,7 @@ ELSE {
     ELSE {
         write-host -ForegroundColor 'Cyan'  " Setting up SQLRUser Group for Default Instance"
         $Query = 'USE [master] CREATE LOGIN [' + $si + '\SQLRUserGroup] FROM WINDOWS WITH DEFAULT_DATABASE=[master]'
-        invoke-sqlcmd -serverinstance $ServerName -database [Master]-Query $Query 
+        invoke-sqlcmd -serverinstance $ServerName -database Master -Query $Query 
     }
 }
 
@@ -184,37 +189,38 @@ if ($isCompatible -eq 'Yes') {
 
     Write-Host -ForeGroundColor 'cyan' (" Using $ServerName SQL Instance") 
 
-    ## Create PY Server DB 
-    $SqlParameters = @("dbName=$dbName_Py")
+    ## Create PY Server DB
+    $dbName = $db + "_Py"
+    $SqlParameters = @("dbName=$dbName")
 
     $CreateSQLDB = "$ScriptPath\CreateDatabase.sql"
 
     $CreateSQLObjects = "$ScriptPath\CreateSQLObjectsPy.sql"
-    Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the  $dbName_Py database") 
+    Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the  $dbName database") 
     invoke-sqlcmd -inputfile $CreateSQLDB -serverinstance $ServerName -database master -Variable $SqlParameters
 
 
-    Write-Host -ForeGroundColor 'cyan' (" SQLServerDB $dbName_Py Created")
-    invoke-sqlcmd "USE $dbName_Py;" 
+    Write-Host -ForeGroundColor 'cyan' (" SQLServerDB $dbName Created")
+    invoke-sqlcmd "USE $dbName;" 
 
-    Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the objects in the $dbName_Py database")
-    invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database $dbName_Py
+    Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the objects in the $dbName database")
+    invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database $dbName
 
 
-    Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName_Py Database")
+    Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Database")
 
     #### Give SqlUserGroup Acess to Py Database
     $si = if ($si -like '*\*') {
         {
             Write-Host -ForegroundColor 'Cyan' " Giving SQLRUser Group access to  Name $Si "
-            $Query = 'USE [' + $dbName_Py + ']' + ' CREATE USER [' + $SN + '\SQLRUserGroup' + $IN + '] FOR LOGIN [' + $SN + '\SQLRUserGroup' + $IN + ']'
-            invoke-sqlcmd -serverinstance $ServerName -database $dbName_Py -Query $Query 
+            $Query = 'USE [' + $dbName + ']' + ' CREATE USER [' + $SN + '\SQLRUserGroup' + $IN + '] FOR LOGIN [' + $SN + '\SQLRUserGroup' + $IN + ']'
+            invoke-sqlcmd -serverinstance $ServerName -database $dbName -Query $Query 
         }
         ELSE 
         {
             write-host -ForegroundColor 'Cyan' " Giving SQLRUserGroup access to  $Si Database"
-            $Query = 'USE [' + $dbName_Py + '] CREATE USER [SQLRUserGroup] FOR LOGIN [' + $si + '\SQLRUserGroup]'
-            invoke-sqlcmd -serverinstance $si -database $dbName_Py -Query $Query }
+            $Query = 'USE [' + $dbName + '] CREATE USER [SQLRUserGroup] FOR LOGIN [' + $si + '\SQLRUserGroup]'
+            invoke-sqlcmd -serverinstance $si -database $dbName -Query $Query }
     } 
 
 
@@ -231,37 +237,40 @@ Write-Host "  Creating SQL Database for R "
 
 Write-Host -ForeGroundColor 'cyan' (" Using $ServerName SQL Instance") 
 
+$dbName = $db + "_R"
+
+
 ## Create RServer DB 
-$SqlParameters = @("dbName=$dbName_R")
+$SqlParameters = @("dbName=$dbName")
 
 $CreateSQLDB = "$ScriptPath\CreateDatabase.sql"
 
 $CreateSQLObjects = "$ScriptPath\CreateSQLObjectsR.sql"
-Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the  $dbName_R database") 
-invoke-sqlcmd -inputfile $CreateSQLDB -serverinstance $ServerName -database master -Variable $SqlParameters
+Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the  $dbName database") 
+invoke-sqlcmd -inputfile $CreateSQLDB -serverinstance $ServerName -database [master] -Variable $SqlParameters
 
 
-Write-Host -ForeGroundColor 'cyan' (" SQLServerDB $dbName_R Created")
-invoke-sqlcmd "USE $dbName_R;" 
+Write-Host -ForeGroundColor 'cyan' (" SQLServerDB $dbName Created")
+invoke-sqlcmd "USE $dbName;" 
 
-Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the objects in the $dbName_R database")
-invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database $dbName_R
+Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the objects in the $dbName database")
+invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database $dbName
 
 
-Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName_R Database")
+Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Database")
 
 #### Give SqlUserGroup Acess to R Database
 $si = if ($si -like '*\*') {
     {
         Write-Host -ForegroundColor 'Cyan' " Giving SQLRUser Group access to  Name $Si "
-        $Query = 'USE [' + $dbName_R + ']' + ' CREATE USER [' + $SN + '\SQLRUserGroup' + $IN + '] FOR LOGIN [' + $SN + '\SQLRUserGroup' + $IN + ']'
-        invoke-sqlcmd -serverinstance $ServerName -database $dbName_R -Query $Query 
+        $Query = 'USE [' + $dbName + ']' + ' CREATE USER [' + $SN + '\SQLRUserGroup' + $IN + '] FOR LOGIN [' + $SN + '\SQLRUserGroup' + $IN + ']'
+        invoke-sqlcmd -serverinstance $ServerName -database $dbName -Query $Query 
     }
     ELSE 
     {
         write-host -ForegroundColor 'Cyan' " Giving SQLRUserGroup access to  $Si Database"
-        $Query = 'USE [' + $dbName_R + '] CREATE USER [SQLRUserGroup] FOR LOGIN [' + $si + '\SQLRUserGroup]'
-        invoke-sqlcmd -serverinstance $si -database $dbName_R -Query $Query }
+        $Query = 'USE [' + $dbName + '] CREATE USER [SQLRUserGroup] FOR LOGIN [' + $si + '\SQLRUserGroup]'
+        invoke-sqlcmd -serverinstance $si -database $dbName -Query $Query }
 } 
 
 
@@ -294,8 +303,9 @@ Write-Host "
         Configuring Solution for R
         "
   
-#$ActionScipts =  C:\Solutions\Hospital\Resources\ActionScripts\CreateDatabaseR.ps1 -ServerName $ServerName -dbName $dbName_R -Prompt $Prompt 
-$ActionScipts =  C:\Solutions\Hospital\SQLR\LoadandTrainData.ps1 -ServerName $ServerName -dbName $dbName_R -Prompt $Prompt 
+#$ActionScipts =  C:\Solutions\Hospital\Resources\ActionScripts\CreateDatabaseR.ps1 -ServerName $ServerName -dbName $dbName_R -Prompt $Prompt
+$dbName = $db + "_R" 
+$ActionScipts =  C:\Solutions\Hospital\SQLR\LoadandTrainData.ps1 -ServerName $ServerName -dbName $dbName -Prompt $Prompt 
 
 
 
@@ -306,8 +316,9 @@ if ($isCompatible -eq 'Yes')
     Write-Host "  
         Configuring Solution for Py
         "
+        $dbname = $db + "_Py"
 #$ActionScipts =  C:\Solutions\Hospital\Resources\ActionScripts\CreateDatabasePy.ps1 -ServerName $ServerName -dbName $dbName_Py -Prompt $Prompt 
-$ActionScipts =  C:\Solutions\Hospital\SQLR\LoadandTrainData.ps1 -ServerName $ServerName -dbName $dbName_Py -Prompt $Prompt         
+$ActionScipts =  C:\Solutions\Hospital\SQLR\LoadandTrainData.ps1 -ServerName $ServerName -dbName $dbName -Prompt $Prompt         
 }
 
 
