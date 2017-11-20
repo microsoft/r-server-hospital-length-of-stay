@@ -4,8 +4,14 @@
 
 BEGIN
 	DECLARE  @DbName VARCHAR(400) = N'$(dbName)'
+	--DECLARE  @DbName VARCHAR(400) = N'Hospital_R'
 	DECLARE @ServerName varchar(100) = (SELECT CAST(SERVERPROPERTY('ServerName') as Varchar))
 	DECLARE @Qry VARCHAR(MAX) 
+
+	--SELECT @DbName
+
+
+
 
 	SET @Qry = 
 		(' 
@@ -101,7 +107,6 @@ BEGIN
 	'
 	USE [<dbName>]
 	CREATE USER [<sn>\SQLRUserGroup] FOR LOGIN [<sn>\SQLRUserGroup]
-
 
 	ALTER USER [<sn>\SQLRUserGroup] WITH DEFAULT_SCHEMA=NULL
 
