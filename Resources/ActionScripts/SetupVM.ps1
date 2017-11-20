@@ -62,7 +62,7 @@ Import-Module -Name SQLServer
 
 
 ### Change Authentication From Windows Auth to Mixed Mode 
-#Invoke-Sqlcmd -Query "EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'LoginMode', REG_DWORD, 2;" -ServerInstance "LocalHost" 
+Invoke-Sqlcmd -Query "EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'LoginMode', REG_DWORD, 2;" -ServerInstance "LocalHost" 
 
 Write-Host -ForeGroundColor 'cyan' " Configuring SQL to allow running of External Scripts "
 ### Allow Running of External Scripts , this is to allow R Services to Connect to SQL (new feature on SQL 2017)
@@ -104,13 +104,6 @@ WRITE-HOST " ServerName set to $ServerName"
 $db = if ($Prompt -eq 'Y') {Read-Host  -Prompt "Enter Desired Database Base Name"} else {$SolutionName} 
 
 
-#$dbName_R = $dbName + "_R"
-
-#WRITE-HOST " Database for R Services set to $dbName_R "
-
-#$dbName_Py = $dbName + "_Py"
-
-#WRITE-HOST " Database for Py Services set to $dbName_Py "
 
 
 
@@ -125,38 +118,7 @@ $trustedConnection = "Y"
 
 
 
-##########################################################################
-#Set up SQL User Group for R 
-##########################################################################
-##$Query = "SELECT SERVERPROPERTY('ServerName')"
-##$si = invoke-sqlcmd -Query $Query
-##$si = $si.Item(0)
-$si = if ($si -like '*\*') 
-{
-    $SN, $IN = $si.split('\')
-    $SqlUser = $SN + '\SQLRUserGroup' + $IN
-    if ((Get-SQLLogin -ServerInstance $si -LoginName $SQLUser -EA SilentlyContinue)) {
-        Write-Host -ForegroundColor 'Cyan'  ''$SqlUser 'is already created in the Master Database'
-    }
-    ELSE { 
-        Write-Host -ForegroundColor 'Cyan'  " Setting up SQLRUserGroup for Name Instance "
-        $SN, $IN = $si.split('\')
-        $Query = 'USE [master] CREATE LOGIN [' + $SN + '\SQLRUserGroup' + $IN + '] FROM WINDOWS WITH DEFAULT_DATABASE=[master]' 
-        invoke-sqlcmd -serverinstance $ServerName -database Master -Query $Query 
-    }
-    Write-Host -ForegroundColor 'Cyan' " Giving SQLRUser Group access to  Name $Si "
-}
-ELSE {
-    $SqlUser = $si + '\SQLRUserGroup'
-    if ((Get-SQLLogin -ServerInstance $si -LoginName $SQLUser -EA SilentlyContinue)) { 
-        Write-Host ''$SqlUser 'has already been given access to the Database' 
-    }
-    ELSE {
-        write-host -ForegroundColor 'Cyan'  " Setting up SQLRUser Group for Default Instance"
-        $Query = 'USE [master] CREATE LOGIN [' + $si + '\SQLRUserGroup] FROM WINDOWS WITH DEFAULT_DATABASE=[master]'
-        invoke-sqlcmd -serverinstance $ServerName -database Master -Query $Query 
-    }
-}
+
 
 ##########################################################################
 
@@ -209,19 +171,7 @@ if ($isCompatible -eq 'Yes') {
 
     Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Database")
 
-    #### Give SqlUserGroup Acess to Py Database
-    $si = if ($si -like '*\*') {
-        {
-            Write-Host -ForegroundColor 'Cyan' " Giving SQLRUser Group access to  Name $Si "
-            $Query = 'USE [' + $dbName + ']' + ' CREATE USER [' + $SN + '\SQLRUserGroup' + $IN + '] FOR LOGIN [' + $SN + '\SQLRUserGroup' + $IN + ']'
-            invoke-sqlcmd -serverinstance $ServerName -database $dbName -Query $Query 
-        }
-        ELSE 
-        {
-            write-host -ForegroundColor 'Cyan' " Giving SQLRUserGroup access to  $Si Database"
-            $Query = 'USE [' + $dbName + '] CREATE USER [SQLRUserGroup] FOR LOGIN [' + $si + '\SQLRUserGroup]'
-            invoke-sqlcmd -serverinstance $si -database $dbName -Query $Query }
-    } 
+ 
 
 
 
@@ -247,7 +197,7 @@ $CreateSQLDB = "$ScriptPath\CreateDatabase.sql"
 
 $CreateSQLObjects = "$ScriptPath\CreateSQLObjectsR.sql"
 Write-Host -ForeGroundColor 'cyan' (" Calling Script to create the  $dbName database") 
-invoke-sqlcmd -inputfile $CreateSQLDB -serverinstance $ServerName -database [master] -Variable $SqlParameters
+invoke-sqlcmd -inputfile $CreateSQLDB -serverinstance $ServerName -database master -Variable $SqlParameters
 
 
 Write-Host -ForeGroundColor 'cyan' (" SQLServerDB $dbName Created")
@@ -258,21 +208,6 @@ invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database
 
 
 Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Database")
-
-#### Give SqlUserGroup Acess to R Database
-$si = if ($si -like '*\*') {
-    {
-        Write-Host -ForegroundColor 'Cyan' " Giving SQLRUser Group access to  Name $Si "
-        $Query = 'USE [' + $dbName + ']' + ' CREATE USER [' + $SN + '\SQLRUserGroup' + $IN + '] FOR LOGIN [' + $SN + '\SQLRUserGroup' + $IN + ']'
-        invoke-sqlcmd -serverinstance $ServerName -database $dbName -Query $Query 
-    }
-    ELSE 
-    {
-        write-host -ForegroundColor 'Cyan' " Giving SQLRUserGroup access to  $Si Database"
-        $Query = 'USE [' + $dbName + '] CREATE USER [SQLRUserGroup] FOR LOGIN [' + $si + '\SQLRUserGroup]'
-        invoke-sqlcmd -serverinstance $si -database $dbName -Query $Query }
-} 
-
 
 
 
