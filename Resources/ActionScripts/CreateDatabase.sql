@@ -3,13 +3,27 @@
 
 
 BEGIN
-	DECLARE  @DbName VARCHAR(400) = N'$(dbName)'
-	--DECLARE  @DbName VARCHAR(400) = N'Hospital_R'
-	DECLARE @ServerName varchar(100) = (SELECT CAST(SERVERPROPERTY('ServerName') as Varchar))
-	DECLARE @Qry VARCHAR(MAX) 
+	DECLARE  
+		@DbName VARCHAR(400) = N'$(dbName)',
+		@ServerName varchar(100) = (SELECT CAST(SERVERPROPERTY('ServerName') as Varchar)),
+		@InstanceName varchar(100) = (SELECT CAST(SERVERPROPERTY('InstanceName') as Varchar)),
+		@UI varchar(100),
+		@Qry VARCHAR(MAX) 
 
-	--SELECT @DbName
+		
+		----Create Needed SQLRUsergroup Name , 
+		----if Default Instance UI = {ServerName}\SQLRUserGroup 
+		----if Named Instance {ServerName}\SQLRUserGroup{InstanceName} 
+		
+		If @InstanceName is null 
+			BEGIN 
+				SET @UI = @ServerName + '\SQLRUserGroup' 
+			END 
 
+		If @InstanceName is Not null 
+			BEGIN 
+				SET @UI = @ServerName + '\SQLRUserGroup' + @InstanceName
+			END 
 
 
 
@@ -92,32 +106,37 @@ BEGIN
 	)
 	SET @Alter = (REPLACE(@Alter,'<db>',@DbName)) 
 	EXEC (@Alter) 
+
+	----CREATE USER SQLRUserGroup on SQL Server
+
 	SET @Qry = 
 	'
-	IF NOT EXISTS (SELECT name FROM master.sys.server_principals where name = ''<sn>\SQLRUserGroup'')
-	BEGIN CREATE LOGIN [<sn>\SQLRUserGroup] FROM WINDOWS WITH DEFAULT_DATABASE=[master], DEFAULT_LANGUAGE=[us_english] END
+	IF NOT EXISTS (SELECT name FROM master.sys.server_principals where name = ''<ui>'')
+	BEGIN CREATE LOGIN [<ui>] FROM WINDOWS WITH DEFAULT_DATABASE=[master], DEFAULT_LANGUAGE=[us_english] END
 	'
-	SET @Qry = REPLACE(@qry,'<sn>', @ServerName)
+	SET @Qry = REPLACE(@qry,'<ui>', @ui)
 	
 	EXEC (@Qry)
+	--SELECT @Qry
 
 
-
+	----Give SQLRUserGroup Rights To Database(s)
 	SET @Qry = 
 	'
 	USE [<dbName>]
-	CREATE USER [<sn>\SQLRUserGroup] FOR LOGIN [<sn>\SQLRUserGroup]
+	CREATE USER [<ui>] FOR LOGIN [<ui>]
 
-	ALTER USER [<sn>\SQLRUserGroup] WITH DEFAULT_SCHEMA=NULL
+	ALTER USER [<ui>] WITH DEFAULT_SCHEMA=NULL
 
-	ALTER AUTHORIZATION ON SCHEMA::[db_datareader] TO [<sn>\SQLRUserGroup]
+	ALTER AUTHORIZATION ON SCHEMA::[db_datareader] TO [<ui>]
 
-	ALTER AUTHORIZATION ON SCHEMA::[db_datawriter] TO [<sn>\SQLRUserGroup]
+	ALTER AUTHORIZATION ON SCHEMA::[db_datawriter] TO [<ui>]
 
-	ALTER AUTHORIZATION ON SCHEMA::[db_ddladmin] TO [<sn>\SQLRUserGroup]
+	ALTER AUTHORIZATION ON SCHEMA::[db_ddladmin] TO [<ui>]
 	'
-	SET @Qry = REPLACE(REPLACE(@qry,'<sn>', @ServerName),'<dbName>',@DbName) 
+	SET @Qry = REPLACE(REPLACE(@qry,'<ui>', @ui),'<dbName>',@DbName) 
 	
-    EXEC (@Qry)
+	EXEC (@Qry)
+	--SELECT @Qry
 
 END 
