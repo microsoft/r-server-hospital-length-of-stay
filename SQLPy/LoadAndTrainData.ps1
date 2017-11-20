@@ -62,6 +62,7 @@ $SolutionData = $SolutionPath +"\Data\"
     }
     Write-Host -ForeGroundColor 'cyan' (" Finished loading .csv File(s).")
    
+    $ServerName = 'LOCALHOST'
 
     # compute statistics for production and faster NA replacement.
     Write-Host -ForeGroundColor 'Cyan' (" Computing statistics on the input table...")
