@@ -43,11 +43,11 @@ $si = if ($si -like '*\*')
         
         Write-Host -ForegroundColor 'Cyan'  " Setting up SQLRUserGroup for Name Instance "
         $SN, $IN = $si.split('\')
-        $Query = 'USE [master] CREATE LOGIN [' + $SN + '\SQLRUserGroup' + $IN + '] FROM WINDOWS WITH DEFAULT_DATABASE=[Hospital_R]' 
+        $Query = 'USE master CREATE LOGIN [' + $SN + '\SQLRUserGroup' + $IN + '] FROM WINDOWS WITH DEFAULT_DATABASE=' + $dbName 
         invoke-sqlcmd -serverinstance $ServerName -database Master -Query $Query 
 
         Write-Host -ForegroundColor 'Cyan' " Giving SQLRUser Group access to  Name $Si "
-        $Query = 'USE [' + $dbName + ']' + ' CREATE USER [' + $SN + '\SQLRUserGroup' + $IN + '] FOR LOGIN [' + $SN + '\SQLRUserGroup' + $IN + ']'
+        $Query = 'USE ' + $dbName  + ' CREATE USER [' + $SN + '\SQLRUserGroup' + $IN + '] FOR LOGIN [' + $SN + '\SQLRUserGroup' + $IN + ']'
         invoke-sqlcmd -serverinstance $ServerName -database $dbName -Query $Query 
     
     }
