@@ -4,8 +4,6 @@ Powershell script for setting up the solution template.
 
 .DESCRIPTION
 This script checks out the solution from github and deploys it to SQL Server on the local Data Science VM (DSVM).
----Need to add pass thru for Prompted install 
-
 #>
 
 param 
@@ -17,7 +15,9 @@ $Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
 
 
 $SolutionName = "Hospital"
-
+$SolutionFullName = "r-server-hospital-length-of-stay" 
+### DON'T FORGET TO CHANGE TO MASTER LATER...
+$Branch = "dev" 
 $setupLog = "c:\tmp\setup_log.txt"
 Start-Transcript -Path $setupLog -Append
 $startTime = Get-Date
@@ -36,21 +36,31 @@ $scriptPath = $SolutionPath + "\Resources\ActionScripts\"
 #Clone Data from GIT
 ##########################################################################
 
-### DON'T FORGET TO CHANGE TO MASTER LATER...
 
-if (Test-Path $solutionTemplatePath) {
-    Write-Host " Solution has already been cloned"
-}
-ELSE {
-    git clone  --branch dev --single-branch https://github.com/Microsoft/r-server-hospital-length-of-stay $solutionPath
-}
+$clone = "git clone --branch $Branch --single-branch https://github.com/Microsoft/$SolutionFullName $solutionPath"
+
+if (Test-Path $solutionTemplatePath) { Write-Host " Solution has already been cloned"}
+ELSE {Invoke-Expression $clone}
+
+
 #################################################################
 ##DSVM Does not have SQLServer Powershell Module , this will try and install it if it is not present it will work , if it is already there it will error out 
 #################################################################
 
+
+
+
+
+
 Write-Host " Installing SQLServer Power Shell Module , if it is already installed a warning will be displayed , this is OK........."
-Install-Module -Name SQLServer -Scope AllUsers -AllowClobber -Force
-Import-Module -Name SQLServer
+
+if (Get-Module -ListAvailable -Name SQLServer) {Update-Module -Name "SQLServer"}
+ else 
+    {
+    Install-Module -Name SQLServer -Scope AllUsers -AllowClobber -Force
+    Import-Module -Name SQLServer
+    }
+
 
 
 
@@ -62,7 +72,7 @@ Import-Module -Name SQLServer
 
 
 ### Change Authentication From Windows Auth to Mixed Mode 
-Invoke-Sqlcmd -Query "EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'LoginMode', REG_DWORD, 2;" -ServerInstance "LocalHost" 
+##Invoke-Sqlcmd -Query "EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'LoginMode', REG_DWORD, 2;" -ServerInstance "LocalHost" 
 
 Write-Host -ForeGroundColor 'cyan' " Configuring SQL to allow running of External Scripts "
 ### Allow Running of External Scripts , this is to allow R Services to Connect to SQL (new feature on SQL 2017)
@@ -235,13 +245,12 @@ Write-Host -ForeGroundColor cyan " PowerBI Reports Copied to Desktop"
 
 ###Configure Database for R 
 Write-Host "  
-        Configuring Solution for R
+        Configuring $SolutionName Solution for R
         "
   
-#$ActionScipts =  C:\Solutions\Hospital\Resources\ActionScripts\CreateDatabaseR.ps1 -ServerName $ServerName -dbName $dbName_R -Prompt $Prompt
 $dbName = $db + "_R" 
-$ActionScipts =  C:\Solutions\Hospital\SQLR\LoadandTrainData.ps1 -ServerName $ServerName -dbName $dbName -Prompt $Prompt 
-
+$ActionScript = $solutionPath + "\SQLR\LoadandTrainData.ps1 -ServerName $ServerName -dbName $dbName -Prompt $Prompt"
+Invoke-Expression $ActionScript
 
 
 
@@ -249,11 +258,11 @@ $ActionScipts =  C:\Solutions\Hospital\SQLR\LoadandTrainData.ps1 -ServerName $Se
 if ($isCompatible -eq 'Yes')
 {
     Write-Host "  
-        Configuring Solution for Py
+        Configuring $SolutionName Solution for Py
         "
         $dbname = $db + "_Py"
-#$ActionScipts =  C:\Solutions\Hospital\Resources\ActionScripts\CreateDatabasePy.ps1 -ServerName $ServerName -dbName $dbName_Py -Prompt $Prompt 
-$ActionScipts =  C:\Solutions\Hospital\SQLR\LoadandTrainData.ps1 -ServerName $ServerName -dbName $dbName -Prompt $Prompt         
+        $ActionScript = $solutionPath + "\SQLPy\LoadandTrainData.ps1 -ServerName $ServerName -dbName $dbName -Prompt $Prompt"
+        Invoke-Expression $ActionScript         
 }
 
 
