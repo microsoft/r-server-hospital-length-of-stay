@@ -29,9 +29,9 @@ $SolutionData = $SolutionPath +"\Data\"
 ##########################################################################
 #Set up SQL User Group for R 
 ##########################################################################
-##$Query = "SELECT SERVERPROPERTY('ServerName')"
-##$si = invoke-sqlcmd -Query $Query
-##$si = $si.Item(0)
+$Query = "SELECT SERVERPROPERTY('ServerName')"
+$si = invoke-sqlcmd -Query $Query
+$si = $si.Item(0)
 $si = if ($si -like '*\*') 
 {
     $SN, $IN = $si.split('\')
