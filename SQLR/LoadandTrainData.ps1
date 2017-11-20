@@ -25,58 +25,7 @@ $solutionTemplatePath = "C:\" + $solutionTemplateName
 $checkoutDir = $SolutionName
 $SolutionPath = $solutionTemplatePath + '\' + $checkoutDir
 $SolutionData = $SolutionPath +"\Data\"
-
-##########################################################################
-#Set up SQL User Group for R 
-##########################################################################
-$Query = "SELECT SERVERPROPERTY('ServerName')"
-$si = invoke-sqlcmd -Query $Query
-$si = $si.Item(0)
-$si = if ($si -like '*\*') 
-{
-    $SN, $IN = $si.split('\')
-    $SqlUser = $SN + '\SQLRUserGroup' + $IN
-    if ((Get-SQLLogin -ServerInstance $si -LoginName $SQLUser -EA SilentlyContinue)) {
-        Write-Host -ForegroundColor 'Cyan'  ''$SqlUser 'is already created in the Master Database'
-    }
-    ELSE { 
-        
-        Write-Host -ForegroundColor 'Cyan'  " Setting up SQLRUserGroup for Name Instance "
-        $SN, $IN = $si.split('\')
-        $Query = 'USE master CREATE LOGIN [' + $SN + '\SQLRUserGroup' + $IN + '] FROM WINDOWS WITH DEFAULT_DATABASE=' + $dbName 
-        invoke-sqlcmd -serverinstance $ServerName -database Master -Query $Query 
-
-        Write-Host -ForegroundColor 'Cyan' " Giving SQLRUser Group access to  Name $Si "
-        $Query = 'USE ' + $dbName  + ' CREATE USER [' + $SN + '\SQLRUserGroup' + $IN + '] FOR LOGIN [' + $SN + '\SQLRUserGroup' + $IN + ']'
-        invoke-sqlcmd -serverinstance $ServerName -database $dbName -Query $Query 
-    
-    }
-
-
-
-ELSE {
-    $SqlUser = $si + '\SQLRUserGroup'
-    if ((Get-SQLLogin -ServerInstance $si -LoginName $SQLUser -EA SilentlyContinue)) { 
-        Write-Host ''$SqlUser 'has already been given access to the Database' 
-    }
-    ELSE {
-        write-host -ForegroundColor 'Cyan'  " Setting up SQLRUser Group for Default Instance"
-        $Query = 'USE [master] CREATE LOGIN [' + $si + '\SQLRUserGroup] FROM WINDOWS WITH DEFAULT_DATABASE=[Hospital_R]'
-        invoke-sqlcmd -serverinstance $ServerName -database Master -Query $Query 
-       
-
-        write-host -ForegroundColor 'Cyan' " Giving SQLRUserGroup access to  $Si Database"
-        $Query = 'USE [' + $dbName + '] CREATE USER [SQLRUserGroup] FOR LOGIN [' + $si + '\SQLRUserGroup]'
-        invoke-sqlcmd -serverinstance $si -database $dbName -Query $Query }
-    }
-}    
-
-
-
-
-
-
-
+   
 
 ##########################################################################
 # Deployment Pipeline

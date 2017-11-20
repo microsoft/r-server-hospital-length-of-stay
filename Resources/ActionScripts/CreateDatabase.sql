@@ -4,8 +4,9 @@
 
 BEGIN
 	DECLARE  @DbName VARCHAR(400) = N'$(dbName)'
-	DECLARE @ServerName varchar(100) = (SELECT @@SERVERNAME)
+	DECLARE @ServerName varchar(100) = (SELECT CAST(SERVERPROPERTY('ServerName') as Varchar))
 	DECLARE @Qry VARCHAR(MAX) 
+
 	SET @Qry = 
 		(' 
 		EXEC msdb.dbo.sp_delete_database_backuphistory @database_name = N''<DBName>''
@@ -84,11 +85,34 @@ BEGIN
 	ALTER DATABASE <db> SET  READ_WRITE'
 	)
 	SET @Alter = (REPLACE(@Alter,'<db>',@DbName)) 
-	EXEC (@Alter)
-END 
-	--GO
-	--USE [master]
-	--GO
-	--ALTER DATABASE [Hospital] SET  READ_WRITE 
-	--GO
+	EXEC (@Alter) 
+	SET @Qry = 
+	'
+	IF NOT EXISTS (SELECT name FROM master.sys.server_principals where name = ''<sn>\SQLRUserGroup'')
+	BEGIN CREATE LOGIN [<sn>\SQLRUserGroup] FROM WINDOWS WITH DEFAULT_DATABASE=[master], DEFAULT_LANGUAGE=[us_english] END
+	'
+	SET @Qry = REPLACE(@qry,'<sn>', @ServerName)
+	
+	EXEC (@Qry)
 
+
+
+	SET @Qry = 
+	'
+	USE [<dbName>]
+	CREATE USER [<sn>\SQLRUserGroup] FOR LOGIN [<sn>\SQLRUserGroup]
+
+
+	ALTER USER [<sn>\SQLRUserGroup] WITH DEFAULT_SCHEMA=NULL
+
+	ALTER AUTHORIZATION ON SCHEMA::[db_datareader] TO [<sn>\SQLRUserGroup]
+
+	ALTER AUTHORIZATION ON SCHEMA::[db_datawriter] TO [<sn>\SQLRUserGroup]
+
+	ALTER AUTHORIZATION ON SCHEMA::[db_ddladmin] TO [<sn>\SQLRUserGroup]
+	'
+	SET @Qry = REPLACE(REPLACE(@qry,'<sn>', @ServerName),'<dbName>',@DbName) 
+	
+    EXEC (@Qry)
+
+END 
