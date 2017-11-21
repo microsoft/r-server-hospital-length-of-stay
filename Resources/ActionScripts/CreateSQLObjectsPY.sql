@@ -1,36 +1,4 @@
-
-CREATE TABLE [dbo].[LengthOfStay](
-	[eid] [int] NOT NULL,
-	[vdate] [date] NULL,
-	[rcount] [varchar](2) NULL,
-	[gender] [varchar](1) NULL,
-	[dialysisrenalendstage] [varchar](1) NULL,
-	[asthma] [varchar](1) NULL,
-	[irondef] [varchar](1) NULL,
-	[pneum] [varchar](1) NULL,
-	[substancedependence] [varchar](1) NULL,
-	[psychologicaldisordermajor] [varchar](1) NULL,
-	[depress] [varchar](1) NULL,
-	[psychother] [varchar](1) NULL,
-	[fibrosisandother] [varchar](1) NULL,
-	[malnutrition] [varchar](1) NULL,
-	[hemo] [varchar](1) NULL,
-	[hematocrit] [float] NULL,
-	[neutrophils] [float] NULL,
-	[sodium] [float] NULL,
-	[glucose] [float] NULL,
-	[bloodureanitro] [float] NULL,
-	[creatinine] [float] NULL,
-	[bmi] [float] NULL,
-	[pulse] [float] NULL,
-	[respiration] [float] NULL,
-	[secondarydiagnosisnonicd9] [varchar](2) NULL,
-	[discharged] [date] NULL,
-	[facid] [varchar](1) NULL,
-	[lengthofstay] [int] NULL
-) ON [PRIMARY]
-GO
-/****** Object:  View [dbo].[LoS0]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  View [dbo].[LoS0]    Script Date: 11/21/2017 7:19:58 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -41,7 +9,7 @@ GO
 		SELECT *
 	    FROM LengthOfStay
 GO
-/****** Object:  Table [dbo].[Stats]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  Table [dbo].[Stats]    Script Date: 11/21/2017 7:19:58 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -54,7 +22,7 @@ CREATE TABLE [dbo].[Stats](
 	[std] [float] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  View [dbo].[LoS]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  View [dbo].[LoS]    Script Date: 11/21/2017 7:19:58 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -80,7 +48,7 @@ GO
 			   secondarydiagnosisnonicd9, discharged, facid, CAST(lengthofstay as float) lengthofstay
 	    FROM LoS0
 GO
-/****** Object:  Table [dbo].[Boosted_Prediction]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  Table [dbo].[Boosted_Prediction]    Script Date: 11/21/2017 7:19:58 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -91,7 +59,7 @@ CREATE TABLE [dbo].[Boosted_Prediction](
 	[eid] [int] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ColInfo]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  Table [dbo].[ColInfo]    Script Date: 11/21/2017 7:19:58 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -100,7 +68,7 @@ CREATE TABLE [dbo].[ColInfo](
 	[info] [varbinary](max) NOT NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Fast_Prediction]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  Table [dbo].[Fast_Prediction]    Script Date: 11/21/2017 7:19:58 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -111,7 +79,7 @@ CREATE TABLE [dbo].[Fast_Prediction](
 	[Score] [float] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Forest_Prediction]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  Table [dbo].[Forest_Prediction]    Script Date: 11/21/2017 7:19:58 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -122,7 +90,7 @@ CREATE TABLE [dbo].[Forest_Prediction](
 	[eid] [int] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[LoS_Predictions]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  Table [dbo].[LoS_Predictions]    Script Date: 11/21/2017 7:19:58 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -161,7 +129,7 @@ CREATE TABLE [dbo].[LoS_Predictions](
 	[lengthofstay_Pred] [int] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Metrics]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  Table [dbo].[Metrics]    Script Date: 11/21/2017 7:19:58 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -175,7 +143,7 @@ CREATE TABLE [dbo].[Metrics](
 	[coefficient_of_determination] [float] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Models]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  Table [dbo].[Models]    Script Date: 11/21/2017 7:19:58 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -185,7 +153,7 @@ CREATE TABLE [dbo].[Models](
 	[model] [varbinary](max) NOT NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[NN_Prediction]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  Table [dbo].[NN_Prediction]    Script Date: 11/21/2017 7:19:58 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -196,7 +164,7 @@ CREATE TABLE [dbo].[NN_Prediction](
 	[Score] [float] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Train_Id]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  Table [dbo].[Train_Id]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -205,12 +173,9 @@ CREATE TABLE [dbo].[Train_Id](
 	[eid] [int] NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Index [length_cci]    Script Date: 11/21/2017 5:50:16 PM ******/
-CREATE CLUSTERED COLUMNSTORE INDEX [length_cci] ON [dbo].[LengthOfStay] WITH (DROP_EXISTING = OFF, COMPRESSION_DELAY = 0) ON [PRIMARY]
-GO
 ALTER TABLE [dbo].[Models] ADD  DEFAULT ('default model') FOR [model_name]
 GO
-/****** Object:  StoredProcedure [dbo].[compute_stats]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[compute_stats]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -302,7 +267,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[dev_lengthofstay]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[dev_lengthofstay]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -347,7 +312,7 @@ BEGIN
 
 END
 GO
-/****** Object:  StoredProcedure [dbo].[evaluate]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[evaluate]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -436,7 +401,43 @@ if model_name == "NN":
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[Execute_Yourself]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[Exec_Inital_PyScoring]    Script Date: 11/21/2017 7:19:59 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+	CREATE Proc [dbo].[Exec_Inital_PyScoring] 
+
+	as
+
+
+
+	DECLARE @Spliting_Percent int 
+	SET @Spliting_Percent = 70 
+  
+	EXEC compute_stats
+	EXEC fill_NA_mode_mean 'LengthOfStay', 'LoS0'
+	EXEC feature_engineering 'LoS0', 'LoS', 0
+	EXEC get_column_info 'LoS'
+	EXEC splitting @Spliting_Percent, 'LoS'
+
+
+
+    --Gradient Boosted Training  
+
+    DECLARE @modelName varchar(10) = 'GBT'
+    EXEC train_model @modelName, 'LoS'
+    
+	----Gradient Boosted Scoring  
+	EXEC score @modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'
+
+    ----Gradient Boosted evaluation 
+	EXEC evaluate @modelName, 'Boosted_Prediction'
+
+	----Gradient Boosted Prediction
+	EXEC prediction_results
+GO
+/****** Object:  StoredProcedure [dbo].[Execute_Yourself]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -498,7 +499,7 @@ exec [dbo].[evaluate] @model_name  = 'NN',
 
 exec [dbo].[prediction_results]; --- uses Fast_Prediction, outputs to LoS_Predictions
 GO
-/****** Object:  StoredProcedure [dbo].[feature_engineering]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[feature_engineering]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -555,7 +556,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[fill_NA_explicit]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[fill_NA_explicit]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -669,7 +670,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[fill_NA_mode_mean]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[fill_NA_mode_mean]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -781,7 +782,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[get_column_info]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[get_column_info]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -844,7 +845,7 @@ OutputDataSet = DataFrame({"payload": dumps(col_info)}, index=[0])
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[prediction_results]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[prediction_results]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -869,7 +870,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[prod_lengthofstay]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[prod_lengthofstay]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -898,7 +899,7 @@ BEGIN
 
 END
 GO
-/****** Object:  StoredProcedure [dbo].[score]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[score]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1011,7 +1012,7 @@ if model_name == "NN" and len(model) > 0:
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[splitting]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[splitting]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1034,7 +1035,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[train_model]    Script Date: 11/21/2017 5:50:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[train_model]    Script Date: 11/21/2017 7:19:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1153,4 +1154,3 @@ WHERE model_name = 'default model'
 
 ;
 END
-
