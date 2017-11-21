@@ -296,11 +296,11 @@ if ($isCompatible -eq 'Yes'-and $InstallPy -eq 'Yes')
     }
     Write-Host -ForeGroundColor 'cyan' (" Finished loading .csv File(s).")
    
-    Write-Host -ForeGroundColor 'Cyan' (" Training Data...")
-    $query = "EXEC Execute_Yourself"
-    Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout  0 
+    Write-Host -ForeGroundColor 'Cyan' (" Scoring and Training Data...")
+    $query = "Exec_Inital_PyScoring"
+    SqlServer\Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
 
-      SqlServer\Invoke-Sqlcmd  -Database $DbName -Query "EXEC Execute_Yourself" -QueryTimeout 0 -ServerInstance $ServerName
+      ##SqlServer\Invoke-Sqlcmd  -Database $DbName -Query "EXEC Execute_Yourself" -QueryTimeout 0 -ServerInstance $ServerName
 
 
 }
