@@ -18,6 +18,7 @@ $SolutionName = "Hospital"
 $SolutionFullName = "r-server-hospital-length-of-stay" 
 ### DON'T FORGET TO CHANGE TO MASTER LATER...
 $Branch = "dev" 
+$InstallPy = 'Yes' ## If Solution has a Py Version this should be 'Yes' Else 'No' 
 $setupLog = "c:\tmp\setup_log.txt"
 Start-Transcript -Path $setupLog -Append
 $startTime = Get-Date
@@ -148,7 +149,7 @@ $query =
 
 $isCompatible = Invoke-Sqlcmd -ServerInstance $ServerName -Database Master -Query $query
 $isCompatible = $isCompatible.Item(0)
-if ($isCompatible -eq 'Yes') {
+if ($isCompatible -eq 'Yes' -and $InstallPy -eq 'Yes') {
     Write-Host " This Version of SQL is Compatible with SQL Py "
 
     ## Create Py Database
@@ -251,7 +252,7 @@ Invoke-Expression $ActionScript
 
 
 ###Conifgure Database for Py 
-if ($isCompatible -eq 'Yes')
+if ($isCompatible -eq 'Yes'-and $InstallPy -eq 'Yes')
 {
     Write-Host "  
         Configuring $SolutionName Solution for Py
