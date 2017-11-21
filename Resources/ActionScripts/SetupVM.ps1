@@ -44,15 +44,12 @@ ELSE {Invoke-Expression $clone}
 
 
 #################################################################
-##DSVM Does not have SQLServer Powershell Module , this will try and install it if it is not present it will work , if it is already there it will error out 
+##DSVM Does not have SQLServer Powershell Module Install or Update 
 #################################################################
 
 
 
-
-
-
-Write-Host " Installing SQLServer Power Shell Module , if it is already installed a warning will be displayed , this is OK........."
+Write-Host " Installing SQLServer Power Shell Module or Updating to latest "
 
 if (Get-Module -ListAvailable -Name SQLServer) {Update-Module -Name "SQLServer"}
  else 
@@ -60,7 +57,6 @@ if (Get-Module -ListAvailable -Name SQLServer) {Update-Module -Name "SQLServer"}
     Install-Module -Name SQLServer -Scope AllUsers -AllowClobber -Force
     Import-Module -Name SQLServer
     }
-
 
 
 
