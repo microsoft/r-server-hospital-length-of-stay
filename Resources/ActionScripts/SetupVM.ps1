@@ -283,7 +283,8 @@ Write-Host -ForeGroundColor 'cyan' (" Finished loading .csv File(s).")
 
 Write-Host -ForeGroundColor 'Cyan' (" Scoring and Training Data...")
 $query = "EXEC Exec_Inital_RScoring"
-SqlServer\Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
+#SqlServer\Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
+SqlServer\Invoke-Sqlcmd -ServerInstance LocalHost -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
 
 
 
@@ -335,7 +336,8 @@ if ($isCompatible -eq 'Yes'-and $InstallPy -eq 'Yes')
    
     Write-Host -ForeGroundColor 'Cyan' (" Scoring and Training Data...")
     $query = "Exec Exec_Inital_PyScoring"
-    SqlServer\Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
+    SqlServer\Invoke-Sqlcmd -ServerInstance LocalHost -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
+    #SqlServer\Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
 
       ##SqlServer\Invoke-Sqlcmd  -Database $DbName -Query "EXEC Execute_Yourself" -QueryTimeout 0 -ServerInstance $ServerName
 
