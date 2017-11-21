@@ -64,7 +64,7 @@ $SolutionData = $SolutionPath +"\Data\"
    
     Write-Host -ForeGroundColor 'Cyan' (" Training Data...")
     $query = "EXEC Execute_Yourself"
-    Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query
+    Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout = 0 
 
 
 
