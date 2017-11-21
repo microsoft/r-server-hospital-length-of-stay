@@ -62,8 +62,15 @@ $SolutionData = $SolutionPath +"\Data\"
     }
     Write-Host -ForeGroundColor 'cyan' (" Finished loading .csv File(s).")
    
-    $ServerName = 'LOCALHOST'
+    Write-Host -ForeGroundColor 'Cyan' (" Training Data...")
+    $query = "EXEC Execute_Yourself"
+    Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query
 
+
+
+
+
+ <#
     # compute statistics for production and faster NA replacement.
     Write-Host -ForeGroundColor 'Cyan' (" Computing statistics on the input table...")
     $query = "EXEC compute_stats"
@@ -71,7 +78,7 @@ $SolutionData = $SolutionPath +"\Data\"
         {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query}
         ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -User $UserName -Password $Password  -Query $query}
         #ELSE {Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Credential $Credential  -Query $query}
-    
+
 
     # execute the NA replacement
     $Replace = if ($Prompt -eq 'y' -or $Prompt -eq 'Y') 
@@ -159,7 +166,7 @@ $SolutionData = $SolutionPath +"\Data\"
         "  
         Solution has been configured for SQLPy 
         " )
-
+#>
 
     
 
