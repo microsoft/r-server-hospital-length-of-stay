@@ -71,7 +71,7 @@ if (Get-Module -ListAvailable -Name SQLServer) {Update-Module -Name "SQLServer"}
 
 
 ### Change Authentication From Windows Auth to Mixed Mode 
-##Invoke-Sqlcmd -Query "EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'LoginMode', REG_DWORD, 2;" -ServerInstance "LocalHost" 
+Invoke-Sqlcmd -Query "EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'LoginMode', REG_DWORD, 2;" -ServerInstance "LocalHost" 
 
 Write-Host -ForeGroundColor 'cyan' " Configuring SQL to allow running of External Scripts "
 ### Allow Running of External Scripts , this is to allow R Services to Connect to SQL (new feature on SQL 2017)
