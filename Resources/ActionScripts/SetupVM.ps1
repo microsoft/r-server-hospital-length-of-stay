@@ -16,6 +16,7 @@ $Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
 
 $SolutionName = "Hospital"
 $SolutionFullName = "r-server-hospital-length-of-stay" 
+$odbcName = 'CampOpt'
 ### DON'T FORGET TO CHANGE TO MASTER LATER...
 $Branch = "dev" 
 $InstallPy = 'Yes' ## If Solution has a Py Version this should be 'Yes' Else 'No' 
@@ -179,7 +180,9 @@ if ($isCompatible -eq 'Yes' -and $InstallPy -eq 'Yes') {
 
     Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Database")
 
- 
+ ## Create ODBC Connection for PowerBI to Use 
+Add-OdbcDsn -Name $odbcName -DriverName "SQL Server Native Client 11.0" -DsnType 'System' -Platform '64-bit' -SetPropertyValue @("Server=$ServerName", "Trusted_Connection=Yes", "Database=$dbName") -ErrorAction SilentlyContinue -PassThru
+
 
 
 
@@ -247,6 +250,10 @@ Write-Host "
         "
   
 $dbName = $db + "_R" 
+
+## Create ODBC Connection for PowerBI to Use 
+Add-OdbcDsn -Name $odbcName -DriverName "SQL Server Native Client 11.0" -DsnType 'System' -Platform '64-bit' -SetPropertyValue @("Server=$ServerName", "Trusted_Connection=Yes", "Database=$dbName") -ErrorAction SilentlyContinue -PassThru
+
 ##########################################################################
 # Deployment Pipeline
 ##########################################################################
