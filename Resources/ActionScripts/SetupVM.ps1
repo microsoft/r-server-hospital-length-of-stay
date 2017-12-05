@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-Powershell script for setting up the solution template. 
+Powershell script for setting up the solution template. t
 
 .DESCRIPTION
 This script checks out the solution from github and deploys it to SQL Server on the local Data Science VM (DSVM).
