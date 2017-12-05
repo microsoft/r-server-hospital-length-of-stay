@@ -4,7 +4,7 @@
 
 --- NOTE: Run prepare_real_time_scoring.sql before running this script.
 
-Use Hospital
+Use Hospital_Py
 GO
 
 --- Real Time Scoring

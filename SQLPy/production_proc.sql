@@ -9,7 +9,7 @@
 
 
 -- Set the working database to the one where you created the stored procedures.
-Use Hospital_Prod
+Use Hospital_Py
 GO
 
 -- @input: specify the name of the table holding the raw data set for Production.

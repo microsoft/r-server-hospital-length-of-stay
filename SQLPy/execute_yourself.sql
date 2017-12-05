@@ -11,7 +11,7 @@
 -- The default table names have been specified. You can modify them by changing the value of the parameters in what follows.
 
 /* Set the working database to the one where you created the stored procedures */ 
-Use Hospital
+Use Hospital_Py
 GO
 
 /* Step 1: Preprocessing */
