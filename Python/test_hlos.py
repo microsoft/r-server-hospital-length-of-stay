@@ -45,7 +45,7 @@ def test_step1_check_output():
                           column_info=col_info)
     table_text = rx_import(LoS_text)
 
-    LengthOfStay_sql = RxSqlServerData(sql_query="SELECT * FROM [Hospital].[dbo].[LengthOfStay] ORDER BY eid",
+    LengthOfStay_sql = RxSqlServerData(sql_query="SELECT * FROM [Hospital_Py].[dbo].[LengthOfStay] ORDER BY eid",
                                        connection_string=connection_string,
                                        column_info=col_info)
     table_sql = rx_import(LengthOfStay_sql)
@@ -54,7 +54,7 @@ def test_step1_check_output():
 
 
 def test_step2_check_output():
-    LoS_sql = RxSqlServerData(sql_query="SELECT TOP (5) * FROM [Hospital].[dbo].[LoS] ORDER BY eid",
+    LoS_sql = RxSqlServerData(sql_query="SELECT TOP (5) * FROM [Hospital_Py].[dbo].[LoS] ORDER BY eid",
                               connection_string=connection_string)
     LoS = rx_import(input_data=LoS_sql)
     LoS[["number_of_issues"]] = LoS[["number_of_issues"]].apply(to_numeric)

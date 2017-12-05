@@ -1,7 +1,7 @@
 from revoscalepy import RxInSqlServer, RxLocalSeq
 
 # Load the connection string and compute context definitions.
-connection_string = "Driver=SQL Server;Server=localhost;Database=Hospital_Py3;Trusted_Connection=True"
+connection_string = "Driver=SQL Server;Server=localhost;Database=Hospital_Py;Trusted_Connection=True"
 sql = RxInSqlServer(connection_string=connection_string)
 local = RxLocalSeq()
 
