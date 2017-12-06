@@ -13,6 +13,7 @@ param
 
 $Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
 
+####Just adding a blank line 
 
 $SolutionName = "Hospital"
 $SolutionFullName = "r-server-hospital-length-of-stay" 
