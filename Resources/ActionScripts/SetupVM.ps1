@@ -1,3 +1,51 @@
+.PARAMETER serverName
+Name of the server with SQL Server with R Services (this is the DSVM server)
+
+.PARAMETER baseurl
+url from which to download data files (if any)
+
+.PARAMETER username
+login username for the server
+
+.PARAMETER password
+login password for the server
+
+.PARAMETER sqlUsername
+User to create in SQL Server
+
+.PARAMETER sqlPassword
+Password for the SQL User
+
+#>
+[CmdletBinding()]
+param(
+[parameter(Mandatory=$true, Position=1, ParameterSetName = "DSVM")]
+[ValidateNotNullOrEmpty()] 
+[string]$serverName,
+
+[parameter(Mandatory=$true, Position=2, ParameterSetName = "LCR")]
+[ValidateNotNullOrEmpty()] 
+[string]$baseurl,
+
+[parameter(Mandatory=$true, Position=3, ParameterSetName = "LCR")]
+[ValidateNotNullOrEmpty()] 
+[string]$username,
+
+[parameter(Mandatory=$true, Position=4, ParameterSetName = "LCR")]
+[ValidateNotNullOrEmpty()] 
+[string]$password,
+
+[parameter(Mandatory=$true, Position=5, ParameterSetName = "LCR")]
+[ValidateNotNullOrEmpty()] 
+[string]$sqlUsername,
+
+[parameter(Mandatory=$true, Position=6, ParameterSetName = "LCR")]
+[ValidateNotNullOrEmpty()] 
+[string]$sqlPassword
+)
+
+
+
 $Prompt = 'N'
 
 
@@ -103,3 +151,18 @@ Write-Host -ForeGroundColor cyan " Help Files Copied to Desktop"
 ###Copy PowerBI Reportt to Desktop 
 Copy-Item  "$ScriptPath\*.pbix"  C:\Users\Public\Desktop\
 Write-Host -ForeGroundColor cyan " PowerBI Reports Copied to Desktop"
+
+
+$WsShell = New-Object -ComObject WScript.Shell
+$shortcut = $WsShell.CreateShortcut($desktop + $checkoutDir + ".lnk")
+$shortcut.TargetPath = $solutionPath
+$shortcut.Save()
+
+
+
+##Launch HelpURL 
+Start-Process "https://microsoft.github.io/r-server-hospital-length-of-stay/Typical.html"
+
+## Close Powershell 
+Exit-PSHostProcess
+EXIT 
