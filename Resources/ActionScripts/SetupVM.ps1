@@ -1,17 +1,62 @@
 <#
 .SYNOPSIS
-Powershell script for setting up the solution template. t
+Powershell script for setting up the solution template. 
 
 .DESCRIPTION
 This script checks out the solution from github and deploys it to SQL Server on the local Data Science VM (DSVM).
+
+.WARNING: This script is only meant to be run from the solution template deployment process.
+
+.PARAMETER serverName
+Name of the server with SQL Server with R Services (this is the DSVM server)
+
+.PARAMETER baseurl
+url from which to download data files (if any)
+
+.PARAMETER username
+login username for the server
+
+.PARAMETER password
+login password for the server
+
+.PARAMETER sqlUsername
+User to create in SQL Server
+
+.PARAMETER sqlPassword
+Password for the SQL User
+
 #>
+[CmdletBinding()]
+param(
+[parameter(Mandatory=$true, Position=1, ParameterSetName = "DSVM")]
+[ValidateNotNullOrEmpty()] 
+[string]$serverName,
 
-param 
-(
-    [Parameter(Mandatory = $false)] [String]$Prompt = ""
-) 
+[parameter(Mandatory=$true, Position=2, ParameterSetName = "LCR")]
+[ValidateNotNullOrEmpty()] 
+[string]$baseurl,
 
-$Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
+[parameter(Mandatory=$true, Position=3, ParameterSetName = "LCR")]
+[ValidateNotNullOrEmpty()] 
+[string]$username,
+
+[parameter(Mandatory=$true, Position=4, ParameterSetName = "LCR")]
+[ValidateNotNullOrEmpty()] 
+[string]$password,
+
+[parameter(Mandatory=$true, Position=5, ParameterSetName = "LCR")]
+[ValidateNotNullOrEmpty()] 
+[string]$sqlUsername,
+
+[parameter(Mandatory=$true, Position=6, ParameterSetName = "LCR")]
+[ValidateNotNullOrEmpty()] 
+[string]$sqlPassword
+)
+
+#$Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
+
+$Prompt = 'N'
+
 
 ####Just adding a blank line 
 
