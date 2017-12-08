@@ -83,10 +83,12 @@ Start-Service -Name "MSSQ*"
 Write-Host -ForegroundColor 'Cyan' " SQL Services Restarted"
 
 
-CREATE LOGIN [bob] WITH PASSWORD=N'ChangePassw)rd12', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
-GO
-ALTER SERVER ROLE [sysadmin] ADD MEMBER [bob]
-GO
+$Query = "CREATE LOGIN [bob] WITH PASSWORD=N'ChangePassw)rd12', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF"
+Invoke-Sqlcmd -Query $Query
+
+$Query = "ALTER SERVER ROLE [sysadmin] ADD MEMBER [bob]"
+Invoke-Sqlcmd -Query $Query
+
 
 
 Write-Host -ForegroundColor 'Cyan' " Done with configuration changes to SQL Server"
