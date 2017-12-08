@@ -82,11 +82,12 @@ Stop-Service -Name "MSSQ*" -Force
 Start-Service -Name "MSSQ*"
 Write-Host -ForegroundColor 'Cyan' " SQL Services Restarted"
 
-
-$Query = "CREATE LOGIN [bob] WITH PASSWORD=N'ChangePassw)rd12', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF"
+$UserName = "SQLBob"
+$Password = "ChangePassw)rd12"
+$Query = "CREATE LOGIN $UserName WITH PASSWORD=N'$Password', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF"
 Invoke-Sqlcmd -Query $Query
 
-$Query = "ALTER SERVER ROLE [sysadmin] ADD MEMBER [bob]"
+$Query = "ALTER SERVER ROLE [sysadmin] ADD MEMBER $UserName"
 Invoke-Sqlcmd -Query $Query
 
 
