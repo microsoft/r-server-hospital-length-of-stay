@@ -1,3 +1,26 @@
+$Prompt = 'N'
+$SolutionName = "Hospital"
+
+$Query = "SELECT SERVERPROPERTY('ServerName')"
+$si = invoke-sqlcmd -Query $Query
+$si = $si.Item(0)
+
+
+
+$ServerName = if ($Prompt -eq 'Y') {Read-Host  -Prompt "Enter SQL Server Name Or SQL InstanceName you are installing on"} else {$si}
+
+
+WRITE-HOST " ServerName set to $ServerName"
+
+$db = if ($Prompt -eq 'Y') {Read-Host  -Prompt "Enter Desired Database Base Name"} else {$SolutionName} 
+
+
+
+
+
+
+
+
 ##########################################################################
 
 # Create Database and BaseTables 
