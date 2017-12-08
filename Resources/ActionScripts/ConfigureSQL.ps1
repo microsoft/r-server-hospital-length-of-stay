@@ -111,3 +111,111 @@ invoke-sqlcmd -inputfile $CreateSQLObjects -serverinstance $ServerName -database
 
 
 Write-Host -ForeGroundColor 'cyan' (" SQLServerObjects Created in $dbName Database")
+
+
+###Configure Database for R 
+Write-Host "  
+Configuring $SolutionName Solution for R
+"
+
+$dbName = $db + "_R" 
+
+## Create ODBC Connection for PowerBI to Use 
+Add-OdbcDsn -Name $odbcName -DriverName "SQL Server Native Client 11.0" -DsnType 'System' -Platform '64-bit' -SetPropertyValue @("Server=$ServerName", "Trusted_Connection=Yes", "Database=$dbName") -ErrorAction SilentlyContinue -PassThru
+
+##########################################################################
+# Deployment Pipeline
+##########################################################################
+
+
+try
+{
+
+Write-Host -ForeGroundColor 'cyan' (" Import CSV File(s).")
+$dataList = "LengthOfStay"
+
+
+# upload csv files into SQL tables
+foreach ($dataFile in $dataList)
+{
+$destination = $SolutionData + $dataFile + ".csv" 
+$tableName = $DBName + ".dbo." + $dataFile
+$tableSchema = $dataPath + "\" + $dataFile + ".xml"
+$dataSet = Import-Csv $destination
+Write-Host -ForegroundColor 'cyan' ("         Loading $dataFile.csv into SQL Table, this will take about 30 seconds per file....") 
+Write-SqlTableData -InputData $dataSet  -DatabaseName $dbName -Force -Passthru -SchemaName dbo -ServerInstance $ServerName -TableName $dataFile
+
+
+Write-Host -ForeGroundColor 'cyan' (" $datafile table loaded from CSV File(s).")
+}
+}
+catch
+{
+Write-Host -ForegroundColor DarkYellow "Exception in populating database tables:"
+Write-Host -ForegroundColor Red $Error[0].Exception 
+throw
+}
+Write-Host -ForeGroundColor 'cyan' (" Finished loading .csv File(s).")
+
+Write-Host -ForeGroundColor 'Cyan' (" Scoring and Training Data...")
+$query = "EXEC Exec_Inital_RScoring"
+#SqlServer\Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
+SqlServer\Invoke-Sqlcmd -ServerInstance LocalHost -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
+
+
+
+
+
+###Conifgure Database for Py 
+if ($isCompatible -eq 'Yes'-and $InstallPy -eq 'Yes')
+{
+Write-Host "  
+Configuring $SolutionName Solution for Py
+# "
+$dbname = $db + "_Py"
+# $ActionScript = $solutionPath + "\SQLPy\LoadandTrainData.ps1 -ServerName $ServerName -dbName $dbName -Prompt $Prompt"
+# Invoke-Expression $ActionScript 
+
+##########################################################################
+# Deployment Pipeline
+##########################################################################
+
+
+try
+{
+
+Write-Host -ForeGroundColor 'cyan' (" Import CSV File(s).")
+$dataList = "LengthOfStay"
+
+
+# upload csv files into SQL tables
+foreach ($dataFile in $dataList)
+{
+    $destination = $SolutionData + $dataFile + ".csv" 
+    $tableName = $DBName + ".dbo." + $dataFile
+    $tableSchema = $dataPath + "\" + $dataFile + ".xml"
+    $dataSet = Import-Csv $destination
+ Write-Host -ForegroundColor 'cyan' ("         Loading $dataFile.csv into SQL Table, this will take about 30 seconds per file....") 
+    Write-SqlTableData -InputData $dataSet  -DatabaseName $dbName -Force -Passthru -SchemaName dbo -ServerInstance $ServerName -TableName $dataFile
+
+    
+ Write-Host -ForeGroundColor 'cyan' (" $datafile table loaded from CSV File(s).")
+}
+}
+catch
+{
+Write-Host -ForegroundColor DarkYellow "Exception in populating database tables:"
+Write-Host -ForegroundColor Red $Error[0].Exception 
+throw
+}
+Write-Host -ForeGroundColor 'cyan' (" Finished loading .csv File(s).")
+
+Write-Host -ForeGroundColor 'Cyan' (" Scoring and Training Data...")
+$query = "Exec Exec_Inital_PyScoring"
+SqlServer\Invoke-Sqlcmd -ServerInstance LocalHost -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
+#SqlServer\Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
+
+##SqlServer\Invoke-Sqlcmd  -Database $DbName -Query "EXEC Execute_Yourself" -QueryTimeout 0 -ServerInstance $ServerName
+
+
+}
