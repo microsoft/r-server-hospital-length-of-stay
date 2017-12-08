@@ -1,31 +1,4 @@
-<#
-.SYNOPSIS
-Powershell script for setting up the solution template. 
 
-.DESCRIPTION
-This script checks out the solution from github and deploys it to SQL Server on the local Data Science VM (DSVM).
-
-.WARNING: This script is only meant to be run from the solution template deployment process.
-
-.PARAMETER serverName
-Name of the server with SQL Server with R Services (this is the DSVM server)
-
-.PARAMETER baseurl
-url from which to download data files (if any)
-
-.PARAMETER username
-login username for the server
-
-.PARAMETER password
-login password for the server
-
-.PARAMETER sqlUsername
-User to create in SQL Server
-
-.PARAMETER sqlPassword
-Password for the SQL User
-
-#>
 [CmdletBinding()]
 param(
 [parameter(Mandatory=$true, Position=1, ParameterSetName = "DSVM")]
@@ -167,7 +140,12 @@ $shortcut = $WsShell.CreateShortcut($desktop + $checkoutDir + ".lnk")
 $shortcut.TargetPath = $solutionPath
 $shortcut.Save()
 
-
+# copy Jupyter Notebook files
+copy-item $SolutionData\R\*.ipynb  c:\dsvm\notebooks
+copy-item $SolutionData*.csv  c:\dsvm\notebooks
+#  substitute real username and password in notebook file
+sed -i "s/XXYOURSQLPW/$sqlPassword/g" "c:\dsvm\notebooks\Loan_Credit_Risk_Notebook.ipynb"
+sed -i "s/XXYOURSQLUSER/$sqlUsername/g" "c:\dsvm\notebooks\Loan_Credit_Risk_Notebook.ipynb"
 
 ##Launch HelpURL 
 Start-Process "https://microsoft.github.io/r-server-hospital-length-of-stay/Typical.html"
