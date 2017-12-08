@@ -85,6 +85,40 @@ Write-Host -ForegroundColor 'Cyan' " SQL Services Restarted"
 
 Write-Host -ForegroundColor 'Cyan' " Done with configuration changes to SQL Server"
 
+Write-Host -ForeGroundColor cyan " Installing latest Power BI..."
+# Download PowerBI Desktop installer
+Start-BitsTransfer -Source "https://go.microsoft.com/fwlink/?LinkId=521662&clcid=0x409" -Destination powerbi-desktop.msi
+
+# Silently install PowerBI Desktop
+msiexec.exe /i powerbi-desktop.msi /qn /norestart  ACCEPT_EULA=1
+
+if (!$?) {
+    Write-Host -ForeGroundColor Red " Error installing Power BI Desktop. Please install latest Power BI manually."
+}
+
+
+##Create Shortcuts and Autostart Help File 
+Copy-Item "$ScriptPath\SolutionHelp.url" C:\Users\Public\Desktop\
+Copy-Item "$ScriptPath\SolutionHelp.url" "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\"
+Write-Host -ForeGroundColor cyan " Help Files Copied to Desktop"
+
+
+###Copy PowerBI Reportt to Desktop 
+Copy-Item  "$ScriptPath\*.pbix"  C:\Users\Public\Desktop\
+Write-Host -ForeGroundColor cyan " PowerBI Reports Copied to Desktop"
+
+$WsShell = New-Object -ComObject WScript.Shell
+$shortcut = $WsShell.CreateShortcut($desktop + $checkoutDir + ".lnk")
+$shortcut.TargetPath = $solutionPath
+$shortcut.Save()
+
+
+
+Stop-Transcript
+
+##Launch HelpURL 
+Start-Process "https://microsoft.github.io/r-server-hospital-length-of-stay/Typical.html"
+
 
 
 
