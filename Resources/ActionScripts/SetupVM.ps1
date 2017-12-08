@@ -140,12 +140,7 @@ $shortcut = $WsShell.CreateShortcut($desktop + $checkoutDir + ".lnk")
 $shortcut.TargetPath = $solutionPath
 $shortcut.Save()
 
-# copy Jupyter Notebook files
-copy-item $SolutionData\R\*.ipynb  c:\dsvm\notebooks
-copy-item $SolutionData*.csv  c:\dsvm\notebooks
-#  substitute real username and password in notebook file
-sed -i "s/XXYOURSQLPW/$sqlPassword/g" "c:\dsvm\notebooks\Loan_Credit_Risk_Notebook.ipynb"
-sed -i "s/XXYOURSQLUSER/$sqlUsername/g" "c:\dsvm\notebooks\Loan_Credit_Risk_Notebook.ipynb"
+
 
 ##Launch HelpURL 
 Start-Process "https://microsoft.github.io/r-server-hospital-length-of-stay/Typical.html"
