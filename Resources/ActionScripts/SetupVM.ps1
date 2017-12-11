@@ -12,13 +12,16 @@ param(
 
 [parameter(Mandatory=$true, Position=3)]
 [ValidateNotNullOrEmpty()] 
-[string]$password
+[string]$password,
 
+[parameter(Mandatory=$false, Position=4)]
+[ValidateNotNullOrEmpty()] 
+[string]$Prompt
 )
 
 
-
-$Prompt = 'N'
+$Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
+#$Prompt = 'N'
 
 
 ####Just adding a blank line 
