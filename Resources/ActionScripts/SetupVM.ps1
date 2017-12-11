@@ -146,15 +146,16 @@ $shortcut.Save()
 
 Invoke-Expression C:\Solutions\Hospital\Resources\ActionScripts\ConfigureSQL.ps1
 
-
-#  substitute real username and password in notebook file
-sed -i "s/XXYOURSQLUSER/$username/g" "$SolutionPath\R\Hospital_Length_Of_Stay.ipynb"
-sed -i "s/XXYOURSQLPW/$password/g" "$SolutionPath\R\Hospital_Length_Of_Stay.ipynb"
-
+write-host "$username"
+write-host "$password"
 
 # copy Jupyter Notebook files
-Copy-Item $SolutionPath\R\*.ipynb  c:\dsvm\notebooks
-Copy-Item $SolutionData*.csv  c:\dsvm\notebooks
+cp $basedir\R\*.ipynb  c:\dsvm\notebooks
+cp $basedir\Data\*.csv  c:\dsvm\notebooks
+#  substitute real username and password in notebook file
+#XXXXXXXXXXChange to NEw NotebookNameXXXXXXXXXXXXXXXXXX# 
+sed -i "s/XXYOURSQLPW/$password/g" c:\dsvm\notebooks\Hospital_Length_Of_Stay_Notebook.ipynb
+sed -i "s/XXYOURSQLUSER/$username/g" c:\dsvm\notebooks\Hospital_Length_Of_Stay_Notebook.ipynb
 
 
 
