@@ -10,15 +10,8 @@ param(
 
 [parameter(Mandatory=$False, Position=4, ParameterSetName = "LCR")]
 [ValidateNotNullOrEmpty()] 
-[string]$password,
+[string]$password
 
-[parameter(Mandatory=$false, Position=5, ParameterSetName = "LCR")]
-[ValidateNotNullOrEmpty()] 
-[string]$sqlUsername,
-
-[parameter(Mandatory=$false, Position=6, ParameterSetName = "LCR")]
-[ValidateNotNullOrEmpty()] 
-[string]$sqlPassword
 )
 
 
