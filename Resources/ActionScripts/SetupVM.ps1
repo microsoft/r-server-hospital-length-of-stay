@@ -1,14 +1,14 @@
 [CmdletBinding()]
 param(
-[parameter(Mandatory=$false, Position=1, ParameterSetName = "DSVM")]
+[parameter(Mandatory=$true, Position=1, ParameterSetName = "DSVM")]
 [ValidateNotNullOrEmpty()] 
 [string]$serverName,
 
-[parameter(Mandatory=$false, Position=3, ParameterSetName = "LCR")]
+[parameter(Mandatory=$true, Position=3, ParameterSetName = "LCR")]
 [ValidateNotNullOrEmpty()] 
 [string]$username,
 
-[parameter(Mandatory=$False, Position=4, ParameterSetName = "LCR")]
+[parameter(Mandatory=$true, Position=4, ParameterSetName = "LCR")]
 [ValidateNotNullOrEmpty()] 
 [string]$password
 
