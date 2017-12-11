@@ -28,29 +28,18 @@ Password for the SQL User
 #>
 [CmdletBinding()]
 param(
-[parameter(Mandatory=$true, Position=1, ParameterSetName = "DSVM")]
+[parameter(Mandatory=$true, Position=1)]
 [ValidateNotNullOrEmpty()] 
 [string]$serverName,
 
-[parameter(Mandatory=$true, Position=2, ParameterSetName = "LCR")]
-[ValidateNotNullOrEmpty()] 
-[string]$baseurl,
-
-[parameter(Mandatory=$true, Position=3, ParameterSetName = "LCR")]
+[parameter(Mandatory=$true, Position=2)]
 [ValidateNotNullOrEmpty()] 
 [string]$username,
 
-[parameter(Mandatory=$true, Position=4, ParameterSetName = "LCR")]
+[parameter(Mandatory=$true, Position=3)]
 [ValidateNotNullOrEmpty()] 
-[string]$password,
+[string]$password
 
-[parameter(Mandatory=$true, Position=5, ParameterSetName = "LCR")]
-[ValidateNotNullOrEmpty()] 
-[string]$sqlUsername,
-
-[parameter(Mandatory=$true, Position=6, ParameterSetName = "LCR")]
-[ValidateNotNullOrEmpty()] 
-[string]$sqlPassword
 )
 
 #$Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
@@ -135,6 +124,16 @@ Stop-Service -Name "MSSQ*" -Force
 ### Start the SQL Service 
 Start-Service -Name "MSSQ*"
 Write-Host -ForegroundColor 'Cyan' " SQL Services Restarted"
+
+
+
+$Query = "CREATE LOGIN $username WITH PASSWORD=N'$password', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF"
+Invoke-Sqlcmd -Query $Query
+
+$Query = "ALTER SERVER ROLE [sysadmin] ADD MEMBER $username"
+Invoke-Sqlcmd -Query $Query
+
+Write-Host " AdminUser Added as a SQL User "
 
 
 Write-Host -ForegroundColor 'Cyan' " Done with configuration changes to SQL Server"
