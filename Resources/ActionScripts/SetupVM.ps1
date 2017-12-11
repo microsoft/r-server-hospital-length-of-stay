@@ -148,7 +148,7 @@ Invoke-Expression C:\Solutions\Hospital\Resources\ActionScripts\ConfigureSQL.ps1
 
 
 # copy Jupyter Notebook files
-Copy-Item $solutionTemplatePath\R\*.ipynb  c:\dsvm\notebooks
+Copy-Item $SolutionPath\R\*.ipynb  c:\dsvm\notebooks
 Copy-Item $SolutionData*.csv  c:\dsvm\notebooks
 #  substitute real username and password in notebook file
 sed -i "s/XXYOURSQLPW/$password/g" "c:\dsvm\notebooks\Hospital_Length_Of_Stay.ipynb"
