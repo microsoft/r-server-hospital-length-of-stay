@@ -151,8 +151,9 @@ Invoke-Expression C:\Solutions\Hospital\Resources\ActionScripts\ConfigureSQL.ps1
 Copy-Item $SolutionPath\R\*.ipynb  c:\dsvm\notebooks
 Copy-Item $SolutionData*.csv  c:\dsvm\notebooks
 #  substitute real username and password in notebook file
-sed -i "s/XXYOURSQLPW/$password/g" "c:\dsvm\notebooks\Hospital_Length_Of_Stay.ipynb"
 sed -i "s/XXYOURSQLUSER/$username/g" "c:\dsvm\notebooks\Hospital_Length_Of_Stay.ipynb"
+sed -i "s/XXYOURSQLPW/$password/g" "c:\dsvm\notebooks\Hospital_Length_Of_Stay.ipynb"
+
 
 
 Stop-Transcript
