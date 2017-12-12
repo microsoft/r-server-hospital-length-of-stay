@@ -146,8 +146,7 @@ $shortcut.Save()
 
 Invoke-Expression C:\Solutions\Hospital\Resources\ActionScripts\ConfigureSQL.ps1
 
-write-host "$username"
-write-host "$password"
+
 
 # copy Jupyter Notebook files
 cp $SolutionPath\R\*.ipynb  c:\dsvm\notebooks
