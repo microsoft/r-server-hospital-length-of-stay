@@ -144,7 +144,7 @@ $shortcut.Save()
 
 
 
-Invoke-Expression C:\Solutions\Hospital\Resources\ActionScripts\ConfigureSQL.ps1 
+Invoke-Expression C:\Solutions\Hospital\Resources\ActionScripts\ConfigureSQL.ps1 -OutVariable $ServerName , $SolutionName
 
 
 
