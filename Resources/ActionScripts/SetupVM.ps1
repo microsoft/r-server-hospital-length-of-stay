@@ -18,7 +18,7 @@ param(
 [ValidateNotNullOrEmpty()] 
 [string]$Prompt
 )
-
+$startTime = Get-Date
 
 $Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
 #$Prompt = 'N'
@@ -157,9 +157,14 @@ sed -i "s/XXYOURSQLPW/$password/g" c:\dsvm\notebooks\Hospital_Length_Of_Stay_Not
 sed -i "s/XXYOURSQLUSER/$username/g" c:\dsvm\notebooks\Hospital_Length_Of_Stay_Notebook.ipynb
 
 
+$endTime = Get-Date
 
+Write-Host -foregroundcolor 'green'(" Length of Stay Development Workflow Finished Successfully!")
+$Duration = New-TimeSpan -Start $StartTime -End $EndTime 
+Write-Host -ForegroundColor 'green'(" Total Deployment Time = $Duration") 
 
 Stop-Transcript
+
 
 ##Launch HelpURL 
 Start-Process "https://microsoft.github.io/r-server-hospital-length-of-stay/Typical.html"
