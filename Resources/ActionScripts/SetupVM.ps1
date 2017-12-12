@@ -150,7 +150,7 @@ write-host "$username"
 write-host "$password"
 
 # copy Jupyter Notebook files
-cp $SolutionPath \R\*.ipynb  c:\dsvm\notebooks
+cp $SolutionPath\R\*.ipynb  c:\dsvm\notebooks
 cp $SolutionData*.csv  c:\dsvm\notebooks
 #  substitute real username and password in notebook file
 #XXXXXXXXXXChange to NEw NotebookNameXXXXXXXXXXXXXXXXXX# 
