@@ -140,7 +140,7 @@ $shortcut.TargetPath = $solutionPath
 $shortcut.Save()
 
 
-Invoke-Expression C:\Solutions\Hospital\Resources\ActionScripts\ConfigureSQL.ps1 -serverName $ServerName , -SolutionName $SolutionName
+Invoke-Expression C:\Solutions\Hospital\Resources\ActionScripts\ConfigureSQL.ps1  $ServerName ,  $SolutionName
 
 
 
