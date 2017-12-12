@@ -150,8 +150,8 @@ write-host "$username"
 write-host "$password"
 
 # copy Jupyter Notebook files
-cp $basedir\R\*.ipynb  c:\dsvm\notebooks
-cp $basedir\Data\*.csv  c:\dsvm\notebooks
+cp $SolutionPath \R\*.ipynb  c:\dsvm\notebooks
+cp $SolutionData*.csv  c:\dsvm\notebooks
 #  substitute real username and password in notebook file
 #XXXXXXXXXXChange to NEw NotebookNameXXXXXXXXXXXXXXXXXX# 
 sed -i "s/XXYOURSQLPW/$password/g" c:\dsvm\notebooks\Hospital_Length_Of_Stay_Notebook.ipynb
