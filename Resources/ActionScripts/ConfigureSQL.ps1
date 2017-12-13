@@ -9,7 +9,7 @@ param(
 [parameter(Mandatory=$true, Position=3)]
 [string]$InstallPy,
 
-[parameter(Mandatory=$true, Position=3)]
+[parameter(Mandatory=$true, Position=4)]
 [string]$Prompt
 )
 

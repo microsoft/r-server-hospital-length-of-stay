@@ -22,11 +22,8 @@ $startTime = Get-Date
 
 
 
-
-
-
-$Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
-#$Prompt = 'N'
+#$Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
+$Prompt = 'N'
 
 
 ####Just adding a blank line 
