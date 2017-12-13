@@ -49,14 +49,14 @@ $scriptPath = $SolutionPath + "\Resources\ActionScripts\"
 $SolutionData = $SolutionPath + "\Data\"
 
 
-$Query = "SELECT SERVERPROPERTY('ServerName')"
-$si = invoke-sqlcmd -Query $Query
-$si = $si.Item(0)
+##$Query = "SELECT SERVERPROPERTY('ServerName')"
+##$si = invoke-sqlcmd -Query $Query
+##$si = $si.Item(0)
 
 
-$serverName = if($serverName -eq $null) {$si}
+###$serverName = if($serverName -eq $null) {$si}
 
-WRITE-HOST " ServerName set to $ServerName"
+##WRITE-HOST " ServerName set to $ServerName"
 
 
 
