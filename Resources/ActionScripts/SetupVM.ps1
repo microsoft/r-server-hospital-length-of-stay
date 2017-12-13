@@ -26,7 +26,6 @@ $startTime = Get-Date
 $Prompt = 'N'
 
 
-####Just adding a blank line 
 
 $SolutionName = "Hospital"
 $SolutionFullName = "r-server-hospital-length-of-stay" 
@@ -55,7 +54,7 @@ $si = invoke-sqlcmd -Query $Query
 $si = $si.Item(0)
 
 
-$ServerName = if ($ServerName -eq $null) {$si}
+$serverName = if($serverName -eq $null) {$si}
 
 WRITE-HOST " ServerName set to $ServerName"
 
