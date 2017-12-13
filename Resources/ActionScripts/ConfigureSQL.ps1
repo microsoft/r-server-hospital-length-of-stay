@@ -4,7 +4,13 @@ param(
 [string]$ServerName,
 
 [parameter(Mandatory=$true, Position=2)]
-[string]$SolutionName
+[string]$SolutionName,
+
+[parameter(Mandatory=$true, Position=3)]
+[string]$InstallPy,
+
+[parameter(Mandatory=$true, Position=3)]
+[string]$Prompt
 )
 
 
@@ -20,19 +26,12 @@ $Prompt = 'N'
 ##$si = $si.Item(0)
 
 
-
 ##$ServerName = if ($Prompt -eq 'Y') {Read-Host  -Prompt "Enter SQL Server Name Or SQL InstanceName you are installing on"} else {$si}
 
 
 WRITE-HOST " ServerName set to $ServerName"
 
 $db = if ($Prompt -eq 'Y') {Read-Host  -Prompt "Enter Desired Database Base Name"} else {$SolutionName} 
-
-
-
-
-
-
 
 
 ##########################################################################

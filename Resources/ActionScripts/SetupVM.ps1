@@ -2,15 +2,15 @@
 
 [CmdletBinding()]
 param(
-[parameter(Mandatory=$true, Position=1)]
+[parameter(Mandatory=$false, Position=1)]
 [ValidateNotNullOrEmpty()] 
 [string]$serverName,
 
-[parameter(Mandatory=$true, Position=2)]
+[parameter(Mandatory=$false, Position=2)]
 [ValidateNotNullOrEmpty()] 
 [string]$username,
 
-[parameter(Mandatory=$true, Position=3)]
+[parameter(Mandatory=$false, Position=3)]
 [ValidateNotNullOrEmpty()] 
 [string]$password,
 
@@ -19,6 +19,11 @@ param(
 [string]$Prompt
 )
 $startTime = Get-Date
+
+
+
+
+
 
 $Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
 #$Prompt = 'N'
@@ -46,6 +51,18 @@ $SolutionPath = $solutionTemplatePath + '\' + $checkoutDir
 $desktop = "C:\Users\Public\Desktop\"
 $scriptPath = $SolutionPath + "\Resources\ActionScripts\"
 $SolutionData = $SolutionPath + "\Data\"
+
+
+$Query = "SELECT SERVERPROPERTY('ServerName')"
+$si = invoke-sqlcmd -Query $Query
+$si = $si.Item(0)
+
+
+$ServerName = if ($ServerName -eq $null) {$si}
+
+WRITE-HOST " ServerName set to $ServerName"
+
+
 
 ##########################################################################
 #Clone Data from GIT
@@ -139,7 +156,7 @@ $shortcut = $WsShell.CreateShortcut($desktop + $checkoutDir + ".lnk")
 $shortcut.TargetPath = $solutionPath
 $shortcut.Save()
 
-$ConfigureSql = "C:\Solutions\Hospital\Resources\ActionScripts\ConfigureSQL.ps1  $ServerName   $SolutionName"
+$ConfigureSql = "C:\Solutions\Hospital\Resources\ActionScripts\ConfigureSQL.ps1  $ServerName $SolutionName $InstallPy $Prompt"
 Invoke-Expression $ConfigureSQL 
 
 #powershell.exe -ExecutionPolicy Unrestricted -File C:\Solutions\Hospital\Resources\ActionScripts\ConfigureSQL.ps1 -serverName $serverName -SolutionName $SolutionName 
