@@ -25,7 +25,7 @@ BEGIN
     -- Get the patient record from a historical table using the eid
     SELECT *
     INTO [#QueryPatient]
-    FROM [LengthOfStay]
+    FROM [LoS]
     WHERE eid = @eid
 
     SET @start = GETDATE()
