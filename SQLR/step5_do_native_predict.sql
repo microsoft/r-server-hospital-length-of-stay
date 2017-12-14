@@ -7,7 +7,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-ALTER PROCEDURE [dbo].[do_native_predict]
+CREATE PROCEDURE [dbo].[do_native_predict]
     @eid int
 AS
 BEGIN
