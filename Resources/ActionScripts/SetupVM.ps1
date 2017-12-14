@@ -159,17 +159,35 @@ Invoke-Expression $ConfigureSQL
 
 
 
-# copy Jupyter Notebook files
-cp $SolutionPath\R\*.ipynb  c:\dsvm\notebooks
-cp $SolutionData*.csv  c:\dsvm\notebooks
-#  substitute real username and password in notebook file
+## copy Jupyter Notebook files
+Move-Item $SolutionPath\R\*.ipynb  c:\tmp\
+sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\*.ipynb
+sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\*.ipynb
+Move-Item  c:\tmp\*.ipynb $SolutionPath\R\
+
+
+
+
+#cp $SolutionData*.csv  c:\dsvm\notebooks
+ # substitute real username and password in notebook file
 #XXXXXXXXXXChange to NEw NotebookNameXXXXXXXXXXXXXXXXXX# 
-sed -i "s/XXYOURSQLPW/$password/g" c:\dsvm\notebooks\Hospital_Length_Of_Stay_Notebook.ipynb
-sed -i "s/XXYOURSQLUSER/$username/g" c:\dsvm\notebooks\Hospital_Length_Of_Stay_Notebook.ipynb
+
+if ($InstallPy -eq "Yes")
+{
+    Move-Item $SolutionPath\Python\*.ipynb  c:\tmp\
+    sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\*.ipynb
+    sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\*.ipynb
+    Move-Item  c:\tmp\*.ipynb $SolutionPath\Python\
+}
 
 # install modules for sample website
-cd $SolutionPath\Website
+
 npm install
+Move-Item $SolutionPath\Website  c:\tmp\
+sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\server.js
+sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\server.js
+Move-Item  c:\tmp\server.js $SolutionPath\Website
+
 
 $endTime = Get-Date
 

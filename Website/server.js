@@ -31,10 +31,10 @@ var poolConfig = {
 };
 
   var connectionConfig = {
-    userName: user,
-    password: pw,
+    userName: XXYOURSQLUSER,
+    password: XXYOURSQLPW,
     server: 'localhost',
-    options: { encrypt: true, database: 'Hospital' }
+    options: { encrypt: true, database: 'Hospital_R' }
 
 };
 
