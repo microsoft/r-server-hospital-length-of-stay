@@ -11,28 +11,32 @@ GO
 DROP PROCEDURE IF EXISTS [dbo].[train_model];
 GO
 
-CREATE PROCEDURE [train_model]   @modelName varchar(20),
-								 @dataset_name varchar(max) 
+CREATE PROCEDURE [dbo].[train_model]   @modelName varchar(20),
+								 @dataset_name varchar(max),
+								 @trained_model varbinary(max) OUTPUT, 
+								 @native_model varbinary(max) OUTPUT
 AS 
 BEGIN
 
 	-- Create an empty table to be filled with the trained models.
 	IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'Models' AND xtype = 'U')
 	CREATE TABLE [dbo].[Models](
-		[model_name] [varchar](30) NOT NULL default('default model'),
-		[model] [varbinary](max) NOT NULL
+		model_name varchar(30) not null primary key,
+		model varbinary(max) not null,
+		native_model varbinary(max) not null
 		)
+
 
 	-- Get the database name and the column information. 
 	DECLARE @info varbinary(max) = (select * from [dbo].[ColInfo]);
 	DECLARE @database_name varchar(max) = db_name();
 
+
 	-- Train the model on the training set.	
 	DELETE FROM Models WHERE model_name = @modelName;
-	INSERT INTO Models (model)
 	EXECUTE sp_execute_external_script @language = N'R',
 									   @script = N' 
-
+								
 ##########################################################################################################################################
 ##	Set the compute context to SQL for faster training
 ##########################################################################################################################################
@@ -92,18 +96,25 @@ if (model_name == "RF") {
 			     splitFraction = 5/24,
 			     featureFraction = 1,
                              minSplit = 10)	
-}				   				       
-OutputDataSet <- data.frame(payload = as.raw(serialize(model, connection=NULL)))'
-, @params = N' @model_name varchar(20), @dataset_name varchar(max), @info varbinary(max), @database_name varchar(max)'
+}			
+native_model <- rxSerializeModel(model, realtimeScoringOnly = TRUE)
+trained_model <- as.raw(serialize(model, connection=NULL))
+  				       
+OutputDataSet <- data.frame(payload = rxSerializeModel(model, realtimeScoringOnly = TRUE))'
+, @params = N' @model_name varchar(20), @dataset_name varchar(max), @info varbinary(max), @database_name varchar(max),
+   @trained_model varbinary(max) OUTPUT, @native_model varbinary(max) OUTPUT'
+
 , @model_name = @modelName 
 , @dataset_name =  @dataset_name
 , @info = @info
 , @database_name = @database_name
+, @trained_model = @trained_model OUTPUT
+, @native_model = @native_model OUTPUT;
 
-UPDATE Models set model_name = @modelName 
-WHERE model_name = 'default model'
+delete from Models where model_name = @modelName;
+insert into Models (model_name, model, native_model) values(@modelName, @trained_model, @native_model);
+
 
 ;
 END
 GO
-
