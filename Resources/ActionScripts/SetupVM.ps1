@@ -29,6 +29,7 @@ $Prompt = 'N'
 
 $SolutionName = "Hospital"
 $SolutionFullName = "r-server-hospital-length-of-stay" 
+$JupyterNotebook = "Hospital_Length_Of_Stay_Notebook.ipynb"
 $odbcName = 'CampOpt'
 ### DON'T FORGET TO CHANGE TO MASTER LATER...
 $Branch = "dev" 
@@ -160,10 +161,10 @@ Invoke-Expression $ConfigureSQL
 
 
 ## copy Jupyter Notebook files
-Move-Item $SolutionPath\R\*.ipynb  c:\tmp\
-sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\*.ipynb
-sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\*.ipynb
-Move-Item  c:\tmp\*.ipynb $SolutionPath\R\
+Move-Item $SolutionPath\R\$JupyterNotebook  c:\tmp\
+sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\$JupyterNotebook
+sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\$JupyterNotebook
+Move-Item  c:\tmp\$JupyterNotebook $SolutionPath\R\
 
 
 
@@ -174,10 +175,10 @@ Move-Item  c:\tmp\*.ipynb $SolutionPath\R\
 
 if ($InstallPy -eq "Yes")
 {
-    Move-Item $SolutionPath\Python\*.ipynb  c:\tmp\
-    sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\*.ipynb
-    sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\*.ipynb
-    Move-Item  c:\tmp\*.ipynb $SolutionPath\Python\
+    Move-Item $SolutionPath\Python\$JupyterNotebook  c:\tmp\
+    sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\$JupyterNotebook
+    sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\$JupyterNotebook
+    Move-Item  c:\tmp\$JupyterNotebook $SolutionPath\Python\
 }
 
 # install modules for sample website
