@@ -1,0 +1,53 @@
+/* Initial styles*/
+
+
+.center {
+  align-content: center;
+  text-align: center;
+  padding: 5px;
+}
+
+.green {
+  color: #17ad62;
+}
+.grey {
+  color: #999;
+}
+.purple {
+   text-decoration: none;
+   color: #5a4ebc;
+}
+#result{
+padding: 20px;
+font-size: 0.9 em;
+line-height: 150%;
+background-color: #f2f2f2;
+}
+.btn-success {
+  color: #fff;
+  background-color: #5a4ebc;
+  border-color: #5a4ebc;
+}
+.btn-success.disabled, .btn-success[disabled], fieldset[disabled] .btn-success, .btn-success.disabled:hover, .btn-success[disabled]:hover, fieldset[disabled] .btn-success:hover, .btn-success.disabled:focus, .btn-success[disabled]:focus, fieldset[disabled] .btn-success:focus, .btn-success.disabled:active, .btn-success[disabled]:active, fieldset[disabled] .btn-success:active, .btn-success.disabled.active, .btn-success.active[disabled], fieldset[disabled] .btn-success.active {
+  background-color: #5a4ebc;
+  border-color: #5a4ebc;
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+.table-hos tbody > tr > th, .table-hos tfoot > tr > th, .table-hos thead > tr > td, .table-hos tbody > tr > td, .table-hos tfoot > tr > td {
+  margin: 8px;
+  line-height: 1.5;
+  vertical-align: top;
+  border-bottom: 8px solid #fff;
+  background-color: #F2F2F2;
+ 
+}
+.table-hos tr:first-child td:first-child {
+  border-left: 8px solid #5a4ebc;
+}
+.table-hos  td:first-child {
+  border-left: 8px solid #9B9B9B;
+}
+
