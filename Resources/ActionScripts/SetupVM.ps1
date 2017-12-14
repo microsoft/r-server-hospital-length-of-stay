@@ -181,9 +181,9 @@ if ($InstallPy -eq "Yes")
 }
 
 # install modules for sample website
-
+cd $SolutionPath\Website\
 npm install
-Move-Item $SolutionPath\Website  c:\tmp\
+Move-Item $SolutionPath\Website\server.js  c:\tmp\
 sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\server.js
 sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\server.js
 Move-Item  c:\tmp\server.js $SolutionPath\Website
