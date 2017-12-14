@@ -167,6 +167,9 @@ cp $SolutionData*.csv  c:\dsvm\notebooks
 sed -i "s/XXYOURSQLPW/$password/g" c:\dsvm\notebooks\Hospital_Length_Of_Stay_Notebook.ipynb
 sed -i "s/XXYOURSQLUSER/$username/g" c:\dsvm\notebooks\Hospital_Length_Of_Stay_Notebook.ipynb
 
+# install modules for sample website
+cd $SolutionPath\Website
+npm install
 
 $endTime = Get-Date
 
