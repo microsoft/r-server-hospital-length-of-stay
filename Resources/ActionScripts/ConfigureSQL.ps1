@@ -142,7 +142,7 @@ Add-OdbcDsn -Name $odbcName -DriverName "SQL Server Native Client 11.0" -DsnType
 ##########################################################################
 # Deployment Pipeline
 ##########################################################################
-<#
+
 
 try
 {
@@ -174,45 +174,6 @@ throw
 Write-Host -ForeGroundColor 'cyan' (" Finished loading .csv File(s).")
 
 Write-Host -ForeGroundColor 'Cyan' (" Training Model and Scoring Data...")
-#>
-
-
-try
-{
-
-
-
- Write-Host -ForeGroundColor 'green' ("Populate SQL table.")
- $dataList = "LengthOfStay"
- 
- # upload csv files into SQL tables
- foreach ($dataFile in $dataList)
- {
-     $destination = $dataPath + $dataFile + ".csv"
-     $tableName = $DBName + ".dbo." + $dataFile
-     $tableSchema = $dataPath + $dataFile + ".xml"
-     bcp $tableName format nul -c -x -f "dbo"  -U $username -S $ServerName -P $password  -t ',' 
-     bcp $tableName in $destination -t ',' -S $ServerName -f "dbo" -F 2 -C "RAW" -b 50000 -U $username -P $password 
- }
-}
-catch
-{
- Write-Host -ForegroundColor DarkYellow "Exception in populating database tables:"
- Write-Host -ForegroundColor Red $Error[0].Exception 
- throw
-}
-
-$query = "ALTER TABLE LengthOfStay ALTER COLUMN  vdate Date"
-invoke-sqlcmd -Query $Query -serverinstance $ServerName -database $dbName
-
-$query = "ALTER TABLE LengthOfStay ALTER COLUMN  discharged Date"
-invoke-sqlcmd -Query $Query -serverinstance $ServerName -database $dbName
-
-
-
-
-
-
 
 
 
