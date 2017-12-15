@@ -230,7 +230,7 @@ throw
 Write-Host -ForeGroundColor 'cyan' (" Finished loading .csv File(s).")
 
 Write-Host -ForeGroundColor 'Cyan' (" Training Model and Scoring Data...")
-$query = "Exec Inital_Run_Once_Py"
+$query = "EXEC Inital_Run_Once_Py"
 SqlServer\Invoke-Sqlcmd -ServerInstance LocalHost -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
 #SqlServer\Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
 
