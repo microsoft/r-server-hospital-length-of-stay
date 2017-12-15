@@ -31,8 +31,8 @@ var poolConfig = {
 };
 
   var connectionConfig = {
-    userName: XXYOURSQLUSER,
-    password: XXYOURSQLPW,
+    userName: 'XXYOURSQLUSER',
+    password: 'XXYOURSQLPW',
     server: 'localhost',
     options: { encrypt: true, database: 'Hospital_R' }
 
