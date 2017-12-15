@@ -197,9 +197,10 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Models](
-	[model_name] [varchar](30) NOT NULL,
-	[model] [varbinary](max) NOT NULL
+	CREATE TABLE [dbo].[Models](
+		model_name varchar(30) not null primary key,
+		model varbinary(max) not null,
+		native_model varbinary(max) not null
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 /****** Object:  Table [dbo].[Train_Id]    Script Date: 12/15/2017 5:10:16 PM ******/
@@ -1025,39 +1026,47 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[train_model]    Script Date: 12/15/2017 5:10:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[train_model]    Script Date: 12/15/2017 10:54:03 PM ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
 
+
 CREATE PROCEDURE [dbo].[train_model]   @modelName varchar(20),
-								 @dataset_name varchar(max) 
+								 @dataset_name varchar(max)
 AS 
 BEGIN
+	DECLARE								 
+		@trained_model varbinary(max), 
+		@native_model varbinary(max)
 
 	-- Create an empty table to be filled with the trained models.
 	IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'Models' AND xtype = 'U')
 	CREATE TABLE [dbo].[Models](
-		[model_name] [varchar](30) NOT NULL default('default model'),
-		[model] [varbinary](max) NOT NULL
+		model_name varchar(30) not null primary key,
+		model varbinary(max) not null,
+		native_model varbinary(max) not null
 		)
+
 
 	-- Get the database name and the column information. 
 	DECLARE @info varbinary(max) = (select * from [dbo].[ColInfo]);
-	DECLARE @database_name varchar(max) = db_name(), @server_name varchar(100) = @@serverName;
+	DECLARE @database_name varchar(max) = db_name();
+
 
 	-- Train the model on the training set.	
 	DELETE FROM Models WHERE model_name = @modelName;
-	INSERT INTO Models (model)
 	EXECUTE sp_execute_external_script @language = N'R',
 									   @script = N' 
-
+								
 ##########################################################################################################################################
 ##	Set the compute context to SQL for faster training
 ##########################################################################################################################################
 # Define the connection string
-connection_string <- paste("Driver=SQL Server;Server=", server_name, ";Database=", database_name, ";Trusted_Connection=True;", sep="")
+connection_string <- paste("Driver=SQL Server;Server=localhost;Database=", database_name, ";Trusted_Connection=true;", sep="")
+
 
 # Set the Compute Context to SQL.
 sql <- RxInSqlServer(connectionString = connection_string)
@@ -1112,17 +1121,71 @@ if (model_name == "RF") {
 			     splitFraction = 5/24,
 			     featureFraction = 1,
                              minSplit = 10)	
-}				   				       
-OutputDataSet <- data.frame(payload = as.raw(serialize(model, connection=NULL)))'
-, @params = N' @model_name varchar(20), @dataset_name varchar(max), @info varbinary(max), @database_name varchar(max), @server_name varchar(100)'
+}	
+# Set to local compute context to use rxSerializeModel
+local <- RxLocalSeq()
+rxSetComputeContext(local)		
+native_model <- rxSerializeModel(model, realtimeScoringOnly = TRUE)
+trained_model <- as.raw(serialize(model, connection=NULL))'
+  				       
+, @params = N' @model_name varchar(20), @dataset_name varchar(max), @info varbinary(max), @database_name varchar(max),
+   @trained_model varbinary(max) OUTPUT, @native_model varbinary(max) OUTPUT'
+
 , @model_name = @modelName 
 , @dataset_name =  @dataset_name
 , @info = @info
 , @database_name = @database_name
-, @server_name = @server_name
+, @trained_model = @trained_model OUTPUT
+, @native_model = @native_model OUTPUT;
 
-UPDATE Models set model_name = @modelName 
-WHERE model_name = 'default model'
+delete from Models where model_name = @modelName;
+insert into Models (model_name, model, native_model) values(@modelName, @trained_model, @native_model);
+END
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[do_native_predict]    Script Date: 12/15/2017 10:57:22 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[do_native_predict]
+    @eid int
+AS
+BEGIN
+    DECLARE @nativeModel VARBINARY(MAX)
+    DECLARE @start DATETIME
+    DECLARE @end DATETIME
+    DECLARE @elapsed varchar(max)
+
+    -- Get the native model from the models table
+    SET @nativeModel = ( SELECT native_model
+    FROM [Models]
+    WHERE model_name = 'RF')
+
+
+    -- Get the patient record from a historical table using the eid
+    SELECT *
+    INTO [#QueryPatient]
+    FROM [LoS]
+    WHERE eid = @eid
+
+    SET @start = GETDATE()
+
+    -- Do real time scoring using native PREDICT clause
+    SELECT [LengthOfStay_Pred]
+    FROM PREDICT (MODEL = @nativeModel, DATA = [#QueryPatient] ) WITH ( LengthOfStay_Pred FLOAT ) p;
+
+    SET @end = GETDATE()
+
+    SET @elapsed = CONVERT(VARCHAR(max),(SELECT DATEDIFF(MICROSECOND,@start,@end)))
+
+    PRINT 'Elapsed Time for 1 row scoring is : ' + @elapsed + ' microseconds.'
+END
+GO
 
 ;
 END
