@@ -145,7 +145,7 @@ try
 {
 
 Write-Host -ForeGroundColor 'cyan' (" Import CSV File(s).")
-$dataList = "LengthOfStay"
+$dataList = "LengthOfStay" ##Move this to top 
 
 
 # upload csv files into SQL tables
@@ -170,8 +170,8 @@ throw
 }
 Write-Host -ForeGroundColor 'cyan' (" Finished loading .csv File(s).")
 
-Write-Host -ForeGroundColor 'Cyan' (" Scoring and Training Data...")
-$query = "EXEC Exec_Inital_RScoring"
+Write-Host -ForeGroundColor 'Cyan' (" Training Model and Scoring Data...")
+$query = "EXEC Inital_Run_Once_R"
 #SqlServer\Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
 SqlServer\Invoke-Sqlcmd -ServerInstance LocalHost -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
 
@@ -223,8 +223,8 @@ throw
 }
 Write-Host -ForeGroundColor 'cyan' (" Finished loading .csv File(s).")
 
-Write-Host -ForeGroundColor 'Cyan' (" Scoring and Training Data...")
-$query = "Exec Exec_Inital_PyScoring"
+Write-Host -ForeGroundColor 'Cyan' (" Training Model and Scoring Data...")
+$query = "Exec Inital_Run_Once_Py"
 SqlServer\Invoke-Sqlcmd -ServerInstance LocalHost -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
 #SqlServer\Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
 

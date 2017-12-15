@@ -489,14 +489,14 @@ GO
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[Exec_Inital_RScoring]    Script Date: 12/15/2017 5:10:16 PM ******/
+/****** Object:  StoredProcedure [dbo].[ Inital_Run_Once_R]    Script Date: 12/15/2017 5:10:16 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
   
-		CREATE Proc [dbo].[Exec_Inital_RScoring]
+		CREATE Proc [dbo].[Inital_Run_Once_R]
 
 		AS
  
@@ -529,8 +529,8 @@ GO
     --#Execute Prediction Results
 		EXEC prediction_results
 
-
-				EXEC train_model 'RF', 'LoS'
+	---#Execute RF Training Model for Native Scoring
+		EXEC train_model 'RF', 'LoS'
 GO
 /****** Object:  StoredProcedure [dbo].[feature_engineering]    Script Date: 12/15/2017 5:10:16 PM ******/
 SET ANSI_NULLS ON

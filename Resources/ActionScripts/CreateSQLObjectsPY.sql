@@ -534,12 +534,12 @@ if model_name == "NN":
 ;
 END
 GO
-/****** Object:  StoredProcedure [dbo].[Exec_Inital_PyScoring]    Script Date: 11/21/2017 7:39:24 PM ******/
+/****** Object:  StoredProcedure [dbo].[Inital_Run_Once_Py]    Script Date: 11/21/2017 7:39:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-	CREATE Proc [dbo].[Exec_Inital_PyScoring] 
+	CREATE Proc [dbo].[Inital_Run_Once_Py] 
 
 	as
 

@@ -33,7 +33,8 @@ $JupyterNotebook = "Hospital_Length_Of_Stay_Notebook.ipynb"
 $odbcName = 'CampOpt'
 ### DON'T FORGET TO CHANGE TO MASTER LATER...
 $Branch = "dev" 
-$InstallPy = 'Yes' ## If Solution has a Py Version this should be 'Yes' Else 'No' 
+$InstallPy = 'Yes' ## If Solution has a Py Version this should be 'Yes' Else 'No'
+$SampleWeb = 'Yes' ## If Solution has a Sample Website  this should be 'Yes' Else 'No'  
 $setupLog = "c:\tmp\setup_log.txt"
 Start-Transcript -Path $setupLog -Append
 $startTime = Get-Date
@@ -182,13 +183,15 @@ if ($InstallPy -eq "Yes")
 }
 
 # install modules for sample website
+if($SampleWeb  -eq "Yes")
+{
 cd $SolutionPath\Website\
 npm install
 Move-Item $SolutionPath\Website\server.js  c:\tmp\
 sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\server.js
 sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\server.js
 Move-Item  c:\tmp\server.js $SolutionPath\Website
-
+}
 
 $endTime = Get-Date
 
