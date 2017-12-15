@@ -12,11 +12,12 @@ DROP PROCEDURE IF EXISTS [dbo].[train_model];
 GO
 
 CREATE PROCEDURE [dbo].[train_model]   @modelName varchar(20),
-								 @dataset_name varchar(max),
-								 @trained_model varbinary(max) OUTPUT, 
-								 @native_model varbinary(max) OUTPUT
+								 @dataset_name varchar(max)
 AS 
 BEGIN
+	DECLARE								 
+		@trained_model varbinary(max), 
+		@native_model varbinary(max)
 
 	-- Create an empty table to be filled with the trained models.
 	IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'Models' AND xtype = 'U')
@@ -42,6 +43,7 @@ BEGIN
 ##########################################################################################################################################
 # Define the connection string
 connection_string <- paste("Driver=SQL Server;Server=localhost;Database=", database_name, ";Trusted_Connection=true;", sep="")
+
 
 # Set the Compute Context to SQL.
 sql <- RxInSqlServer(connectionString = connection_string)
@@ -96,11 +98,12 @@ if (model_name == "RF") {
 			     splitFraction = 5/24,
 			     featureFraction = 1,
                              minSplit = 10)	
-}			
+}	
+
+rxSetComputeContext(local)		
 native_model <- rxSerializeModel(model, realtimeScoringOnly = TRUE)
-trained_model <- as.raw(serialize(model, connection=NULL))
+trained_model <- as.raw(serialize(model, connection=NULL))'
   				       
-OutputDataSet <- data.frame(payload = rxSerializeModel(model, realtimeScoringOnly = TRUE))'
 , @params = N' @model_name varchar(20), @dataset_name varchar(max), @info varbinary(max), @database_name varchar(max),
    @trained_model varbinary(max) OUTPUT, @native_model varbinary(max) OUTPUT'
 
