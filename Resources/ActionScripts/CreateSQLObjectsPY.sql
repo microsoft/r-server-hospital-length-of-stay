@@ -642,7 +642,7 @@ CREATE PROCEDURE [dbo].[feature_engineering]  @input varchar(max), @output varch
 AS
 BEGIN 
 
--- Drop the output table if it has been created in R in the same database. 
+-- Drop the output table if it has been created in Py in the same database. 
     DECLARE @sql0 nvarchar(max);
 	SELECT @sql0 = N'
 	IF OBJECT_ID (''' + @output + ''', ''U'') IS NOT NULL  
