@@ -1188,5 +1188,3 @@ END
 GO
 
 ;
-END
-GO
