@@ -99,7 +99,8 @@ if (model_name == "RF") {
 			     featureFraction = 1,
                              minSplit = 10)	
 }	
-
+# Set to local compute context to use rxSerializeModel
+local <- RxLocalSeq()
 rxSetComputeContext(local)		
 native_model <- rxSerializeModel(model, realtimeScoringOnly = TRUE)
 trained_model <- as.raw(serialize(model, connection=NULL))'
