@@ -244,7 +244,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[RTS](
 	[id] [nvarchar](255) NULL,
-	[value] [varbinary](255) NULL
+	[value] [varbinary](MAX) NULL
 ) ON [PRIMARY]
 GO
 /****** Object:  Table [dbo].[RTS_Prediction]    Script Date: 11/21/2017 7:39:24 PM ******/
