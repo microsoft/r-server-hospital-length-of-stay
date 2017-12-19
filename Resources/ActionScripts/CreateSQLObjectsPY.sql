@@ -533,92 +533,14 @@ if model_name == "NN":
 , @database_name = @database_name
 ;
 END
+
 GO
 /****** Object:  StoredProcedure [dbo].[Inital_Run_Once_Py]    Script Date: 11/21/2017 7:39:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-	CREATE Proc [dbo].[Inital_Run_Once_Py] 
-
-	as
-
-	DECLARE @Spliting_Percent int
-	DECLARE @modelName varchar(10)
-	
-	 
-	SET @Spliting_Percent = 70 
-  
-	EXEC compute_stats
-	EXEC fill_NA_mode_mean 'LengthOfStay', 'LoS0'
-	EXEC feature_engineering 'LoS0', 'LoS', 0
-	EXEC get_column_info 'LoS'
-	EXEC splitting @Spliting_Percent, 'LoS'
-
-
-
-    --Gradient Boosted Training  
-
-    Set @modelName  = 'GBT'
-    EXEC train_model @modelName, 'LoS'
-    
-	----Gradient Boosted Scoring  
-	EXEC score @modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'
-
-    ----Gradient Boosted evaluation 
-	EXEC evaluate @modelName, 'Boosted_Prediction'
-
-	    --Random Forrest Training 
-
-    Set @modelName  = 'RF'
-    EXEC train_model @modelName, 'LoS'
-    
-	----Gradient Boosted Scoring  
-	EXEC score @modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'
-
-    ----Gradient Boosted evaluation 
-	EXEC evaluate @modelName, 'Boosted_Prediction'
-
-	----Gradient Boosted Prediction
-	--EXEC prediction_results
-
-
-	
-	    --Forrest Training 
-
-    Set @modelName  = 'FT'
-    EXEC train_model @modelName, 'LoS'
-    
-	----Gradient Boosted Scoring  
-	EXEC score @modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'
-
-    ----Gradient Boosted evaluation 
-	EXEC evaluate @modelName, 'Boosted_Prediction'
-
-
-		    --Nueral Network Training 
-
-    Set @modelName  = 'NN'
-    EXEC train_model @modelName, 'LoS'
-    
-	----Gradient Boosted Scoring  
-	EXEC score @modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'
-
-    ----Gradient Boosted evaluation 
-	EXEC evaluate @modelName, 'Boosted_Prediction'
-
-	
-	
-	---- Prediction Results 
-	EXEC prediction_results
-
-GO
-/****** Object:  StoredProcedure [dbo].[Execute_Yourself]    Script Date: 11/21/2017 7:39:24 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE Proc [dbo].[Execute_Yourself]
+CREATE Proc [dbo].[Inital_Run_Once_Py]
 
 AS
 
