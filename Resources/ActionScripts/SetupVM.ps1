@@ -145,9 +145,7 @@ Copy-Item "$ScriptPath\SolutionHelp.url" "C:\ProgramData\Microsoft\Windows\Start
 Write-Host -ForeGroundColor cyan " Help Files Copied to Desktop"
 
 
-###Copy PowerBI Reportt to Desktop 
-Copy-Item  "$ScriptPath\*.pbix"  C:\Users\Public\Desktop\
-Write-Host -ForeGroundColor cyan " PowerBI Reports Copied to Desktop"
+
 
 $WsShell = New-Object -ComObject WScript.Shell
 $shortcut = $WsShell.CreateShortcut($desktop + $checkoutDir + ".lnk")
