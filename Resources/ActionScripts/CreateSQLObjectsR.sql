@@ -311,7 +311,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-	CREATE PROCEDURE [dbo].[copy_modeling_tables]  @dev_db varchar(max) = 'Hospital'
+	CREATE PROCEDURE [dbo].[copy_modeling_tables]  @dev_db varchar(max) = 'Hospital_R'
 	AS
 	BEGIN
 		-- Only copy deployment tables if the production and the deployment databases are different. 
@@ -883,7 +883,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-	CREATE PROCEDURE [dbo].[prod_lengthofstay]  @input varchar(max) = 'LengthOfStay_Prod',  @dev_db varchar(max) = 'Hospital'								  
+	CREATE PROCEDURE [dbo].[prod_lengthofstay]  @input varchar(max) = 'LengthOfStay_Prod',  @dev_db varchar(max) = 'Hospital_R'								  
 	AS
 	BEGIN
 
