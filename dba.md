@@ -29,24 +29,21 @@ title: For the Database Analyst
 Among the key variables to learn from data are number of previous admissions as well as various diagnostic codes and lab results.  (View the [full data set description.](input_data.html) )
 
 
-For businesses that prefer an on-prem solution, the implementation with SQL Server R Services is a great option, which takes advantage of the power of SQL Server and RevoScaleR (Microsoft R Server). In this template, we implemented all steps in SQL stored procedures: data preprocessing, and feature engineering are implemented in pure SQL, while data cleaning, and the model training, scoring and evaluation steps are implemented with SQL stored procedures calling R (Microsoft R Server) code. 
+For businesses that prefer an on-prem solution, the implementation with Microsoft Machine Learning Services is a great option, which takes advantage of the power of SQL Server and RevoScaleR (Microsoft R Server). In this template, we implemented all steps in SQL stored procedures: data preprocessing, and feature engineering are implemented in pure SQL, while data cleaning, and the model training, scoring and evaluation steps are implemented with SQL stored procedures calling R (Microsoft R Server) code. 
 
 All the steps can be executed on SQL Server client environment (SQL Server Management Studio). We provide a Windows PowerShell script which invokes the SQL scripts and demonstrates the end-to-end modeling process.
 
 ## System Requirements
 -----------------------
 
-To run the scripts requires the following:
-
- * SQL server 2016 with Microsoft R Server  (version 9.0.1) installed and configured;
- * The SQL user name and password, and the user is configured properly to execute R scripts in-memory;
- * SQL Database for which the user has write permission and can execute stored procedures;
- * For more information about SQL server 2016 and R service, please visit: [What's New in SQL Server R Services](https://msdn.microsoft.com/en-us/library/mt604847.aspx)
+    {% include requirements.md %}
 
 
 ## Workflow Automation
 -------------------
 Follow the [PowerShell instructions](Powershell_Instructions.html) to execute all the scripts described below.  [Click here](tables.html) to view the details all tables created in this solution.
+
+The steps below describe the R solution (found in the `{{ site.db_name }}_R` database) and the Python solution (found in the `{{ site.db_name }}_Py` database). 
 
  
 <a name="step0"></a>

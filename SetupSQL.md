@@ -28,7 +28,7 @@ The rest of this page assumes you are configuring your on premises SQL Server 20
 
 If you need a trial version of SQL Server 2016, see [What's New in SQL Server 2016](https://msdn.microsoft.com/en-us/library/bb500435.aspx) for download or VM options. 
 
-Complete the steps in the Set up SQL Server R Services (In-Database) Instructions. The set up instructions file can found at  <a href="https://msdn.microsoft.com/en-us/library/mt696069.aspx" target="_blank"> https://msdn.microsoft.com/en-us/library/mt696069.aspx</a>
+Complete the steps in the Set up Microsoft Machine Learning Services (In-Database) Instructions. The set up instructions file can found at  <a href="https://msdn.microsoft.com/en-us/library/mt696069.aspx" target="_blank"> https://msdn.microsoft.com/en-us/library/mt696069.aspx</a>
 
 ### Set up logins in SQL Server
 If you are administering your own server and want to add a user to run the code of this solution, use the steps below.

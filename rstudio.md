@@ -15,8 +15,7 @@ RStudio needs to use R Server in order for the code for this solution.  Follow t
 <ol type="a">
 <li>From the <code>Tools</code> menu, choose <code>Global Options</code>.</li>
 <li>In the General tab, update the path to R to point to R Server:</li>
-<ul><li>On the VM deployed from <a href="{{ site.aka_url }}">Cortana Intelligence Gallery</a> the path is <code>C:\Program Files\Microsoft SQL Server\130\R_SERVER</code></li>
-<li>If you installed R Server on your own computer, the path is <code>C:\Program Files\Microsoft\R Client\R_SERVER\bin\x6b</code></li></ul>
+<ul><li>On the VM deployed from <a href="{{ site.aka_url }}">Cortana Intelligence Gallery</a> the path is <code>C:\Program Files\Microsoft\ML Server\R_SERVER</code></li>
 </ol>
 <li>Exit RStudio.</li>
 <li>When you relaunch RStudio, R Client will now be the default R engine.</li>

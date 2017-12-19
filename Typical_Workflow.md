@@ -26,11 +26,11 @@ title: Typical Workflow for for On-Prem Deployment
 
  {% include typicalintro1.md %}
 
-
+<div class="alert alert-warning" role="alert"> 
 This guide assumes you are using an on premises SQL Server for this solution.  
 
-*If you have deployed the {{ site.solution_name }} solution from the [Cortana Intelligence Gallery]({{ site.aka_url }}) you should instead [use this guide](CIG_Workflow.html).*
-
+<li>f you have deployed the {{ site.solution_name }} solution from the<a href="{{ site.aka_url }}">Cortana Intelligence Gallery</a> you should instead <a href="CIG_Workflow.html">use this guide</a>.</li>
+</div>
 
 To demonstrate a typical workflow, we'll introduce you to a few personas.  You can follow along by performing the same steps for each persona.  
 
@@ -47,19 +47,41 @@ You can perform these steps in your environment by using the instructions in <a 
 
  <a name="step2" id="step2"></a>
 
-## Step 2: Data Prep and Modeling with Debra the Data Scientist
------------------------------------------------------------------
+## Step 2: Data Prep and Modeling with Debra the Data Scientist (Code from R IDE)
+------------------------------------------------------------------
 
 {% include dsintro.md %}
 
-Debra will work on her own machine, using  [R Client](https://msdn.microsoft.com/en-us/microsoft-r/install-r-client-windows) to execute these R scripts. She will need to [install and configure an R IDE](https://msdn.microsoft.com/en-us/microsoft-r/r-client-get-started#configure-ide) to use with R Client.  
 
-Now that Debra's environment is set up, she  opens her IDE and creates a Project.  To follow along with her, open the **{{ site.folder_name }}/R** directory.  There you will see three files with the name `{{ site.solution_name }}`.
+<!-- R/Python Text -->
+<div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="active"><a href="#r1" aria-controls="R" role="tab" data-toggle="tab">R</a></li>
+                <li><a href="#python1" aria-controls="Python" role="tab" data-toggle="tab">Python</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <br/>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="r1">
+                    {% include rsetup2.html %}
+                    <br/>
+                    {% include step2.html %}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="python1">
+                    {% include pysetup.html %}
+                    <br/>
+                    {% include step2py.html %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END R/Python Text -->
 
-* If you use Visual Studio, double click on the Visual Studio SLN file.
-* If you use RStudio, double click on the "R Project" file.
 
-    {% include step2.md %}
 
 
  <a name="step3" id="step3"></a>
@@ -67,7 +89,7 @@ Now that Debra's environment is set up, she  opens her IDE and creates a Project
    {% include step3.md %}
 
 
-You can find this script in the **SQLR** directory, and execute it yourself by following the [PowerShell Instructions](Powershell_Instructions.html).   As noted earlier, this is the fastest way to execute all the code included in this solution.  (This will re-create the same set of tables and models as the above R scripts.)
+You can find this script in the **SQLR** or **SQLPY** directory, and execute it yourself by following the [PowerShell Instructions](Powershell_Instructions.html).   As noted earlier, this is the fastest way to execute all the code included in this solution.  (This will re-create the same set of tables and models as the above R/Python scripts.)
 
 <a name="step4" id="step4"></a>
 
