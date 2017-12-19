@@ -33,7 +33,7 @@ WRITE-HOST " ServerName set to $ServerName"
 
 $db = if ($Prompt -eq 'Y') {Read-Host  -Prompt "Enter Desired Database Base Name"} else {$SolutionName} 
 
-
+$dataList = "LengthOfStay , LengthOfStay_Prod"
 
 
 
@@ -148,7 +148,7 @@ try
 {
 
 Write-Host -ForeGroundColor 'cyan' (" Import CSV File(s).")
-$dataList = "LengthOfStay" ##Move this to top 
+ ##Move this to top 
 
 
 # upload csv files into SQL tables
@@ -204,7 +204,7 @@ try
 {
 
 Write-Host -ForeGroundColor 'cyan' (" Import CSV File(s).")
-$dataList = "LengthOfStay"
+#$dataList = "LengthOfStay"
 
 
 # upload csv files into SQL tables
