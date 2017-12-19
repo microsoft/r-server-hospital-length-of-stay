@@ -118,10 +118,10 @@ Write-Host -ForegroundColor 'Cyan' " SQL Services Restarted"
 
 
 $Query = "CREATE LOGIN $username WITH PASSWORD=N'$password', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF"
-Invoke-Sqlcmd -Query $Query
+Invoke-Sqlcmd -Query $Query -ErrorAction SilentlyContinue
 
 $Query = "ALTER SERVER ROLE [sysadmin] ADD MEMBER $username"
-Invoke-Sqlcmd -Query $Query
+Invoke-Sqlcmd -Query $Query -ErrorAction SilentlyContinue
 
 
 
