@@ -143,7 +143,7 @@ Add-OdbcDsn -Name $odbcName -DriverName "SQL Server Native Client 11.0" -DsnType
 # Deployment Pipeline
 ##########################################################################
 
-
+$RStart = Get-Date
 try
 {
 
@@ -181,19 +181,21 @@ $query = "EXEC Inital_Run_Once_R"
 #SqlServer\Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
 SqlServer\Invoke-Sqlcmd -ServerInstance LocalHost -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
 
+$Rend = Get-Date
 
+$Duration = New-TimeSpan -Start $RStart -End $Rend 
+Write-Host -ForegroundColor 'green'(" R Server Configured in $Duration")
 
 
 
 ###Conifgure Database for Py 
 if ($isCompatible -eq 'Yes'-and $InstallPy -eq 'Yes')
 {
+$PyStart = get-date
 Write-Host "  
 Configuring $SolutionName Solution for Py
 # "
 $dbname = $db + "_Py"
-# $ActionScript = $solutionPath + "\SQLPy\LoadandTrainData.ps1 -ServerName $ServerName -dbName $dbName -Prompt $Prompt"
-# Invoke-Expression $ActionScript 
 
 ##########################################################################
 # Deployment Pipeline
@@ -232,9 +234,10 @@ Write-Host -ForeGroundColor 'cyan' (" Finished loading .csv File(s).")
 Write-Host -ForeGroundColor 'Cyan' (" Training Model and Scoring Data...")
 $query = "EXEC Inital_Run_Once_Py"
 SqlServer\Invoke-Sqlcmd -ServerInstance LocalHost -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
-#SqlServer\Invoke-Sqlcmd -ServerInstance $ServerName -Database $dbName -Query $query -ConnectionTimeout  0 -QueryTimeout 0
 
-##SqlServer\Invoke-Sqlcmd  -Database $DbName -Query "EXEC Execute_Yourself" -QueryTimeout 0 -ServerInstance $ServerName
+$Pyend = Get-Date
 
+$Duration = New-TimeSpan -Start $PyStart -End $Pyend 
+Write-Host -ForegroundColor 'green'(" Py Server Configured in $Duration")
 
 }
