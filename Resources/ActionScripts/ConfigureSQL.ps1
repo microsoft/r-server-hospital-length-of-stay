@@ -33,7 +33,7 @@ WRITE-HOST " ServerName set to $ServerName"
 
 $db = if ($Prompt -eq 'Y') {Read-Host  -Prompt "Enter Desired Database Base Name"} else {$SolutionName} 
 
-$dataList = {"LengthOfStay" , "LengthOfStay_Prod"}
+$dataList = ("LengthOfStay" , "LengthOfStay_Prod")
 
 
 
