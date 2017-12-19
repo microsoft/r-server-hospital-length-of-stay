@@ -543,9 +543,10 @@ GO
 
 	as
 
-
-
-	DECLARE @Spliting_Percent int 
+	DECLARE @Spliting_Percent int
+	DECLARE @modelName varchar(10)
+	
+	 
 	SET @Spliting_Percent = 70 
   
 	EXEC compute_stats
@@ -558,7 +559,18 @@ GO
 
     --Gradient Boosted Training  
 
-    DECLARE @modelName varchar(10) = 'GBT'
+    Set @modelName  = 'GBT'
+    EXEC train_model @modelName, 'LoS'
+    
+	----Gradient Boosted Scoring  
+	EXEC score @modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'
+
+    ----Gradient Boosted evaluation 
+	EXEC evaluate @modelName, 'Boosted_Prediction'
+
+	    --Random Forrest Training 
+
+    Set @modelName  = 'RF'
     EXEC train_model @modelName, 'LoS'
     
 	----Gradient Boosted Scoring  
@@ -568,7 +580,38 @@ GO
 	EXEC evaluate @modelName, 'Boosted_Prediction'
 
 	----Gradient Boosted Prediction
+	--EXEC prediction_results
+
+
+	
+	    --Forrest Training 
+
+    Set @modelName  = 'FT'
+    EXEC train_model @modelName, 'LoS'
+    
+	----Gradient Boosted Scoring  
+	EXEC score @modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'
+
+    ----Gradient Boosted evaluation 
+	EXEC evaluate @modelName, 'Boosted_Prediction'
+
+
+		    --Nueral Network Training 
+
+    Set @modelName  = 'NN'
+    EXEC train_model @modelName, 'LoS'
+    
+	----Gradient Boosted Scoring  
+	EXEC score @modelName, 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)', 'Boosted_Prediction'
+
+    ----Gradient Boosted evaluation 
+	EXEC evaluate @modelName, 'Boosted_Prediction'
+
+	
+	
+	---- Prediction Results 
 	EXEC prediction_results
+
 GO
 /****** Object:  StoredProcedure [dbo].[Execute_Yourself]    Script Date: 11/21/2017 7:39:24 PM ******/
 SET ANSI_NULLS ON

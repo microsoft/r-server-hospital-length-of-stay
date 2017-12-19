@@ -2,15 +2,15 @@
 
 [CmdletBinding()]
 param(
-[parameter(Mandatory=$false, Position=1)]
+[parameter(Mandatory=$True, Position=1)]
 [ValidateNotNullOrEmpty()] 
 [string]$serverName,
 
-[parameter(Mandatory=$false, Position=2)]
+[parameter(Mandatory=$True, Position=2)]
 [ValidateNotNullOrEmpty()] 
 [string]$username,
 
-[parameter(Mandatory=$false, Position=3)]
+[parameter(Mandatory=$True, Position=3)]
 [ValidateNotNullOrEmpty()] 
 [string]$password,
 
