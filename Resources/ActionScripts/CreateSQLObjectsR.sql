@@ -34,6 +34,44 @@ CREATE TABLE [dbo].[LengthOfStay](
 	[lengthofstay] [int] NULL
 ) ON [PRIMARY]
 GO
+
+/****** Object:  Table [dbo].[QueryPatient]    Script Date: 12/15/2017 5:10:15 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[QueryPatient](
+	[eid] [int] NOT NULL,
+	[vdate] [date] NULL,
+	[rcount] [varchar](2) NULL,
+	[gender] [varchar](1) NULL,
+	[dialysisrenalendstage] [varchar](1) NULL,
+	[asthma] [varchar](1) NULL,
+	[irondef] [varchar](1) NULL,
+	[pneum] [varchar](1) NULL,
+	[substancedependence] [varchar](1) NULL,
+	[psychologicaldisordermajor] [varchar](1) NULL,
+	[depress] [varchar](1) NULL,
+	[psychother] [varchar](1) NULL,
+	[fibrosisandother] [varchar](1) NULL,
+	[malnutrition] [varchar](1) NULL,
+	[hemo] [varchar](1) NULL,
+	[hematocrit] [float] NULL,
+	[neutrophils] [float] NULL,
+	[sodium] [float] NULL,
+	[glucose] [float] NULL,
+	[bloodureanitro] [float] NULL,
+	[creatinine] [float] NULL,
+	[bmi] [float] NULL,
+	[pulse] [float] NULL,
+	[respiration] [float] NULL,
+	[secondarydiagnosisnonicd9] [varchar](2) NULL,
+	[discharged] [date] NULL,
+	[facid] [varchar](1) NULL,
+	[lengthofstay] [int] NULL
+) ON [PRIMARY]
+GO
+
 /****** Object:  View [dbo].[LoS0]    Script Date: 12/15/2017 5:10:15 PM ******/
 SET ANSI_NULLS ON
 GO
