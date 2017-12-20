@@ -27,7 +27,7 @@ Now that we know how to predict LOS, we might want to use this in real time when
 
 <h2>Starting the Website</h2>
 <hr/>
-To start the sample webpage, type the following commands into  a terminal window or powershell window.  Substitute your own values for <span class="onp">the path and </span> username/password:
+To start the sample webpage, type the following commands into  a terminal window or PowerShell window. 
 
 ```
     cd C:\Solutions\Hospital\Website
