@@ -24,6 +24,5 @@ You can view the model values by opening the Console window on your browser.
 
 For Edge or Internet Explorer: Press F12 to open Developer Tools, then click on the Console tab.
 For FireFox or Chome: Press Ctrl-Shift-i to open Developer Tools, then click on the Console tab.
-Use the Log In button on the site to switch to a different account and try the same transaction again. (Hint: the account number that begins with a “9” is most likely to have a high probability of fraud.)
 
 See more details about this example see [For the Web Developer](web-developer.html).
