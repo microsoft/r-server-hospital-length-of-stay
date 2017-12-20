@@ -48,15 +48,14 @@ This has already been done on your deployed Cortana Intelligence Gallery VM.
 
 {% include dsintro.md %}
 
-
 <!-- R/Python Text -->
 <div>
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card ">
+        <div class="card-block">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li class="active"><a href="#r1" aria-controls="R" role="tab" data-toggle="tab">R</a></li>
-                <li><a href="#python1" aria-controls="Python" role="tab" data-toggle="tab">Python</a></li>
+                <li class="nav-item "><a class="nav-link active" href="#r1" aria-controls="R" data-toggle="tab">R</a></li>
+                <li class="nav-item"><a class="nav-link" href="#python1" aria-controls="Python" data-toggle="tab">Python</a></li>
             </ul>
             <!-- Tab panes -->
             <br/>
