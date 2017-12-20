@@ -987,7 +987,7 @@ BEGIN
 	SET @query_string_prod ='
 	SELECT * FROM LoS_Prod' 
 
-	--exec [dbo].[score] @model_name = 'RF', @inquery = @query_string_prod, @output = 'Forest_Prediction_Prod'
+	exec [dbo].[score] @model_name = 'RF', @inquery = @query_string_prod, @output = 'Forest_Prediction_Prod'
 	exec [dbo].[score] @model_name = 'GBT', @inquery = @query_string_prod, @output = 'Boosted_Prediction_Prod'
 
 END
