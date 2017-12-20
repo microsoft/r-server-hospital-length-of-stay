@@ -1,7 +1,7 @@
 <img src="Resources/Images/los.png" align="right">
 
 # Predicting Length of Stay in Hospitals 
-## Implemented on SQL Server 2016 R Services
+## Implemented with SQL Server 2017 Machine Learning Services
 
 For all documentation, visit the [Hospital Length of Stay website](https://microsoft.github.io/r-server-hospital-length-of-stay/).
 

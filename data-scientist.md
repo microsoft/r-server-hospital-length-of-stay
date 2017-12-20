@@ -20,13 +20,13 @@ title: For the Data Scientist
         </div>
     </div>
     <div class="col-md-6">
-        SQL Server R Services takes advantage of the power of SQL Server and RevoScaleR (Microsoft R Server package) by allowing R to run on the same server as the database. It includes a database service that runs outside the SQL Server process and communicates securely with the R runtime. 
+        Microsoft Machine Learning Services provide an extensible, scalable platform for integrating machine learning tasks and tools with the applications that consume machine learning services. It includes a database service that runs outside the SQL Server process and communicates securely with  R and Python. 
         <p>
-       This solution package shows how to pre-process data (cleaning and feature engineering), train prediction models, and perform scoring on the SQL Server machine. </p>
+       This solution package shows how to pre-process data (cleaning and feature engineering), train prediction models, and perform scoring on the SQL Server machine using either R or Python code.  </p>
     </div>
 </div>
 
-Data scientists who are testing and developing solutions can work from the convenience of their R IDE on their client machine, while <a href="https://msdn.microsoft.com/en-us/library/mt604885.aspx">setting the computation context to SQL</a> (see **R** folder for code).  They can also deploy the completed solutions to SQL Server 2016 by embedding calls to R in stored procedures (see **SQLR** folder for code). These solutions can then be further automated by the use of SQL Server Integration Services and SQL Server agent: a PowerShell script (.ps1 file) automates the running of the SQL code.
+Data scientists who are testing and developing solutions can work from the convenience of their preferred IDE on their client machine, while <a href="https://msdn.microsoft.com/en-us/library/mt604885.aspx">setting the computation context to SQL</a> (see **R** or **Python** folder for code).  They can also deploy the completed solutions to SQL Server 2017 by embedding calls to R or Python in stored procedures (see **SQLR** or **SQLPy** folder for code). These solutions can then be further automated by the use of SQL Server Integration Services and SQL Server agent: a PowerShell script (.ps1 file) automates the running of the SQL code.
 
 <a name="first"></a>
 
@@ -35,9 +35,9 @@ Data scientists who are testing and developing solutions can work from the conve
 
 In order for hospitals to optimize resource allocation, it is important to predict accurately how long a newly admitted patient will stay in the hospital.
 
-In this template, we implemented all steps in SQL stored procedures: data preprocessing, and feature engineering are implemented in pure SQL, while data cleaning, and the model training, scoring and evaluation steps are implemented with SQL stored procedures calling R (Microsoft R Server) code. 
+In this template, we implemented all steps in SQL stored procedures: data preprocessing, and feature engineering are implemented in pure SQL, while data cleaning, and the model training, scoring and evaluation steps are implemented with SQL stored procedures calling either R (Microsoft R Server) or Python code. 
 
-All these steps can be executed in an R IDE. 
+All these steps can be executed in an R or Python IDE, and are also presented in R/Python Jupyter notebooks. 
 
 Among the key variables to learn from data are number of previous admissions as well as various diagnostic codes and lab results.  (View the [full data set description.](input_data.html) )
 
@@ -51,12 +51,7 @@ This page describes what happens in each of the steps: dataset creation, model d
 ## System Requirements
 --------------------------
 
-To run the scripts requires the following:
-
-- SQL Server 2016 with Microsoft R Server  (version 9.0.1) installed and configured.     
-- The SQL user name and password, and the user configured properly to execute R scripts in-memory;
-- SQL Database which the user has write permission and execute stored procedures;
-- For more information about SQL server 2016 and R service, please visit: [https://msdn.microsoft.com/en-us/library/mt604847.aspx](https://msdn.microsoft.com/en-us/library/mt604847.aspx)
+    {% include requirements.md %}
 
 
 <a name="step1"></a>
@@ -80,7 +75,8 @@ The user can run the one he prefers.
 * A SQL Table `LengthOfStay`, with missing values replaced.
 
 ### Related files:
-* **step1_data_preprocessing.R**
+* R: **step1_data_preprocessing.R**
+* Python: **step1_data_preprocessing.Py**
 
 <a name="step2"></a>
 
@@ -102,7 +98,8 @@ In this step, we design new features:
 
 ### Related files:
 
-* **step2_feature_engineering.R**
+* R: **step2_feature_engineering.R**
+* Python: **step2_feature_engineering.py**
 
 <img src="images/ds1.png">
 
@@ -111,7 +108,7 @@ In this step, we design new features:
 ## Step3:  Splitting, Training, Testing and Evaluating (Regression)
 -------------------------
 
-In this step, we split the data into a training set and a testing set. The user has to specify a splitting percentage. For example, if the splitting percentage is 70, 70% of the data will be put in the training set, while the other 30% will be assigned to the testing set. The `eid` that will end in the training set are stored in the table `Train_Id`.  Then we train a regression Random Forest (rxDForest) and a gradient boosted trees model (rxFastTrees) on the training set. The trained models are uploaded to SQL if needed later. Finally, we score the trained models on the testing set, and then compute regression performance metrics.
+In this step, we split the data into a training set and a testing set. The user has to specify a splitting percentage. For example, if the splitting percentage is 70, 70% of the data will be put in the training set, while the other 30% will be assigned to the testing set. The `eid` that will end in the training set are stored in the table `Train_Id`.  Then we train a regression Random Forest (rxDForest in R, rx_dforest in Python) and a gradient boosted trees model (rxFastTrees in R, rx_btrees in Python) on the training set. The trained models are uploaded to SQL if needed later. Finally, we score the trained models on the testing set, and then compute regression performance metrics.
 
 ### Input:
 
@@ -123,7 +120,8 @@ In this step, we split the data into a training set and a testing set. The user 
 
 ### Related files:
 
-* **step3_training_evaluation**
+* R: **step3_training_evaluation.R**
+* Python: **step3_training_evaluation.py**
 
 <img src="images/ds2.png">
 <br/>

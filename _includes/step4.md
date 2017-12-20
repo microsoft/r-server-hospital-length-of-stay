@@ -16,4 +16,6 @@ Chris is directly involved with the care of patients. His role requires monitori
 
 Length of stay prediction allows Chris to better plan for his patients’ care. In the provided dashboard, Chris is able to see the number of patients under his care by selecting his facility at the top of the page. He can then see all the patients in that facility today and a predicted number of days each has left until their discharge.  This allows him to allocated appropriate resources be available for his patient population.  He can also see when patients might be projected to leave on a Saturday or Sunday and can either ensure discharge occurs, or to plan for additional days of care in the inpatient setting. Additionally, the vitals and condition breakdowns allow the care line manager to closely monitor the status of those patients projected to be in the hospital for longer periods of time in order to ensure additional complications do not arise during their stay.
 
-*Remember that before the data in this dashboard can be refreshed to use your scored data, you must <a href="Visualize_Results.html">configure the dashboard</a> as Debra did in step 2 of this workflow.*
+<div class="alert alert-warning">
+Remember that before the data in this dashboard can be refreshed to use your scored data, you must <a href="Visualize_Results.html">configure the dashboard</a> as Debra did in step 2 of this workflow.
+</div>

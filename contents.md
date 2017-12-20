@@ -10,13 +10,11 @@ The following is the directory structure for this template:
 
 - [**Data**](#copy-of-input-datasets)  This contains the copy of the input data.
 - [**R**](#model-development-in-r)  This contains the R code to simulate the input datasets, pre-process them, create the analytical datasets, train the models, and score the data.
+- [**Python**](#model-development-in-python)  This contains the Python code to simulate the input datasets, pre-process them, create the analytical datasets, train the models, and score the data.
 - [**Resources**](#resources-for-the-solution-packet) This directory contains other resources for the solution package.
-- [**SQLR**](#operationalize-in-sql-2016) This contains the T-SQL code to pre-process the datasets, train the models, identify the champion model and provide recommendations. It also contains a PowerShell script to automate the entire process, including loading the data into the database (not included in the T-SQL code).
+- [**SQLR**](#operationalize-in-sql-r) This contains the T-SQL code with R to pre-process the datasets, train the models, identify the champion model and provide recommendations. It also contains a PowerShell script to automate the entire process, including loading the data into the database (not included in the T-SQL code).
+- [**SQLPy**](#operationalize-in-sql-python) This contains the T-SQL code with Python to pre-process the datasets, train the models, identify the champion model and provide recommendations. It also contains a PowerShell script to automate the entire process, including loading the data into the database (not included in the T-SQL code).
 
-In this template with SQL Server R Services, two versions of the implementation:
-
-1. [**Model Development in R IDE**](#model-development-in-r)  . Run the R code in R IDE (e.g., RStudio, R Tools for Visual Studio).
-2. [**Operationalize in SQL**](#operationalize-in-sql-2016). Run the SQL code in SQL Server using SQLR scripts from SSMS or from the PowerShell script.
 
 
 ### Copy of Input Datasets
@@ -43,8 +41,24 @@ In this template with SQL Server R Services, two versions of the implementation:
 * See [For the Data Scientist](data_scientist.html) for more details about these files.
 * View [Typical Workflow](Typical.html)  for more information about executing these scripts.
 
+### Model Development in Python
+-------------------------
 
-### Operationalize in SQL 2016 
+<table class="table table-striped table-condensed">
+<tr><th> File </th><th> Description </th></tr>
+<tr><td> {{ site.jupyter_name}}  </td><td> Contains the Jupyter Notebook file that runs all the .R scripts. </td></tr>
+<tr><td>SQL_connection.py </td><td> Contains details of connection to SQL Server used in all other scripts. </td></tr>
+<tr><td>step1_data_preprocessing.py </td><td> Data loaded and missing values handled </td></tr>
+<tr><td>step2_feature_engineering.py </td><td> Measures standardized </td></tr>
+<tr><td>step3_training_evaluation.py  </td><td>Trains and Scores regression Random Forest (rxDForest) and a gradient boosted trees model (rxFastTrees)</td></tr>
+</table>
+
+
+* See [For the Data Scientist](data_scientist.html) for more details about these files.
+* View [Typical Workflow](Typical.html)  for more information about executing these scripts.
+
+
+### Operationalize in SQL R 
 -------------------------------------------------------
 
 <table class="table table-striped table-condensed">
@@ -56,8 +70,29 @@ In this template with SQL Server R Services, two versions of the implementation:
 <tr><td> .\SQLR\step1_data_processing.sql  </td><td> Handles missing data </td></tr>
 <tr><td> .\SQLR\step2_feature_engineering.sql  </td><td> Standardizes measures and creates <code>number_of_issues</code> and <code>lengthofstay_bucket</code> </td></tr>
 <tr><td> .\SQLR\step3a_splitting.sql  </td><td> Splits data into train and test </td></tr>
-<tr><td> .\SQLR\step3b_training.sql  </td><td> Trains and scores a gradient boosted trees model (rxFastTrees)  </td></tr>
+<tr><td> .\SQLR\step3b_training.sql  </td><td> Trains and scores a gradient boosted trees model (rxFastTrees) or Random Forest (rxDForest)  </td></tr>
 <tr><td> .\SQLR\step3c_testing_evaluating.sql  </td><td> Scores and evaluates regression RF </td></tr>
+
+
+</table>
+
+* See [ For the Database Analyst](dba.html) for more information about these files.
+* Follow the [PowerShell Instructions](Powershell_Instructions.html) to execute the PowerShell script which automates the running of all these .sql files.
+
+### Operationalize in SQL Python 
+-------------------------------------------------------
+
+<table class="table table-striped table-condensed">
+<tr><th> File </th><th> Description </th></tr>
+<tr><td> .\SQLPy\Length_Of_Stay.ps1  </td><td> Automates execution of all .sql files and creates stored procedures </td></tr>
+<tr><td> .\SQLPy\execute_yourself.sql  </td><td> used in Length_Of_Stay.sql </td></tr>
+<tr><td> .\SQLPy\load_data.ps1  </td><td> used in Length_Of_Stay.sql </td></tr>
+<tr><td> .\SQLPy\step0_create_table.sql  </td><td> Creates initial <code>LengthOfStay</code> table </td></tr>
+<tr><td> .\SQLPy\step1_data_processing.sql  </td><td> Handles missing data </td></tr>
+<tr><td> .\SQLPy\step2_feature_engineering.sql  </td><td> Standardizes measures and creates <code>number_of_issues</code> and <code>lengthofstay_bucket</code> </td></tr>
+<tr><td> .\SQLPy\step3a_splitting.sql  </td><td> Splits data into train and test </td></tr>
+<tr><td> .\SQLPy\step3b_training.sql  </td><td> Trains and scores a gradient boosted trees model (rx_btrees) or Random Forest (rx_dforest)  </td></tr>
+<tr><td> .\SQLPy\step3c_testing_evaluating.sql  </td><td> Scores and evaluates models </td></tr>
 
 
 </table>

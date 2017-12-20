@@ -1,20 +1,22 @@
 author:
         name: Microsoft
 
-description: Use SQL Server 2016 + R Services to build and deploy a predictive model for Length of Stay for in-hospital admissions.
+description: Use SQL Server 2017 + ML Services to build and deploy a predictive model for Length of Stay for in-hospital admissions.
 
 # names
 solution_name: Predicting Hospital Length of Stay
 folder_name: Hospital
 db_name: Hospital
 ps1_name: Length_Of_Stay.ps1
+sql_image_url: images/los.png
 jupyter_name: Hospital_Length_Of_Stay_Notebook.ipynb
+py_jupyter_name:
 pbi_name: Hospital Dashboard.pbix
+
 
 # urls
 code_url: "https://github.com/Microsoft/r-server-hospital-length-of-stay"
 website_url: "https://microsoft.github.io/r-server-hospital-length-of-stay/"  
 pbi_url: "https://start.cortanaintelligence.com/TryItNow/Dashboard/hospital"
 aka_url: "http://aka.ms/hospital-los" 
-
 

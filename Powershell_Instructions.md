@@ -26,75 +26,30 @@ title: PowerShell Instructions
 
 If you are configuring your own server, continue with the steps below to run the PowerShell script.
 
-## Setup
+## Setup 
 -----------
 
-First, make sure you have set up your SQL Server by  <a href="SetupSQL.html">following these instructions</a>.  Then proceed with the steps below to run the solution template using the automated PowerShell files. 
+First, make sure you have set up your SQL Server by  <a href="SetupSQL.html">following these instructions</a>.  Then proceed with the steps below to run the solution template using the automated PowerShell file. 
 
 ## Create Data and Train Model
 ----------------------------
 
-Running this PowerShell script will create stored procedures for the the operationalization of this solution.  It will also execute these procedures to create full database with results of the steps  – dataset creation, modeling, and scoring as described  [here](dba.html).
+Running this PowerShell script will create the data tables and stored procedures for the the operationalization of this solution, both in R (in the `{{ site.db_name }}_R` database) and Python (in the `{{ site.db_name }}_Py` database).  It will also execute these procedures to create full database with results of the steps  – dataset creation, modeling, and scoring as described  [here](dba.html).
 
 
+1. Download  <a href="https://raw.githubusercontent.com/Microsoft/r-server-hospital-length-of-stay/master/Resources/ActionScripts/SetupVM.ps1" download>SetupVM.ps1</a> to your computer.
 
-1.	Click on the windows key on your keyboard. Type the words `PowerShell`.  Right click on Windows Powershell to and select `Run as administrator` to open the PowerShell window.
+1.  Right click on SetupVM.ps1 and select `Run with PowerShell`.
 
+1.  Answer `Y` if asked if it is ok to execute this script.
 
-2.	In the Powershell command window, type the following command:
-  
-    ```
-    Set-ExecutionPolicy Unrestricted -Scope Process
-    ```
+1.  When prompted, enter the servername, username, and password for your SQL 2016 or SQL 2017 server.  (The Python version of this solution is only available if you are using a SQL 2017 server.)
 
-    Answer `y` to the prompt to allow the following scripts to execute.
-
-3. Create a directory on your computer where you will put this solution.  CD to the directory and then clone the repository into it:
     
-    ```
-    git clone {{ site.code_url }} {{ site.folder_name }}
-    ```
-
-4.  Now CD to the **{{ site.folder_name }}/SQLR** directory and run one of the two following commands, inserting your server name (or "." if you are on the same machine as the SQL server), database name, username, and password.
-
-    * Run with no prompts: 
-    
-        <code class="highlighter-rouge">
-        .\{{ site.ps1_name }} -ServerName "Server Name" -DBName "Database Name" -username "" -password "" -is_production "N" -uninterrupted "Y"  
-        </code>
-
-    * Run with prompts:
-
-        <code class="highlighter-rouge">
-        .\{{ site.ps1_name }} -ServerName "Server Name" -DBName "Database Name" -username "" -password "" -is_production "N" -uninterrupted "N"  
-        </code>
-
-    * For example, uninterrupted mode for a user named rdemo with password D@tascience, the command would be: 
-
-        <code class="highlighter-rouge">
-        .\{{ site.ps1_name }} -ServerName "localhost" -DBName "{{ site.db_name }}" -username "rdemo" -password "D@tascience" -is_production "N" -uninterrupted "Y"  
-        </code>
-
-
-5.  If running with prompts (`-uninterrupted "N"`), you cannot complete a step until the previous step has been completed, so only skip steps that have previously been executed.  Running in this mode allows you to specify non default names for tables.
-
-
-6.  You can also optionally add the parameter `-dataPath "your path\to\csv files"`.  If you omit this, it defaults to the Data folder in the current directory.
-
-
-## Score Production Data
-------------------------
-To score production data re-run the [command from step 4](#runcmd) this time using `-is_production "Y"`.  For example, uninterrupted mode for a user named rdemo with password D@tascience:
-
-<code class="highlighter-rouge">
-.\{{ site.ps1_name }} -ServerName "localhost" -DBName "{{ site.db_name }}" -username "rdemo" -password "D@tascience" -is_production "Y" -uninterrupted "Y"  
-</code>
-
-
 ## Review Data
 --------------
 
-Once the PowerShell script has completed successfully, log into the SQL Server Management Studio to view all the datasets that have been created in the `{{ site.db_name }}` database.  
+Once the PowerShell script has completed successfully, log into the SQL Server Management Studio to view all the datasets that have been created in the `{{ site.db_name }}_R` and `{{ site.db_name }}_Py` databases.  
 Hit `Refresh` if necessary.
 <br/>
 
@@ -110,6 +65,11 @@ Right click `Boosted_Prediction` and select `View Top 1000 Rows` to preview the 
 You've now  created and processed data, created models, and predicted LOS as described  [here](data-scientist.html). This PowerShell script also created the stored procedures that can be used to score new data in the future.  
 
 Let's look at our current results. Proceed to <a href="Visualize_Results.html">Visualizing Results with PowerBI</a>.
+
+## Sample Website for Native Scoring
+---------
+[This sample website](web-developer.html) shows how you might use the solution to show an estimate of the patient's lenght of stay during the admission process.
+
 
 ## Other Steps
 ----------------

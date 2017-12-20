@@ -1,0 +1,34 @@
+<ol>
+  <li>
+    <p>First she’ll develop scripts to prepare the data.  To view the scripts she writes, open the files mentioned below, or see the Data Prepration and Feature Engineering sections in the Jupyter Notebook.
+
+    <ul>
+      <li><strong>step1_data_preprocessing.py</strong></li>
+      <li><strong>step2_feature_engineering.py</strong></li>
+    </ul>
+    <br/>
+    <p><em>You can run these scripts if you wish, but you may also skip them if you want to get right to the modeling.  The data that these scripts create already exists in the SQL database.</em></p>
+</p>
+</li>
+
+  <li>
+    <p>After running the step1 and step2 scripts, Debra goes to SQL Server Management Studio to log in and view the results of these steps  by running the following query:</p>
+
+        <div class="highlighter-rouge"><pre class="highlight"><code>SELECT TOP 1000 *    FROM [Hospital_Py].[dbo].[LoS]
+</code></pre>
+</div>
+  </li>
+  <li>
+    <p>Now she is ready for training the models.  She creates and executes the following script to train and score  a regression Random Forest (rxDForest) and a gradient boosted trees model (rxFastTrees) on the training set. This uses the new <a href="https://docs.microsoft.com/en-us/machine-learning-server/python-reference/microsoftml/microsoftml-package">MicrosoftML package</a> for Python. Both models will  predict LOS.  When she looks at the metrics of both models, she notices that along with a faster performance time, the rxFastTrees model also performs with lower error, so she decides to use this model for prediction.</p>
+    <ul>
+      <li><strong>step3_training_evaluation</strong></li>
+    </ul>
+    <br/>
+  </li>
+  <li>
+    <p>Debra will now use PowerBI to visualize the predictions created from her model.  She creates the PowerBI Dashboard which you can find in the <code class="highlighter-rouge">Hospital</code> directory.  If you want to refresh data in your PowerBI Dashboard, make sure to <a href="Visualize_Results.html">follow these instructions</a> to provide the necessary information.</p>
+  </li>
+  <li>
+    <p>A summary of this process and all the files involved is described in more detail <a href="data-scientist.html">here</a>.</p>
+  </li>
+</ol>
