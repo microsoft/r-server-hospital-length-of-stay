@@ -9,6 +9,6 @@
 ##       and create a New Database with the name you wish to use.
 ##########################################################################################################################################
 
-connection_string <- "Driver=SQL Server;Server=localhost;Database=Hospital;Trusted_Connection=Yes"
+connection_string <- "Driver=SQL Server;Server=localhost;Database=Hospital_R;Trusted_Connection=Yes"
 sql <- RxInSqlServer(connectionString = connection_string)
 local <- RxLocalSeq()

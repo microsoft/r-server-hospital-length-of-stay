@@ -7,7 +7,7 @@
 
 
 -- Set the working database to the one where you created the stored procedures.
-Use Hospital
+Use Hospital_R
 GO
 
 -- @input: specify the name of the table holding the raw data set for Modeling/Development. 

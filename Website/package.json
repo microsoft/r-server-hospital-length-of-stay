@@ -1,0 +1,22 @@
+{
+  "name": "hslos",
+  "version": "1.0.0",
+  "description": "hlos demo",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "r",
+    "sql",
+    "server"
+  ],
+  "author": "Sheri Gilley <sgilley@microsoft.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.13.4",
+    "express-handlebars": "^3.0.0",
+    "tedious": "^1.13.2",
+    "tedious-connection-pool": "^1.0.5"
+  }
+}
