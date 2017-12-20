@@ -69,7 +69,7 @@ $SolutionData = $SolutionPath + "\Data\"
 
 $clone = "git clone --branch $Branch --single-branch https://github.com/Microsoft/$SolutionFullName $solutionPath"
 
-if (Test-Path $solutionTemplatePath) { Write-Host " Solution has already been cloned"}
+if (Test-Path $SolutionPath) { Write-Host " Solution has already been cloned"}
 ELSE {Invoke-Expression $clone}
 
 #################################################################
