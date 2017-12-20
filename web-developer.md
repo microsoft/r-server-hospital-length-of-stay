@@ -38,7 +38,9 @@ You should see the following response:
 
 ```
     The website is running at http://localhost:3000
-    Tedious-Connection-Pool: filling pool with ...
+    Tedious-Connection-Pool: filling pool with 2
+    Tedious-Connection-Pool: creating connection: 1
+    ...
 ```
 
 Now leave this window open and open the url [http://localhost:3000](http://localhost:3000) in your browser.  

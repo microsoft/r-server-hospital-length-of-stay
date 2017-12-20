@@ -14,6 +14,7 @@ title: Typical Workflow for Cortana Intelligence Gallery Deployment
         <li><a href="#step2">Step 2: Data Prep and Modeling</a></li>
         <li><a href="#step3">Step 3: Operationalize</a></li>
         <li><a href="#step4">Step 4: Deploy and Visualize</a></li>
+        <li><a href="#step5">Step 5: Use the Model during Admission</a></li>
         </div>
     </div>
     
@@ -85,3 +86,7 @@ This has already been done on your deployed Cortana Intelligence Gallery VM.
  <a name="step4" id="step4"></a>
 
     {% include step4.md %}
+
+<a name="step5" id="step5"></a>
+
+{% include step5.md %}

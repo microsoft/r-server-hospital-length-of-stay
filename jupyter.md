@@ -4,19 +4,18 @@ title: Using a Jupyter Notebook
 ---
 ## Using a Jupyter Notebook
 
-You can view and execute the R or Python code for this solution in a Jupyter Notebook on the VM by following these instructions. 
+You can view and execute the R or Python code for this solution in a Jupyter Notebook by following these instructions. 
 
 ## Start Jupyter Notebook
 
-1.  Set Firefox to be your default browser if you haven't already done so
-2.  Open a Powershell or Terminal window and execute the following:
+Open a Powershell or Terminal window and execute the following:
 
     ```
     cd c:\Solutions\Hospital
     jupyter notebook
     ```
 
-After a moment, the browser window will open.  Navigate to either the **R** or **Python** directory to find the corresponding notebook.
+After a moment, the browser window will open.  Navigate to either the **R** or **Python** directory to find the corresponding notebook.  Select the `ML Server` kernel for the Python notebook.
 
 
 ## Using Jupyter

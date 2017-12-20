@@ -79,8 +79,8 @@ There are two ways to replace missing values:
 
 * The second stored procedure, `[fill_NA_mode_mean]`, will replace the missing values with the mode (categorical variables) or mean (float variables).
 
-If running the stored procedures yourself, or if running **Length_Of_Stay.ps1** with `uninterrupted = "N"`, you will have the opportunity to choose between the two stored procedures. 
-If running **Length_Of_Stay.ps1** with `uninterrupted = "Y"`, [`fill_NA_mode_mean`] will be automatically used.
+If running the stored procedures yourself you will have the opportunity to choose between the two stored procedures. 
+During the initial deployment [`fill_NA_mode_mean`] will be automatically used.
 
 ### Input:
 * 1 Table filled with the raw data: `LengthOfStay` (filled through PowerShell).
@@ -199,7 +199,20 @@ Finally, a table `LoS_Predictions` stores data from the testing set as well as p
 ## Step 4: The Production Pipeline 
 -------------------------------------
 
-In the Production pipeline, the data from the file **LengthOfStay_Prod.csv** is uploaded through PowerShell to the `LengthOfStay_Prod` table. The tables `Stats`, `ColInfo` and `Models`, created during the development pipeline are then moved to the Production database through the stored procedure `[dbo].[copy_modeling_tables]` located in the file **create_tables_prod.sql** .
+The stored procedure `prod_lengthofstay` can be used to score new data during production.  To run this with the sample production data you can execute this procdure as follows:
+
+    USE [Hospital_R]
+    GO
+
+    DECLARE	@return_value int
+
+    EXEC	@return_value = [dbo].[prod_lengthofstay]
+            @input = N'LengthOfStay_Prod',
+            @dev_db = N'Hospital_R'
+
+    SELECT	'Return Value' = @return_value
+
+    GO
 
 `LengthOfStay_Prod` is then cleaned as in Step 1, and a feature engineered view is created as in Step 2 (both using the Stats table). Finally, the view is scored on the model(s) stored in the Models table, using the `ColInfo` table information. The predictions are stored in a SQL table.
 
