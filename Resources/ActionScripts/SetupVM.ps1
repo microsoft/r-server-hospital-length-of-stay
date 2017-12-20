@@ -32,7 +32,7 @@ $SolutionFullName = "r-server-hospital-length-of-stay"
 $JupyterNotebook = "Hospital_Length_Of_Stay_Notebook.ipynb"
 $odbcName = 'CampOpt'
 ### DON'T FORGET TO CHANGE TO MASTER LATER...
-$Branch = "dev" 
+$Branch = "master" 
 $InstallPy = 'Yes' ## If Solution has a Py Version this should be 'Yes' Else 'No'
 $SampleWeb = 'Yes' ## If Solution has a Sample Website  this should be 'Yes' Else 'No'  
 $setupLog = "c:\tmp\setup_log.txt"
