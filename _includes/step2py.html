@@ -14,9 +14,10 @@
   <li>
     <p>After running the step1 and step2 scripts, Debra goes to SQL Server Management Studio to log in and view the results of these steps  by running the following query:</p>
 
-        <div class="highlighter-rouge"><pre class="highlight"><code>SELECT TOP 1000 *    FROM [Hospital_Py].[dbo].[LoS]
-</code></pre>
-</div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+  SELECT TOP 1000 *    
+  FROM [Hospital_Py].[dbo].[LoS]
+    </code></pre></div></div>
   </li>
   <li>
     <p>Now she is ready for training the models.  She creates and executes the following script to train and score  a regression Random Forest (rxDForest) and a gradient boosted trees model (rxFastTrees) on the training set. This uses the new <a href="https://docs.microsoft.com/en-us/machine-learning-server/python-reference/microsoftml/microsoftml-package">MicrosoftML package</a> for Python. Both models will  predict LOS.  When she looks at the metrics of both models, she notices that along with a faster performance time, the rxFastTrees model also performs with lower error, so she decides to use this model for prediction.</p>
