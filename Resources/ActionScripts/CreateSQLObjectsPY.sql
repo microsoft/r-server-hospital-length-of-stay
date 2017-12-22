@@ -540,7 +540,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE Proc [dbo].[Inital_Run_Once_Py]
+CREATE Proc [dbo].[Initial_Run_Once_Py]
 
 AS
 

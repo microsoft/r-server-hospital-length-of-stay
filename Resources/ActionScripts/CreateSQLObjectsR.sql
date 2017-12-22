@@ -535,7 +535,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
   
-		CREATE Proc [dbo].[Inital_Run_Once_R]
+		CREATE Proc [dbo].[Initial_Run_Once_R]
 
 		AS
  
