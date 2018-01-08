@@ -10,7 +10,6 @@ title: "On-Prem: Setup SQL Server 2017"
     <div class="col-md-6">
         <div class="toc">
             <li><a href="#prepare-your-sql-server-installation">Prepare your SQL Server 2017 Installation</a></li>
-            <li><a href="#set-up-logins-in-sql-server">Set up logins in SQL Server</a></li>
             <li><a href="#ready-to-run-code">Ready to Run Code</a></li>
         </div>
     </div>
@@ -24,27 +23,13 @@ title: "On-Prem: Setup SQL Server 2017"
 ## Prepare your SQL Server Installation
 -------------------------------------------
 
-The rest of this page assumes you are configuring your on premises SQL Server 2016 or 2017 for this solution.
+The rest of this page assumes you are configuring your on premises SQL Server 2016 or higher for this solution.
 
-If you need a trial version of SQL Server see [What's New in SQL Server 2016](https://msdn.microsoft.com/en-us/library/bb500435.aspx) or [What's New in SQL Server 2017](https://docs.microsoft.com/en-us/sql/sql-server/what-s-new-in-sql-server-2017)for download or VM options. 
+If you need a trial version of SQL Server 2016, see [What's New in SQL Server 2016](https://msdn.microsoft.com/en-us/library/bb500435.aspx) for download or VM options. 
 
-Complete the steps in the Set up Microsoft Machine Learning Services (In-Database) Instructions. The set up instructions file can found at  <a href="https://msdn.microsoft.com/en-us/library/mt696069.aspx" target="_blank"> https://msdn.microsoft.com/en-us/library/mt696069.aspx</a>
+For more information about SQL server 2017 and R service, please visit: <a href="https://msdn.microsoft.com/en-us/library/mt604847.aspx">https://msdn.microsoft.com/en-us/library/mt604847.asp</a>
 
-If you haven’t already done so, create a new Windows authentication user with the Login name <code>&lt;machinename&gt;/SQLRUserGroup</code>. 
-
-### Set up logins in SQL Server
-If you are administering your own server and want to add a user to run the code of this solution, use the steps below.
-
-1.	In SSMS, connect to the Server with your admin account.
-2.	Create a new user: Right click on <code>Security</code> and select <code>New &gt; Login.</code> <br/>
-    <br/>
-    <img src="images/newuser.png" >
-
-
- 
-4. Double click on **Resources/exampleuser.sql** file to see how to create a user with all the correct settings to execute R code. (This user login will be used to install data and procedures). Change the username and password to the one you wish to use before executing this query.
-
-6.	Now, click on `File` on the top left corner of the SQL Server window and select `Connect Object Explorer…` verify that you can connect to the server with the username and password you created using the SQL Server Authentication.
+Complete the steps in the Set up SQL Server R Services (In-Database) Instructions. The set up instructions file can found at  <a href="https://msdn.microsoft.com/en-us/library/mt696069.aspx" target="_blank"> https://msdn.microsoft.com/en-us/library/mt696069.aspx</a>
 
 
 ### Ready to Run Code 
