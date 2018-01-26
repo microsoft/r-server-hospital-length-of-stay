@@ -66,6 +66,10 @@ In this step, we create a table `LengthOfStay` in a SQL Server database, and the
 ### Related files:
 * **step0_create_tables.sql**
 
+### Example:
+
+    EXEC [dbo].[compute_stats];
+
 
 <a name="step1"></a>
 
@@ -91,6 +95,10 @@ During the initial deployment [`fill_NA_mode_mean`] will be automatically used.
 ### Related files:
 * **step1_data_processing.sql**
 
+### Example:
+
+    EXEC [dbo].[fill_NA_mode_mean] @input='LengthOfStay', @output = 'LoS0';
+
 <a name="step2"></a>
 
 ## Step 2: Feature Engineering
@@ -115,6 +123,12 @@ In this step, we create a stored procedure `[dbo].[feature_engineering]` that de
 
 <a name="step3a"></a>
 
+### Example:
+
+    EXEC [dbo].[feature_engineering]  @input = 'LoS0', @output = 'LoS', @is_production = '0';
+    EXEC [dbo].[get_column_info] @input = 'LoS';
+
+
 ## Step 3a: Splitting the data set
 -------------------------
 
@@ -133,7 +147,9 @@ In this step, we create a stored procedure `[dbo].[splitting]` that splits the d
 
 * **step3a_splitting.sql**
 
+### Example:
 
+    EXEC [dbo].[splitting] @splitting_percent = 70, @input = 'LoS';
 
 ## Step 3b: Training
 -------------------------
@@ -152,6 +168,10 @@ In this step, we create a stored procedure [dbo].[train_model] that trains a reg
 ### Related files:
 
 * **step3b_training.sql**
+
+### Example:
+
+    exec [dbo].[train_model] @model_name = 'RF', @dataset_name = 'LoS';
 
 
 <a name="step3cr"></a>
@@ -174,6 +194,12 @@ Table(s) storing the predictions from the tested model(s).
 
 **step3c_scoring.sql**
 
+### Example:
+
+    EXEC [dbo].[score] @model_name = 'RF',
+		@inquery = 'SELECT * FROM LoS WHERE eid NOT IN (SELECT eid FROM Train_Id)',
+		@output = 'Forest_Prediction';
+
 <a name="step3d"></a>
 
 ## Step 3d: Evaluating
@@ -189,10 +215,16 @@ Table(s) storing the predictions from the tested model(s).
 
 `Metrics` table containing the performance metrics of the model(s).
 
+
 ### Related files:
 
 **step3d_evaluating.sql** 
 Finally, a table `LoS_Predictions` stores data from the testing set as well as predicted discharge dates from the rxFastTrees model, and will be used for PowerBI. The stored procedure that creates it can be found in the **step4_full_table.sql** file.
+
+### Example:
+
+    exec [dbo].[evaluate] @model_name  = 'RF',
+		@predictions_table = 'Forest_Prediction';
 
 <a name="step4"></a>
 
