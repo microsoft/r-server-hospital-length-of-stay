@@ -160,10 +160,10 @@ Invoke-Expression $ConfigureSQL
 
 
 ## copy Jupyter Notebook files
-Move-Item $SolutionPath\R\$JupyterNotebook  c:\tmp\
-sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\$JupyterNotebook
-sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\$JupyterNotebook
-Move-Item  c:\tmp\$JupyterNotebook $SolutionPath\R\
+# Move-Item $SolutionPath\R\$JupyterNotebook  c:\tmp\
+# sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\$JupyterNotebook
+# sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\$JupyterNotebook
+# Move-Item  c:\tmp\$JupyterNotebook $SolutionPath\R\
 
 
 
@@ -172,13 +172,13 @@ Move-Item  c:\tmp\$JupyterNotebook $SolutionPath\R\
  # substitute real username and password in notebook file
 #XXXXXXXXXXChange to NEw NotebookNameXXXXXXXXXXXXXXXXXX# 
 
-if ($InstallPy -eq "Yes")
-{
-    Move-Item $SolutionPath\Python\$JupyterNotebook  c:\tmp\
-    sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\$JupyterNotebook
-    sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\$JupyterNotebook
-    Move-Item  c:\tmp\$JupyterNotebook $SolutionPath\Python\
-}
+# if ($InstallPy -eq "Yes")
+# {
+#     Move-Item $SolutionPath\Python\$JupyterNotebook  c:\tmp\
+#     sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\$JupyterNotebook
+#     sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\$JupyterNotebook
+#     Move-Item  c:\tmp\$JupyterNotebook $SolutionPath\Python\
+# }
 
 # install modules for sample website
 if($SampleWeb  -eq "Yes")
