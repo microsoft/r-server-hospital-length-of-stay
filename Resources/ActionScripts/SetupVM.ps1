@@ -2,7 +2,7 @@
 
 [CmdletBinding()]
 param(
-[parameter(Mandatory=$True, Position=1)]
+[parameter(Mandatory=$false, Position=1)]
 [ValidateNotNullOrEmpty()] 
 [string]$serverName,
 
@@ -19,6 +19,13 @@ param(
 [string]$Prompt
 )
 $startTime = Get-Date
+
+$Query = "SELECT SERVERPROPERTY('ServerName')"
+$si = invoke-sqlcmd -Query $Query
+$si = $si.Item(0)
+
+$serverName = if([string]::IsNullOrEmpty($servername)) {$si}
+
 
 
 
@@ -38,7 +45,8 @@ $SampleWeb = 'Yes' ## If Solution has a Sample Website  this should be 'Yes' Els
 $setupLog = "c:\tmp\setup_log.txt"
 Start-Transcript -Path $setupLog -Append
 $startTime = Get-Date
-Write-Host -ForegroundColor 'Green'  "  Start time:" $startTime 
+Write-Host "Start time:" $startTime 
+Write-Host "ServerName set to $ServerName"
 
 
 
@@ -69,7 +77,7 @@ $SolutionData = $SolutionPath + "\Data\"
 
 $clone = "git clone --branch $Branch --single-branch https://github.com/Microsoft/$SolutionFullName $solutionPath"
 
-if (Test-Path $SolutionPath) { Write-Host " Solution has already been cloned"}
+if (Test-Path $SolutionPath) { Write-Host "Solution has already been cloned"}
 ELSE {Invoke-Expression $clone}
 
 #################################################################
@@ -125,9 +133,9 @@ Invoke-Sqlcmd -Query $Query -ErrorAction SilentlyContinue
 
 
 
-Write-Host -ForegroundColor 'Cyan' " Done with configuration changes to SQL Server"
+Write-Host "Done with configuration changes to SQL Server"
 
-Write-Host -ForeGroundColor cyan " Installing latest Power BI..."
+Write-Host "Installing latest Power BI..."
 # Download PowerBI Desktop installer
 Start-BitsTransfer -Source "https://go.microsoft.com/fwlink/?LinkId=521662&clcid=0x409" -Destination powerbi-desktop.msi
 
@@ -142,7 +150,7 @@ if (!$?) {
 ##Create Shortcuts and Autostart Help File 
 Copy-Item "$ScriptPath\SolutionHelp.url" C:\Users\Public\Desktop\
 Copy-Item "$ScriptPath\SolutionHelp.url" "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\"
-Write-Host -ForeGroundColor cyan " Help Files Copied to Desktop"
+Write-Host "Help Files Copied to Desktop"
 
 
 
@@ -193,9 +201,9 @@ Move-Item  c:\tmp\server.js $SolutionPath\Website
 
 $endTime = Get-Date
 
-Write-Host -foregroundcolor 'green'(" Length of Stay Development Workflow Finished Successfully!")
+Write-Host ("Length of Stay Development Workflow Finished Successfully!")
 $Duration = New-TimeSpan -Start $StartTime -End $EndTime 
-Write-Host -ForegroundColor 'green'(" Total Deployment Time = $Duration") 
+Write-Host ("Total Deployment Time = $Duration") 
 
 Stop-Transcript
 
