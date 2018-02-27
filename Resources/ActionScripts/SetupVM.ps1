@@ -18,13 +18,26 @@ param(
 [ValidateNotNullOrEmpty()] 
 [string]$Prompt
 )
-$startTime = Get-Date
 
-$Query = "SELECT SERVERPROPERTY('ServerName')"
-$si = invoke-sqlcmd -Query $Query
-$si = $si.Item(0)
 
-$serverName = if([string]::IsNullOrEmpty($servername)) {$si}
+
+#################################################################
+##DSVM Does not have SQLServer Powershell Module Install or Update 
+#################################################################
+
+
+Write-Host "Installing SQLServer Power Shell Module or Updating to latest "
+
+
+if (Get-Module -ListAvailable -Name SQLServer) 
+    {Update-Module -Name "SQLServer" -MaximumVersion 21.0.17199}
+Else 
+    {Install-Module -Name SqlServer -RequiredVersion 21.0.17199 -Scope AllUsers -AllowClobber -Force}
+
+#Set-PSRepository -Name PSGallery -InstallationPolicy Untrusted
+    Import-Module -Name SqlServer -MaximumVersion 21.0.17199 -Force
+
+
 
 
 
@@ -43,6 +56,8 @@ $Branch = "master"
 $InstallPy = 'Yes' ## If Solution has a Py Version this should be 'Yes' Else 'No'
 $SampleWeb = 'Yes' ## If Solution has a Sample Website  this should be 'Yes' Else 'No'  
 $setupLog = "c:\tmp\setup_log.txt"
+
+
 Start-Transcript -Path $setupLog -Append
 $startTime = Get-Date
 Write-Host "Start time:" $startTime 
@@ -80,20 +95,6 @@ $clone = "git clone --branch $Branch --single-branch https://github.com/Microsof
 if (Test-Path $SolutionPath) { Write-Host "Solution has already been cloned"}
 ELSE {Invoke-Expression $clone}
 
-#################################################################
-##DSVM Does not have SQLServer Powershell Module Install or Update 
-#################################################################
-
-
-
-Write-Host " Installing SQLServer Power Shell Module or Updating to latest "
-
-if (Get-Module -ListAvailable -Name SQLServer) {Update-Module -Name "SQLServer"}
- else 
-    {
-    Install-Module -Name SQLServer -Scope AllUsers -AllowClobber -Force
-    Import-Module -Name SQLServer
-    }
 
 
 
@@ -102,6 +103,14 @@ if (Get-Module -ListAvailable -Name SQLServer) {Update-Module -Name "SQLServer"}
 ############################################################################################
 
 #Write-Host -ForegroundColor 'Cyan' " Switching SQL Server to Mixed Mode"
+
+
+
+$Query = "SELECT SERVERPROPERTY('ServerName')"
+$si = invoke-sqlcmd -Query $Query
+$si = $si.Item(0)
+
+$serverName = if([string]::IsNullOrEmpty($servername)) {$si}
 
 
 ### Change Authentication From Windows Auth to Mixed Mode 
