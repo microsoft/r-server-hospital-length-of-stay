@@ -202,10 +202,13 @@ if($SampleWeb  -eq "Yes")
 {
 cd $SolutionPath\Website\
 npm install
-Move-Item $SolutionPath\Website\server.js  c:\tmp\
-sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\server.js
-sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\server.js
-Move-Item  c:\tmp\server.js $SolutionPath\Website
+# Move-Item $SolutionPath\Website\server.js  c:\tmp\
+# sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\server.js
+# sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\server.js
+# Move-Item  c:\tmp\server.js $SolutionPath\Website
+
+(Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLPW', $password) | Set-Content $SolutionPath\Website\server.js
+(Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLUSER', $username) | Set-Content $SolutionPath\Website\server.js
 }
 
 $endTime = Get-Date
