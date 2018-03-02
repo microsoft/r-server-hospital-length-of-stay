@@ -31,16 +31,10 @@ For more information about SQL server 2017 and R service, please visit: <a href=
 
 Complete the steps in the Set up SQL Server R Services (In-Database) Instructions. The set up instructions file can found at  <a href="https://msdn.microsoft.com/en-us/library/mt696069.aspx" target="_blank"> https://msdn.microsoft.com/en-us/library/mt696069.aspx</a>
 
+* If you are using SQL Server 2016, make sure R Services (In-Database) is installed. 
+* If you are using SQL Server 2017, make sure Machine Learning Services (In-Database) is installed.
 
-### Ready to Run Code 
+## Ready to Run Code 
 ---------------------
 
-You are now ready to run the code for this solution.  
-
-* Install the solution by following thse <a href="Powershell_Instructions.html">PowerShell Instructions</a> for deployment.
-
-* Typically a data scientist will create and test a predictive model from their favorite R IDE, at which point the models will be stored in SQL Server and then scored in production using Transact-SQL (T-SQL) stored procedures. 
-You can follow along with this by following the <a href="Typical.html">Typical Workflow Walkthrough.</a>.
-
-
-	
+* See <a href="Powershell_Instructions.html">PowerShell Instructions</a> to install and run the code for this solution.
