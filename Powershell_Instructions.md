@@ -20,11 +20,10 @@ title: PowerShell Instructions
     </div>
     <div class="col-md-6">
         If you have deployed a VM through the  
-        <a href="{{ site.aka_url }}">Cortana Intelligence Gallery</a>, all the steps below have already been performed and your database on that machine has all the resulting tables and stored procedures.  Skip to the <a href="CIG_Workflow.html">Typical Workflow</a> for a description of how these files were first created in R by a Data Scientist and then deployed to SQL stored procedures.
+        <a href="{{ site.aka_url }}">Azure AI Gallery</a>, all the steps below have already been performed and your database on that machine has all the resulting tables and stored procedures.  Skip to the <a href="CIG_Workflow.html">Typical Workflow</a> for a description of how these files were first created in R by a Data Scientist and then deployed to SQL stored procedures.
     </div>
 </div>
-
-If you are configuring your own server, continue with the steps below to run the PowerShell script.
+If you are configuring your own server, or if you want to reset your VM to its initial state, continue with the steps below to run the PowerShell script.
 
 ## Setup 
 -----------
@@ -37,7 +36,9 @@ First, make sure you have set up your SQL Server by  <a href="SetupSQL.html">fol
 Running this PowerShell script will create the data tables and stored procedures for the the operationalization of this solution, both in R (in the `{{ site.db_name }}_R` database) and Python (in the `{{ site.db_name }}_Py` database).  It will also execute these procedures to create full database with results of the steps  – dataset creation, modeling, and scoring as described  [here](dba.html).
 
 
-1. Download  <a href="https://raw.githubusercontent.com/Microsoft/r-server-hospital-length-of-stay/master/Resources/ActionScripts/SetupVM.ps1" download>SetupVM.ps1</a> to your computer.
+1. Log onto the machine that contains the SQL Server you wish to use.
+
+2. Download  <a href="https://raw.githubusercontent.com/Microsoft/r-server-campaign-optimization/master/Resources/ActionScripts/SetupVM.ps1" download>SetupVM.ps1</a> to your computer.
 
 1. Open a command or PowerShell window as Administrator.
 
@@ -46,6 +47,15 @@ Running this PowerShell script will create the data tables and stored procedures
     .\SetupVM.ps1
 
 1. Answer the prompts.
+
+1. This will make the following modification to your SQL Server:
+    * Installs the SQL Server PowerShell module. If this is already installed, it will update it if necessary.
+    * Changes Authentication Method to Mixed Mode, which is needed in this version of the solution.
+    * Creates the SLQRUserGroup for running R and Python code.
+    * Elevates the login user's credentials to SA.
+    * Reconfigures SQL Server to allow running of external scripts.
+    * Clones the solution code and data into the c:\Solutions\{{ site.folder_name }} directory
+    * Creates the solution database `{{ site.db_name }}_R` and configures an ODBC connection to the database.
 
     
 ## Review Data

@@ -8,7 +8,7 @@ title: Quick Start
  
  There are multiple ways you can try this solution package out for yourself.
 
-* Visit the [Cortana Intelligence Gallery]({{ site.aka_url }}) and use the `Deploy` button.  All necessary software will be installed and configured for you as well as the initial deployment of the solution.  You will be all set to follow along with the [Typical Workflow](CIG_Workflow.html) on the deployed virtual machine.
+* Visit the [Azure AI Gallery]({{ site.aka_url }}) and use the `Deploy` button.  All necessary software will be installed and configured for you as well as the initial deployment of the solution.  You will be all set to follow along with the [Typical Workflow](CIG_Workflow.html) on the deployed virtual machine.
 
 * For an On-Prem installation, follow [these instructions](SetupSQL.html) to setup the server.    
 

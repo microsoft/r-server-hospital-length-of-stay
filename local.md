@@ -4,7 +4,7 @@ title: Setup for Local Code Execution
 ---
 ## Setup for Local Code Execution
 
-You can execute code on your local computer and push the computations to the SQL Server on the VM  that was created by the Cortana Intelligence Gallery. But first you must perform the following steps. 
+You can execute code on your local computer and push the computations to the SQL Server on the VM  that was created by the Azure AI Gallery. But first you must perform the following steps. 
 
 ## On the VM: Configure VM for Remote Access
 
@@ -43,4 +43,4 @@ Perform these steps on your local computer.
 
 See <a href="https://docs.microsoft.com/en-us/machine-learning-server/install/python-libraries-interpreter">How to install custom Python packages and interpreter locally on Windows</a>.
 
-<a href="CIG_Workflow.html#step2">Return to Typical Workflow for Cortana Intelligence Gallery Deployment<a>
+<a href="CIG_Workflow.html#step2">Return to Typical Workflow for Azure AI Gallery Deployment<a>

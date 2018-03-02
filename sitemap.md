@@ -11,7 +11,7 @@ title: Site Map
 * [For the Data Scientist](data-scientist.html)
 * [For the Database Analyst](dba.html)
 * [Typical Workflow](Typical.html)
-    * [Typical Workflow for Cortana Intelligence Gallery Deployment](CIG_Workflow.html)
+    * [Typical Workflow for Azure AI Gallery Deployment](CIG_Workflow.html)
         * [Setup for Local Code Execution](local.html)
         * [Using a Jupyter Notebook](jupyter.html)
         * [Using RStudio with R Server](rstudio.html)

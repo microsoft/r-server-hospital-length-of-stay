@@ -51,7 +51,7 @@ Or see below for <a href="#remoteaccess">accessing the website from a different 
 <h2>Prediction LOS</h2>
 <hr/>
 
-A connection to the `Hospital_R` database is set up in  **server.js**.  If you deployed the solution from the Cortana Intelligence Gallery, the user name and password you chose has been inserted as well.  Otherwise, open the file and supply your SQL username and password.
+A connection to the `Hospital_R` database is set up in  **server.js**.  If you deployed the solution from the Azure AI Gallery, the user name and password you chose has been inserted as well.  Otherwise, open the file and supply your SQL username and password.
 
 ```javascript
     var connectionConfig = {

@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Typical Workflow for Cortana Intelligence Gallery Deployment
+title: Typical Workflow for Azure AI Gallery Deployment
 ---
 
 
-## Typical Workflow for Cortana Intelligence Gallery Deployment
+## Typical Workflow for Azure AI Gallery Deployment
 ---------------------------------------------------------------
 
 <div class="row">
@@ -28,7 +28,7 @@ title: Typical Workflow for Cortana Intelligence Gallery Deployment
  {% include typicalintro1.md %}
  
 <div class="alert alert-warning" role="alert"> 
-This guide assumes you have deployed the {{ site.solution_name }} solution from the <a href="{{ site.aka_url }}">Cortana Intelligence Gallery</a>.  
+This guide assumes you have deployed the {{ site.solution_name }} solution from the <a href="{{ site.aka_url }}">Azure AI Gallery</a>.  
 
 <li>If you are using your own SQL Server for this solution, <a href="Typical_Workflow.html">use this guide instead</a>.</li>
 </div>
@@ -39,7 +39,7 @@ To demonstrate a typical workflow, we'll introduce you to a few personas.  You c
         
         {% include step1.md %}
 
-This has already been done on your deployed Cortana Intelligence Gallery VM.
+This has already been done on your deployed Azure AI Gallery VM.
 
  <a name="step2" id="step2"></a>
 

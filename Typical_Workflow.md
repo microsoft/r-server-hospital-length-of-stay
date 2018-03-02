@@ -31,7 +31,7 @@ title: Typical Workflow for for On-Prem Deployment
 <div class="alert alert-warning" role="alert"> 
 This guide assumes you are using an on premises SQL Server for this solution.  
 
-<li>f you have deployed the {{ site.solution_name }} solution from the<a href="{{ site.aka_url }}">Cortana Intelligence Gallery</a> you should instead <a href="CIG_Workflow.html">use this guide</a>.</li>
+<li>f you have deployed the {{ site.solution_name }} solution from the<a href="{{ site.aka_url }}">Azure AI Gallery</a> you should instead <a href="CIG_Workflow.html">use this guide</a>.</li>
 </div>
 
 To demonstrate a typical workflow, we'll introduce you to a few personas.  You can follow along by performing the same steps for each persona.  
