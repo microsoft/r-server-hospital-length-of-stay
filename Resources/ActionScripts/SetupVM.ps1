@@ -18,7 +18,12 @@ param(
 [ValidateNotNullOrEmpty()] 
 [string]$Prompt
 )
+###Check to see if user is Admin
 
+$isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
+        [Security.Principal.WindowsBuiltInRole] "Administrator")
+        
+if ($isAdmin -eq 'True') {
 
 
 #################################################################
@@ -224,8 +229,23 @@ Stop-Transcript
 Start-Process "https://microsoft.github.io/r-server-hospital-length-of-stay/Typical.html"
 
 
+    ## Close Powershell if not run on 
+   ## if ($baseurl)
+    Exit-PSHostProcess
+    EXIT
+
+}
+
+
+
+
+ELSE 
+{ 
+    
+    Write-Host "To install this Solution you need to run Powershell as an Administrator. This program will close automatically in 20 seconds"
+    Start-Sleep -s 20
 
 
 ## Close Powershell 
 Exit-PSHostProcess
-EXIT 
+EXIT }
