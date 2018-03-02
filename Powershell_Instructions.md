@@ -39,11 +39,13 @@ Running this PowerShell script will create the data tables and stored procedures
 
 1. Download  <a href="https://raw.githubusercontent.com/Microsoft/r-server-hospital-length-of-stay/master/Resources/ActionScripts/SetupVM.ps1" download>SetupVM.ps1</a> to your computer.
 
-1.  Right click on SetupVM.ps1 and select `Run with PowerShell`.
+1. Open a command or PowerShell window as Administrator.
 
-1.  Answer `Y` if asked if it is ok to execute this script.
+1. CD to the directory where you downloaded the above .ps1 file and execute the command:
 
-1.  When prompted, enter the servername, username, and password for your SQL 2016 or SQL 2017 server.  (The Python version of this solution is only available if you are using a SQL 2017 server.)
+    .\SetupVM.ps1
+
+1. Answer the prompts.
 
     
 ## Review Data
