@@ -22,7 +22,10 @@ Finally, the dashboard pages are filtered to display only data for patients that
 ### Configure PowerBI to Access Data 
 In order to replace the cached data with data from your SQL Server, follow the steps below.
 
+First, try refreshing the data using the <code>Refresh</code> button on the toolbar.
+Use your Windows credentials if prompted.
 
+If this does not work, you may need to modify the connection information by using the steps below.
 
 1.	Open the `{{ site.pbi_name }}` file in the {{ site.folder_name }} folder. Click on `Edit Queries` in the toolbar.  
  <br/>

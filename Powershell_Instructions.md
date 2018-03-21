@@ -41,7 +41,7 @@ Running this PowerShell script will create the data tables and stored procedures
 
 1. If you wish to install the sample website to demonstrate using the model, install [node.js](https://nodejs.org/en/) if it is not already present.
 
-1. Download  <a href="https://raw.githubusercontent.com/Microsoft/r-server-campaign-optimization/master/Resources/ActionScripts/SetupVM.ps1" download>SetupVM.ps1</a> to your computer.
+1. Download  <a href="https://raw.githubusercontent.com/Microsoft/r-server-hospital-length-of-stay/master/Resources/ActionScripts/SetupVM.ps1" download>SetupVM.ps1</a> to your computer.
 
 1. Open a command or PowerShell window as Administrator.
 
@@ -70,7 +70,7 @@ Running this PowerShell script will create the data tables and stored procedures
 ## Review Data
 --------------
 
-Once the PowerShell script has completed successfully, log into the SQL Server Management Studio to view all the datasets that have been created in the `{{ site.db_name }}_R` and `{{ site.db_name }}_Py` databases.  
+Once the PowerShell script has completed successfully, log into the SQL Server Management Studio to view all the datasets that have been created in the `{{ site.db_name }}_R` and `{{ site.db_name }}_Py` databases.
 Hit `Refresh` if necessary.
 <br/>
 
