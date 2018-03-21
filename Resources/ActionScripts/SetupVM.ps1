@@ -44,9 +44,6 @@ Else
 
 
 
-
-
-
 #$Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
 $Prompt = 'N'
 
@@ -79,16 +76,6 @@ $scriptPath = $SolutionPath + "\Resources\ActionScripts\"
 $SolutionData = $SolutionPath + "\Data\"
 
 
-##$Query = "SELECT SERVERPROPERTY('ServerName')"
-##$si = invoke-sqlcmd -Query $Query
-##$si = $si.Item(0)
-
-
-###$serverName = if($serverName -eq $null) {$si}
-
-##WRITE-HOST " ServerName set to $ServerName"
-
-
 
 ##########################################################################
 #Clone Data from GIT
@@ -108,35 +95,36 @@ ELSE {Invoke-Expression $clone}
 ############################################################################################
 
 #Write-Host -ForegroundColor 'Cyan' " Switching SQL Server to Mixed Mode"
+    if([string]::IsNullOrEmpty($serverName))   
+    {$Query = "SELECT SERVERPROPERTY('ServerName')"
+    $si = Invoke-Sqlcmd  -Query $Query
+    $si = $si.Item(0)}
+    else 
+    {$si = $serverName}
+    $serverName = $si
 
-
-
-$Query = "SELECT SERVERPROPERTY('ServerName')"
-$si = invoke-sqlcmd -Query $Query
-$si = $si.Item(0)
-
-$serverName = if([string]::IsNullOrEmpty($servername)) {$si}
+    Write-Host "Servername set to $serverName"
 
 
 ### Change Authentication From Windows Auth to Mixed Mode 
 Invoke-Sqlcmd -Query "EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'LoginMode', REG_DWORD, 2;" -ServerInstance "LocalHost" 
 
-Write-Host -ForeGroundColor 'cyan' " Configuring SQL to allow running of External Scripts "
+Write-Host "Configuring SQL to allow running of External Scripts "
 ### Allow Running of External Scripts , this is to allow R Services to Connect to SQL
 Invoke-Sqlcmd -Query "EXEC sp_configure  'external scripts enabled', 1"
 
 ### Force Change in SQL Policy on External Scripts 
 Invoke-Sqlcmd -Query "RECONFIGURE WITH OVERRIDE" 
-Write-Host -ForeGroundColor 'cyan' " SQL Server Configured to allow running of External Scripts "
+Write-Host "SQL Server Configured to allow running of External Scripts "
 
-Write-Host -ForeGroundColor 'cyan' " Restarting SQL Services "
+Write-Host "Restarting SQL Services "
 ### Changes Above Require Services to be cycled to take effect 
 ### Stop the SQL Service and Launchpad wild cards are used to account for named instances  
 Stop-Service -Name "MSSQ*" -Force
 
 ### Start the SQL Service 
 Start-Service -Name "MSSQ*"
-Write-Host -ForegroundColor 'Cyan' " SQL Services Restarted"
+Write-Host "SQL Services Restarted"
 
 
 $Query = "CREATE LOGIN $username WITH PASSWORD=N'$password', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF"
@@ -177,41 +165,12 @@ $shortcut.Save()
 $ConfigureSql = "C:\Solutions\Hospital\Resources\ActionScripts\ConfigureSQL.ps1  $ServerName $SolutionName $InstallPy $Prompt"
 Invoke-Expression $ConfigureSQL 
 
-#powershell.exe -ExecutionPolicy Unrestricted -File C:\Solutions\Hospital\Resources\ActionScripts\ConfigureSQL.ps1 -serverName $serverName -SolutionName $SolutionName 
-
-
-
-## copy Jupyter Notebook files
-# Move-Item $SolutionPath\R\$JupyterNotebook  c:\tmp\
-# sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\$JupyterNotebook
-# sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\$JupyterNotebook
-# Move-Item  c:\tmp\$JupyterNotebook $SolutionPath\R\
-
-
-
-
-#cp $SolutionData*.csv  c:\dsvm\notebooks
- # substitute real username and password in notebook file
-#XXXXXXXXXXChange to NEw NotebookNameXXXXXXXXXXXXXXXXXX# 
-
-# if ($InstallPy -eq "Yes")
-# {
-#     Move-Item $SolutionPath\Python\$JupyterNotebook  c:\tmp\
-#     sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\$JupyterNotebook
-#     sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\$JupyterNotebook
-#     Move-Item  c:\tmp\$JupyterNotebook $SolutionPath\Python\
-# }
 
 # install modules for sample website
 if($SampleWeb  -eq "Yes")
 {
 cd $SolutionPath\Website\
 npm install
-# Move-Item $SolutionPath\Website\server.js  c:\tmp\
-# sed -i "s/XXYOURSQLPW/$password/g" c:\tmp\server.js
-# sed -i "s/XXYOURSQLUSER/$username/g" c:\tmp\server.js
-# Move-Item  c:\tmp\server.js $SolutionPath\Website
-
 (Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLPW', $password) | Set-Content $SolutionPath\Website\server.js
 (Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLUSER', $username) | Set-Content $SolutionPath\Website\server.js
 }
@@ -235,8 +194,6 @@ Start-Process "https://microsoft.github.io/r-server-hospital-length-of-stay/Typi
     EXIT
 
 }
-
-
 
 
 ELSE 
