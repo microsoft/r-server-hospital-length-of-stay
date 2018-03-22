@@ -58,6 +58,7 @@ $Branch = "master"
 $InstallPy = 'Yes' ## If Solution has a Py Version this should be 'Yes' Else 'No'
 $SampleWeb = 'Yes' ## If Solution has a Sample Website  this should be 'Yes' Else 'No'  
 $setupLog = "c:\tmp\setup_log.txt"
+$isDsvm = if(Test-Path "C:\dsvm") {"Yes"} else {"No"}
 
 
 Start-Transcript -Path $setupLog -Append
@@ -167,9 +168,9 @@ Invoke-Expression $ConfigureSQL
 
 
 # install modules for sample website
-if($SampleWeb  -eq "Yes")
+if(($SampleWeb  -eq "Yes") -and ($isDsvm = "Yes"))
 {
-cd $SolutionPath\Website\
+set-location $SolutionPath\Website\
 npm install
 (Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLPW', $password) | Set-Content $SolutionPath\Website\server.js
 (Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLUSER', $username) | Set-Content $SolutionPath\Website\server.js
