@@ -60,10 +60,10 @@ $query =
 $isCompatible = Invoke-Sqlcmd -ServerInstance $ServerName -Database Master -Query $query
 $isCompatible = $isCompatible.Item(0)
 if ($isCompatible -eq 'Yes' -and $InstallPy -eq 'Yes') {
-    Write-Host " This Version of SQL is Compatible with SQL Py "
+    Write-Host "This Version of SQL is Compatible with SQL Py"
 
     ## Create Py Database
-    Write-Host "  Creating SQL Database for Py "
+    Write-Host "Creating SQL Database for Py"
 
 
     Write-Host ("Using $ServerName SQL Instance") 
@@ -130,9 +130,7 @@ Write-Host ("SQLServerObjects Created in $dbName Database")
 
 
 ###Configure Database for R 
-Write-Host ("  
-Configuring $SolutionName Solution for R
-")
+Write-Host ("Configuring $SolutionName Solution for R")
 
 $dbName = $db + "_R" 
 
@@ -171,9 +169,9 @@ Write-Host -ForegroundColor DarkYellow "Exception in populating database tables:
 Write-Host -ForegroundColor Red $Error[0].Exception 
 throw
 }
-Write-Host (" Finished loading .csv File(s).")
+Write-Host ("Finished loading .csv File(s).")
 
-Write-Host (" Training Model and Scoring Data...")
+Write-Host ("Training Model and Scoring Data...")
 
 
 
