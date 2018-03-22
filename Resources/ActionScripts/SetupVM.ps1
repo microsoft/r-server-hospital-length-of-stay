@@ -57,7 +57,7 @@ $odbcName = 'CampOpt'
 $Branch = "master" 
 $InstallPy = 'Yes' ## If Solution has a Py Version this should be 'Yes' Else 'No'
 $SampleWeb = 'Yes' ## If Solution has a Sample Website  this should be 'Yes' Else 'No'  
-$setupLog = "c:\tmp\setup_log.txt"
+$setupLog = "c:\tmp\hospital_setup_log.txt"
 $isDsvm = if(Test-Path "C:\dsvm") {"Yes"} else {"No"}
 
 
