@@ -123,7 +123,7 @@ BEGIN
 	----Give SQLRUserGroup Rights To Database(s)
 	SET @Qry = 
 	'
-	USE [<dbName>]
+	USE [<db>]
 	CREATE USER [<ui>] FOR LOGIN [<ui>]
 
 	ALTER USER [<ui>] WITH DEFAULT_SCHEMA=NULL
@@ -133,8 +133,14 @@ BEGIN
 	ALTER AUTHORIZATION ON SCHEMA::[db_datawriter] TO [<ui>]
 
 	ALTER AUTHORIZATION ON SCHEMA::[db_ddladmin] TO [<ui>]
+
+	ALTER ROLE [db_datareader] ADD MEMBER [<ui>]
+
+	ALTER ROLE [db_datawriter] ADD MEMBER [<ui>]
+
+	ALTER ROLE [db_ddladmin] ADD MEMBER [<ui>]
 	'
-	SET @Qry = REPLACE(REPLACE(@qry,'<ui>', @ui),'<dbName>',@DbName) 
+	SET @Qry = REPLACE(REPLACE(@qry,'<ui>', @ui),'<db>',@DbName) 
 	
 	EXEC (@Qry)
 	--SELECT @Qry
