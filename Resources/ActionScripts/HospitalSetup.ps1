@@ -6,13 +6,13 @@ param(
 [ValidateNotNullOrEmpty()] 
 [string]$serverName,
 
-[parameter(Mandatory=$True, Position=2)]
+[parameter(Mandatory=$false, Position=2)]
 [ValidateNotNullOrEmpty()] 
 [string]$username,
 
-[parameter(Mandatory=$True, Position=3)]
+[parameter(Mandatory=$false, Position=3)]
 [ValidateNotNullOrEmpty()] 
-[string]$password,
+[SecureString]$password,
 
 [parameter(Mandatory=$false, Position=4)]
 [ValidateNotNullOrEmpty()] 
@@ -26,24 +26,6 @@ $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIde
 if ($isAdmin -eq 'True') {
 
 
-#################################################################
-##DSVM Does not have SQLServer Powershell Module Install or Update 
-#################################################################
-
-
-Write-Host "Installing SQLServer Power Shell Module or Updating to latest "
-
-
-if (Get-Module -ListAvailable -Name SQLServer) 
-    {Update-Module -Name "SQLServer" -MaximumVersion 21.0.17199}
-Else 
-    {Install-Module -Name SqlServer -RequiredVersion 21.0.17199 -Scope AllUsers -AllowClobber -Force}
-
-#Set-PSRepository -Name PSGallery -InstallationPolicy Untrusted
-    Import-Module -Name SqlServer -MaximumVersion 21.0.17199 -Force
-
-
-
 #$Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
 $Prompt = 'N'
 
@@ -51,14 +33,22 @@ $Prompt = 'N'
 
 $SolutionName = "Hospital"
 $SolutionFullName = "r-server-hospital-length-of-stay" 
-$JupyterNotebook = "Hospital_Length_Of_Stay_Notebook.ipynb"
-$odbcName = 'CampOpt'
+##$JupyterNotebook = "Hospital_Length_Of_Stay_Notebook.ipynb"
+##$odbcName = 'CampOpt'
 ### DON'T FORGET TO CHANGE TO MASTER LATER...
 $Branch = "master" 
 $InstallPy = 'Yes' ## If Solution has a Py Version this should be 'Yes' Else 'No'
-$SampleWeb = 'Yes' ## If Solution has a Sample Website  this should be 'Yes' Else 'No'  
+$SampleWeb = 'Yes' ## If Solution has a Sample Website  this should be 'Yes' Else 'No' 
+$sqlAuth = 'Yes' 
 $setupLog = "c:\tmp\hospital_setup_log.txt"
 $isDsvm = if(Test-Path "C:\dsvm") {"Yes"} else {"No"}
+
+
+if ($SampleWeb -eq "Yes") 
+{
+    $Credential = if([string]::IsNullOrEmpty($username)) 
+    {Get-Credential -Message "Enter a UserName and Password for SQL to use"}
+}
 
 
 Start-Transcript -Path $setupLog -Append
@@ -75,6 +65,25 @@ $SolutionPath = $solutionTemplatePath + '\' + $checkoutDir
 $desktop = "C:\Users\Public\Desktop\"
 $scriptPath = $SolutionPath + "\Resources\ActionScripts\"
 $SolutionData = $SolutionPath + "\Data\"
+
+
+
+###################################################################
+##DSVM Does not have SQLServer Powershell Module Install or Update 
+###################################################################
+
+
+Write-Host "Installing SQLServer Power Shell Module or Updating to latest "
+
+
+if (Get-Module -ListAvailable -Name SQLServer) 
+    {Update-Module -Name "SQLServer" -MaximumVersion 21.0.17199}
+Else 
+    {Install-Module -Name SqlServer -RequiredVersion 21.0.17199 -Scope AllUsers -AllowClobber -Force}
+
+#Set-PSRepository -Name PSGallery -InstallationPolicy Untrusted
+    Import-Module -Name SqlServer -MaximumVersion 21.0.17199 -Force
+
 
 
 
@@ -96,19 +105,27 @@ ELSE {Invoke-Expression $clone}
 ############################################################################################
 
 #Write-Host -ForegroundColor 'Cyan' " Switching SQL Server to Mixed Mode"
-    if([string]::IsNullOrEmpty($serverName))   
-    {$Query = "SELECT SERVERPROPERTY('ServerName')"
+if([string]::IsNullOrEmpty($serverName))   
+    {
+    $Query = "SELECT SERVERPROPERTY('ServerName')"
     $si = Invoke-Sqlcmd  -Query $Query
-    $si = $si.Item(0)}
+    $si = $si.Item(0)
+    }
     else 
-    {$si = $serverName}
+    {
+    $si = $serverName
+    }
     $serverName = $si
 
     Write-Host "Servername set to $serverName"
 
-
+if ($sqlAuth -eq "Yes")
+{
 ### Change Authentication From Windows Auth to Mixed Mode 
 Invoke-Sqlcmd -Query "EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'LoginMode', REG_DWORD, 2;" -ServerInstance "LocalHost" 
+Write-Host ("Switching SQL Server to Mixed Mode")
+}
+
 
 Write-Host "Configuring SQL to allow running of External Scripts "
 ### Allow Running of External Scripts , this is to allow R Services to Connect to SQL
@@ -169,11 +186,11 @@ Invoke-Expression $ConfigureSQL
 
 # install modules for sample website
 if($SampleWeb  -eq "Yes")
-{
+{   
 set-location $SolutionPath\Website\
 npm install
-(Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLPW', $password) | Set-Content $SolutionPath\Website\server.js
-(Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLUSER', $username) | Set-Content $SolutionPath\Website\server.js
+(Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLPW', $credential.GetNetworkCredential().password) | Set-Content $SolutionPath\Website\server.js
+(Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLUSER', $credential.Username) | Set-Content $SolutionPath\Website\server.js
 }
 
 $endTime = Get-Date
