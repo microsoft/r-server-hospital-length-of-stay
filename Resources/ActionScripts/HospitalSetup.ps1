@@ -6,13 +6,13 @@ param(
 [ValidateNotNullOrEmpty()] 
 [string]$serverName,
 
-[parameter(Mandatory=$true, Position=2)]
+[parameter(Mandatory=$false, Position=2)]
 [ValidateNotNullOrEmpty()] 
 [string]$username,
 
-[parameter(Mandatory=$true, Position=3)]
+[parameter(Mandatory=$false, Position=3)]
 [ValidateNotNullOrEmpty()] 
-[SecureString]$password,
+[String]$password,
 
 [parameter(Mandatory=$false, Position=4)]
 [ValidateNotNullOrEmpty()] 
@@ -44,24 +44,15 @@ $setupLog = "c:\tmp\hospital_setup_log.txt"
 $isDsvm = if(Test-Path "C:\dsvm") {"Yes"} else {"No"}
 
 
-# if ($SampleWeb -eq "Yes") 
-# {
-#      if([string]::IsNullOrEmpty($username)) 
-#     {
-#         $credential = Get-Credential -Message "Enter a UserName and Password for SQL to use"
-#         $ui = $credential.Username
-#         $pw = $credential.GetNetworkCredential().password   
-#         $username = $ui
-#         $password = $pw
-
-#     } 
-#     ELSE 
-#     {
-#         $username = $username
-#         $password = $password
-#     }  
-
-# }
+ if ($SampleWeb -eq "Yes") 
+{
+    if([string]::IsNullOrEmpty($username)) 
+    {
+        $credential = Get-Credential -Message "Enter a UserName and Password for SQL/Sample Web use"
+        $username = $credential.Username
+        $password = $credential.GetNetworkCredential().password 
+    }  
+}
 
 
 Start-Transcript -Path "c:\tmp\hospital_setup_log.txt"
@@ -85,7 +76,9 @@ $SolutionData = $SolutionPath + "\Data\"
 ###################################################################
 
 
-Write-Host "Installing SQLServer Power Shell Module or Updating to latest "
+Write-Host 
+("Installing SQLServer Power Shell Module or Updating to latest
+")
 
 
 if (Get-Module -ListAvailable -Name SQLServer) 
@@ -106,7 +99,10 @@ Else
 
 $clone = "git clone --branch $Branch --single-branch https://github.com/Microsoft/$SolutionFullName $solutionPath"
 
-if (Test-Path $SolutionPath) { Write-Host "Solution has already been cloned"}
+if (Test-Path $SolutionPath) 
+{Write-Host 
+    ("Solution has already been cloned
+    ")}
 ELSE {Invoke-Expression $clone}
 
 
@@ -128,7 +124,9 @@ if([string]::IsNullOrEmpty($serverName))
     }
     $serverName = $si
 
-    Write-Host "Servername set to $serverName"
+    Write-Host 
+    ("Servername set to $serverName
+    ")
 
 
 
@@ -136,7 +134,9 @@ if ($sqlAuth -eq "Yes")
 {
 ### Change Authentication From Windows Auth to Mixed Mode 
 Invoke-Sqlcmd -Query "EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'LoginMode', REG_DWORD, 2;" -ServerInstance "LocalHost" 
-Write-Host ("Switching SQL Server to Mixed Mode")
+Write-Host 
+("Switching SQL Server to Mixed Mode
+")
 $Query = "CREATE LOGIN $username WITH PASSWORD=N'$password', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF"
 Invoke-Sqlcmd -Query $Query -ErrorAction SilentlyContinue
 
@@ -145,29 +145,34 @@ Invoke-Sqlcmd -Query $Query -ErrorAction SilentlyContinue
 }
 
 
-Write-Host "Configuring SQL to allow running of External Scripts "
+Write-Host 
+("Configuring SQL to allow running of External Scripts
+")
 ### Allow Running of External Scripts , this is to allow R Services to Connect to SQL
 Invoke-Sqlcmd -Query "EXEC sp_configure  'external scripts enabled', 1"
 
 ### Force Change in SQL Policy on External Scripts 
 Invoke-Sqlcmd -Query "RECONFIGURE WITH OVERRIDE" 
-Write-Host "SQL Server Configured to allow running of External Scripts "
+Write-Host 
+("SQL Server Configured to allow running of External Scripts
+")
 
-Write-Host "Restarting SQL Services "
+Write-Host 
+("Restarting SQL Services
+")
 ### Changes Above Require Services to be cycled to take effect 
 ### Stop the SQL Service and Launchpad wild cards are used to account for named instances  
 Stop-Service -Name "MSSQ*" -Force
 
 ### Start the SQL Service 
 Start-Service -Name "MSSQ*"
-Write-Host "SQL Services Restarted"
+Write-Host 
+("SQL Services Restarted
+")
 
-
-
-
-
-
-Write-Host "Done with configuration changes to SQL Server"
+Write-Host 
+("Done with configuration changes to SQL Server
+")
 
 Write-Host "Installing latest Power BI..."
 # Download PowerBI Desktop installer
@@ -177,14 +182,16 @@ Start-BitsTransfer -Source "https://go.microsoft.com/fwlink/?LinkId=521662&clcid
 msiexec.exe /i powerbi-desktop.msi /qn /norestart  ACCEPT_EULA=1
 
 if (!$?) {
-    Write-Host -ForeGroundColor Red " Error installing Power BI Desktop. Please install latest Power BI manually."
+    (Write-Host -ForeGroundColor Red " Error installing Power BI Desktop. Please install latest Power BI manually.")
 }
 
 
 ##Create Shortcuts and Autostart Help File 
 Copy-Item "$ScriptPath\SolutionHelp.url" C:\Users\Public\Desktop\
 Copy-Item "$ScriptPath\SolutionHelp.url" "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\"
-Write-Host "Help Files Copied to Desktop"
+Write-Host 
+("Help Files Copied to Desktop
+")
 
 
 
@@ -209,9 +216,13 @@ npm install
 
 $endTime = Get-Date
 
-Write-Host ("Length of Stay Development Workflow Finished Successfully!")
+Write-Host 
+("Length of Stay Development Workflow Finished Successfully!
+")
 $Duration = New-TimeSpan -Start $StartTime -End $EndTime 
-Write-Host ("Total Deployment Time = $Duration") 
+Write-Host 
+("Total Deployment Time = $Duration
+") 
 
 Stop-Transcript
 
