@@ -54,7 +54,6 @@ if ($SampleWeb -eq "Yes")
 Start-Transcript -Path "c:\tmp\hospital_setup_log.txt"
 $startTime = Get-Date
 Write-Host "Start time:" $startTime 
-Write-Host "ServerName set to $ServerName"
 
 
 
