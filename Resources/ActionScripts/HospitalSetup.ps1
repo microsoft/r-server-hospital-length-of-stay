@@ -108,7 +108,6 @@ ELSE {Invoke-Expression $clone}
 #Configure SQL to Run our Solutions 
 ############################################################################################
 
-#Write-Host -ForegroundColor 'Cyan' " Switching SQL Server to Mixed Mode"
 if([string]::IsNullOrEmpty($serverName))   
     {
     $Query = "SELECT SERVERPROPERTY('ServerName')"
