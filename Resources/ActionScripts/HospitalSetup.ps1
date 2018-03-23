@@ -6,11 +6,11 @@ param(
 [ValidateNotNullOrEmpty()] 
 [string]$serverName,
 
-[parameter(Mandatory=$false, Position=2)]
+[parameter(Mandatory=$true, Position=2)]
 [ValidateNotNullOrEmpty()] 
 [string]$username,
 
-[parameter(Mandatory=$false, Position=3)]
+[parameter(Mandatory=$true, Position=3)]
 [ValidateNotNullOrEmpty()] 
 [SecureString]$password,
 
@@ -34,7 +34,7 @@ $Prompt = 'N'
 $SolutionName = "Hospital"
 $SolutionFullName = "r-server-hospital-length-of-stay" 
 ##$JupyterNotebook = "Hospital_Length_Of_Stay_Notebook.ipynb"
-##$odbcName = 'CampOpt'
+$odbcName = 'Hospital'
 ### DON'T FORGET TO CHANGE TO MASTER LATER...
 $Branch = "master" 
 $InstallPy = 'Yes' ## If Solution has a Py Version this should be 'Yes' Else 'No'
@@ -44,16 +44,24 @@ $setupLog = "c:\tmp\hospital_setup_log.txt"
 $isDsvm = if(Test-Path "C:\dsvm") {"Yes"} else {"No"}
 
 
-if ($SampleWeb -eq "Yes") 
-{
-    $Credential = if([string]::IsNullOrEmpty($username)) 
-    {
-        Get-Credential -Message "Enter a UserName and Password for SQL to use"
-        $username = $credential.Username
-        $password = $credential.GetNetworkCredential().password
-    }   
+# if ($SampleWeb -eq "Yes") 
+# {
+#      if([string]::IsNullOrEmpty($username)) 
+#     {
+#         $credential = Get-Credential -Message "Enter a UserName and Password for SQL to use"
+#         $ui = $credential.Username
+#         $pw = $credential.GetNetworkCredential().password   
+#         $username = $ui
+#         $password = $pw
 
-}
+#     } 
+#     ELSE 
+#     {
+#         $username = $username
+#         $password = $password
+#     }  
+
+# }
 
 
 Start-Transcript -Path "c:\tmp\hospital_setup_log.txt"
@@ -122,11 +130,18 @@ if([string]::IsNullOrEmpty($serverName))
 
     Write-Host "Servername set to $serverName"
 
+
+
 if ($sqlAuth -eq "Yes")
 {
 ### Change Authentication From Windows Auth to Mixed Mode 
 Invoke-Sqlcmd -Query "EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'LoginMode', REG_DWORD, 2;" -ServerInstance "LocalHost" 
 Write-Host ("Switching SQL Server to Mixed Mode")
+$Query = "CREATE LOGIN $username WITH PASSWORD=N'$password', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF"
+Invoke-Sqlcmd -Query $Query -ErrorAction SilentlyContinue
+
+$Query = "ALTER SERVER ROLE [sysadmin] ADD MEMBER $username"
+Invoke-Sqlcmd -Query $Query -ErrorAction SilentlyContinue
 }
 
 
@@ -148,11 +163,7 @@ Start-Service -Name "MSSQ*"
 Write-Host "SQL Services Restarted"
 
 
-$Query = "CREATE LOGIN $username WITH PASSWORD=N'$password', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF"
-Invoke-Sqlcmd -Query $Query -ErrorAction SilentlyContinue
 
-$Query = "ALTER SERVER ROLE [sysadmin] ADD MEMBER $username"
-Invoke-Sqlcmd -Query $Query -ErrorAction SilentlyContinue
 
 
 
