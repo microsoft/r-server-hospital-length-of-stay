@@ -47,7 +47,12 @@ $isDsvm = if(Test-Path "C:\dsvm") {"Yes"} else {"No"}
 if ($SampleWeb -eq "Yes") 
 {
     $Credential = if([string]::IsNullOrEmpty($username)) 
-    {Get-Credential -Message "Enter a UserName and Password for SQL to use"}
+    {
+        Get-Credential -Message "Enter a UserName and Password for SQL to use"
+        $username = $credential.Username
+        $password = $credential.GetNetworkCredential().password
+    }   
+
 }
 
 
@@ -188,8 +193,8 @@ if($SampleWeb  -eq "Yes")
 {   
 set-location $SolutionPath\Website\
 npm install
-(Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLPW', $credential.GetNetworkCredential().password) | Set-Content $SolutionPath\Website\server.js
-(Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLUSER', $credential.Username) | Set-Content $SolutionPath\Website\server.js
+(Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLPW', $password) | Set-Content $SolutionPath\Website\server.js
+(Get-Content $SolutionPath\Website\server.js).replace('XXYOURSQLUSER', $username) | Set-Content $SolutionPath\Website\server.js
 }
 
 $endTime = Get-Date
