@@ -44,15 +44,15 @@ $setupLog = "c:\tmp\hospital_setup_log.txt"
 $isDsvm = if(Test-Path "C:\dsvm") {"Yes"} else {"No"}
 
 
- if ($SampleWeb -eq "Yes") 
-{
+if ($SampleWeb -eq "Yes")         {
+    {    
     if([string]::IsNullOrEmpty($username)) 
-    {
-        $credential = Get-Credential -Message "Enter a UserName and Password for SQL/Sample Web use"
+        {
+        $Credential = $Host.ui.PromptForCredential("Need credentials", "Please supply an user name and password to configure SQL for mixed authentication.", "", "")
         $username = $credential.Username
         $password = $credential.GetNetworkCredential().password 
-    }  
-}
+        }  
+    }
 
 
 Start-Transcript -Path "c:\tmp\hospital_setup_log.txt"
