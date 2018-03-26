@@ -44,6 +44,16 @@ $setupLog = "c:\tmp\hospital_setup_log.txt"
 $isDsvm = if(Test-Path "C:\dsvm") {"Yes"} else {"No"}
 
 
+$solutionTemplateName = "Solutions"
+$solutionTemplatePath = "C:\" + $solutionTemplateName
+$checkoutDir = $SolutionName
+$SolutionPath = $solutionTemplatePath + '\' + $checkoutDir
+$desktop = "C:\Users\Public\Desktop\"
+$scriptPath = $SolutionPath + "\Resources\ActionScripts\"
+$SolutionData = $SolutionPath + "\Data\"
+
+
+
 if ($SampleWeb -eq "Yes")             
     {    
     if([string]::IsNullOrEmpty($username)) 
@@ -55,19 +65,16 @@ if ($SampleWeb -eq "Yes")
     }
 
 
-Start-Transcript -Path "c:\tmp\hospital_setup_log.txt"
+Start-Transcript -Path $setupLog
 $startTime = Get-Date
 Write-Host "Start time:" $startTime 
 
+if($isDSVM -eq "Yes") 
+    {Write-Host ("This Solution was created on a DSVM")}
+    else 
+    {Write-Host ("This Solution was created on non DVSM Sku")}
 
 
-$solutionTemplateName = "Solutions"
-$solutionTemplatePath = "C:\" + $solutionTemplateName
-$checkoutDir = $SolutionName
-$SolutionPath = $solutionTemplatePath + '\' + $checkoutDir
-$desktop = "C:\Users\Public\Desktop\"
-$scriptPath = $SolutionPath + "\Resources\ActionScripts\"
-$SolutionData = $SolutionPath + "\Data\"
 
 
 
