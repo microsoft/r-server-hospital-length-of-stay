@@ -23,8 +23,8 @@ param(
 $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
         [Security.Principal.WindowsBuiltInRole] "Administrator")
         
-if ($isAdmin -eq 'True') {
-
+if ($isAdmin -eq 'True') 
+{
 
 #$Prompt= if ($Prompt -match '^y(es)?$') {'Y'} else {'N'}
 $Prompt = 'N'
@@ -44,7 +44,7 @@ $setupLog = "c:\tmp\hospital_setup_log.txt"
 $isDsvm = if(Test-Path "C:\dsvm") {"Yes"} else {"No"}
 
 
-if ($SampleWeb -eq "Yes")         {
+if ($SampleWeb -eq "Yes")             
     {    
     if([string]::IsNullOrEmpty($username)) 
         {
@@ -226,7 +226,7 @@ Start-Process "https://microsoft.github.io/r-server-hospital-length-of-stay/Typi
     Exit-PSHostProcess
     EXIT
 
-}
+ }
 
 
 ELSE 
