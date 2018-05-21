@@ -3,7 +3,7 @@ layout: default
 title: HOME
 ---
 <div class="alert alert-warning">
-Are you unable to connect to your Virtual Machine? See this important announcement for
+Are you unable to connect to your Virtual Machine? See this important information for
 <a href="https://blogs.technet.microsoft.com/mckittrick/unable-to-rdp-to-virtual-machine-credssp-encryption-oracle-remediation/">how to resolve.</a>
 </div>
 
