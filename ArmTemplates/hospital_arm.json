@@ -61,10 +61,7 @@
         {
         "apiVersion": "2017-05-10",
         "name": "dsvmTemplate",
-        "type": "Microsoft.Resources/deployments",
-        "dependsOn": [
-            "storageAccountTemplate"
-          ],        
+        "type": "Microsoft.Resources/deployments",      
         "properties": {
         "mode": "incremental",
         "templateLink": {
@@ -84,7 +81,7 @@
         "name": "configureTemplate",
         "type": "Microsoft.Resources/deployments",
         "dependsOn": [
-            "storageAccountTemplate"
+            "dsvmTemplate"
           ],        
         "properties": {
         "mode": "incremental",
