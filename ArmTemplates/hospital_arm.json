@@ -14,6 +14,12 @@
         "description": "Password for the Virtual Machine."
       }
     },
+    "vmName": {
+        "type": "string",
+        "metadata": {
+            "description": "Name for the Virtual Machine. Windows computer name cannot be more than 15 characters long, be entirely numeric, or contain non-ASCII or special characters"
+        }
+    },
     "vmSize": {
         "type": "string",
         "defaultValue": "Standard_DS4_v2",
@@ -54,8 +60,7 @@
     }
   },
   "variables": {
-    "location": "[resourceGroup().location]",
-    "vmName": "[toLower(concat('hos', uniqueString(resourceGroup().id)))]"
+    "location": "[resourceGroup().location]"
   },
   "resources": [
         {
@@ -71,7 +76,7 @@
         "parameters": {
             "adminUsername": { "value": "[parameters('adminUsername')]" },
             "adminPassword": { "value": "[parameters('adminPassword')]" },
-            "vmName": { "value": "[variables('vmName')]" },
+            "vmName": { "value": "[parameters('vmName')]" },
             "vmSize": { "value": "[parameters('vmSize')]" }
                 }
             }
@@ -92,7 +97,7 @@
         "parameters": {
             "adminUsername": { "value": "[parameters('adminUsername')]" },
             "adminPassword": { "value": "[parameters('adminPassword')]" },
-            "vmName": { "value": "[variables('vmName')]" }
+            "vmName": { "value": "[parameters('vmName')]" }
                 }
             }
         }
