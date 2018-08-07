@@ -5,7 +5,7 @@
 
 > Discover more examples at [Microsoft Machine Learning Server](https://github.com/Microsoft/ML-Server)
 
-Deploy this solution in [Azure](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Flaramume%2Fr-server-hospital-length-of-stay%2FdeployfromGitHub%2FArmTemplates%2Fhospital_arm.json).
+[![Deploy to Azure](https://raw.githubusercontent.com/Azure/Azure-CortanaIntelligence-SolutionAuthoringWorkspace/master/docs/images/DeployToAzure.PNG)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Flaramume%2Fr-server-hospital-length-of-stay%2FdeployfromGitHub%2FArmTemplates%2Fhospital_arm.json)
 
 For all documentation, visit the [Hospital Length of Stay website](https://microsoft.github.io/r-server-hospital-length-of-stay/).
 
