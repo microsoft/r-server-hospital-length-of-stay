@@ -2,7 +2,7 @@
 
 # Predicting Length of Stay in Hospitals
 
-[![Deploy to Azure](https://raw.githubusercontent.com/Azure/Azure-CortanaIntelligence-SolutionAuthoringWorkspace/master/docs/images/DeployToAzure.PNG)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Flaramume%2Fr-server-hospital-length-of-stay%2FdeployfromGitHub%2FArmTemplates%2Fhospital_arm.json)
+[![Deploy to Azure](https://raw.githubusercontent.com/Azure/Azure-CortanaIntelligence-SolutionAuthoringWorkspace/master/docs/images/DeployToAzure.PNG)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2Fr-server-hospital-length-of-stay%2Fmaster%2FArmTemplates%2Fhospital_arm.json)
 
 ## Implemented on SQL Server 2016 R Services
 
