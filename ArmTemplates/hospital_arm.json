@@ -65,7 +65,7 @@
         "properties": {
         "mode": "incremental",
         "templateLink": {
-            "uri":"https://raw.githubusercontent.com/laramume/r-server-hospital-length-of-stay/deployfromGitHub/ArmTemplates/dsvm_arm.json",
+            "uri":"https://raw.githubusercontent.com/Microsoft/r-server-hospital-length-of-stay/master/ArmTemplates/dsvm_arm.json",
             "contentVersion":"1.0.0.0"
                 },
         "parameters": {
@@ -86,7 +86,7 @@
         "properties": {
         "mode": "incremental",
         "templateLink": {
-            "uri":"https://raw.githubusercontent.com/laramume/r-server-hospital-length-of-stay/deployfromGitHub/ArmTemplates/configure_arm.json",
+            "uri":"https://raw.githubusercontent.com/Microsoft/r-server-hospital-length-of-stay/master/ArmTemplates/configure_arm.json",
             "contentVersion":"1.0.0.0"
                 },
         "parameters": {
