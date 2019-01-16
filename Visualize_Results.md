@@ -23,7 +23,7 @@ Finally, the dashboard pages are filtered to display only data for patients that
 In order to replace the cached data with data from your SQL Server, follow the steps below.
 
 First, try refreshing the data using the <code>Refresh</code> button on the toolbar.
-Use your Windows credentials if prompted.
+Use your Windows credentials and allow an insecure connection if prompted.
 
 If this does not work, you may need to modify the connection information by using the steps below.
 

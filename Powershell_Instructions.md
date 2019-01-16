@@ -41,7 +41,7 @@ Running this PowerShell script will create the data tables and stored procedures
 
 1. If you wish to install the sample website to demonstrate using the model, install [node.js](https://nodejs.org/en/) if it is not already present.
 
-1. Download  <a href="https://raw.githubusercontent.com/Microsoft/r-server-hospital-length-of-stay/master/Resources/ActionScripts/HospitalSetup.ps1" download>HospitalSetup.ps1</a> to your computer.
+1. Download  <a href="https://raw.githubusercontent.com/Microsoft/r-server-hospital-length-of-stay/master/Resources/ActionScripts/HospitalSetup.ps1" download>HospitalSetup.ps1</a> to your computer. The best way of downloading the file is to clone the <a href="https://github.com/Microsoft/r-server-hospital-length-of-stay">repository</a> using `git clone https://github.com/Microsoft/r-server-hospital-length-of-stay`.
 
 1. Open a command or PowerShell window as Administrator.
 

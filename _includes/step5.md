@@ -1,4 +1,5 @@
-Step 5: Use the Model during Admission
+## Step 5: Use the Model during Admission
+----------------------------------------------------------------
 
 The predicted LOS might also be displayed during a patient's admission.  An example of such a display is available in a sample webpage included in this solution.
 
