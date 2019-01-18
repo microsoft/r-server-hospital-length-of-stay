@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Typical Workflow for Azure AI Gallery Deployment
+title: Typical Workflow for GitHub Deployment
 ---
 
 
-## Typical Workflow for Azure AI Gallery Deployment
+## Typical Workflow for GitHub Deployment
 ---------------------------------------------------------------
 
 <div class="row">
@@ -40,7 +40,7 @@ To demonstrate a typical workflow, we'll introduce you to a few personas.  You c
         
         {% include step1.md %}
 
-This has already been done on your deployed Azure AI Gallery VM.
+This has already been done on your GitHub deployed VM.
 
  <a name="step2" id="step2"></a>
 

@@ -22,4 +22,4 @@ After a moment, the browser window will open.  Navigate to either the **R** or *
 To execute the code in a cell, `Shift+Enter` when your cursor is in the cell.  Some of the cells may take a minute or two to work, and must be complete before the next cell can execute.  You can also select the `Cell>Run All` menu item to execute the entire notebook.
 
 
-<a href="CIG_Workflow.html#step2">Return to Typical Workflow for Azure AI Gallery Deployment<a>
+<a href="CIG_Workflow.html#step2">Return to Typical Workflow for GitHub Deployment<a>.

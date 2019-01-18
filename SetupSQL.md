@@ -16,7 +16,10 @@ title: "On-Prem: Setup SQL Server 2017"
     <div class="col-md-6">
         The instructions on this page will help you to add this solution to your on premises SQL Server 2017.  
         <p>
-        If you instead would like to try this solution out on a virtual machine, visit the <a href="{{ site.aka_url }}">Azure AI Gallery</a> and use the Deploy button.  All the configuration described below will be done for you, as well as the initial deployment of the solution. </p>
+        If you instead would like to try this solution out on a virtual machine, visit <a href="https://github.com/Microsoft/r-server-hospital-length-of-stay">GitHub</a> and use the <b>Deploy to Azure</b> button. <br/>Click the button below to deploy it now:<br/>
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2Fr-server-hospital-length-of-stay%2Fmaster%2FArmTemplates%2Fhospital_arm.json"><image src="https://raw.githubusercontent.com/Azure/Azure-CortanaIntelligence-SolutionAuthoringWorkspace/master/docs/images/DeployToAzure.PNG" alt="Deploy to Azure"/></a>
+<br/>
+All the configuration described below will be done for you, as well as the initial deployment of the solution. </p>
     </div>
 </div>
 

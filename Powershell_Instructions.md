@@ -19,8 +19,7 @@ title: PowerShell Instructions
         </div>
     </div>
     <div class="col-md-6">
-        If you have deployed a VM through the  
-        <a href="{{ site.aka_url }}">Azure AI Gallery</a>, all the steps below have already been performed and your database on that machine has all the resulting tables and stored procedures.  Skip to the <a href="CIG_Workflow.html">Typical Workflow</a> for a description of how these files were first created in R by a Data Scientist and then deployed to SQL stored procedures.
+        If you have deployed a VM using the <b>Deploy to Azure</b> button on <a href="https://github.com/Microsoft/r-server-hospital-length-of-stay">GitHub</a>, all the steps below have already been performed and your database on that machine has all the resulting tables and stored procedures.  Skip to the <a href="CIG_Workflow.html">Typical Workflow</a> for a description of how these files were first created in R by a Data Scientist and then deployed to SQL stored procedures.
     </div>
 </div>
 If you are configuring your own server, or if you want to reset your VM to its initial state, continue with the steps below to run the PowerShell script.

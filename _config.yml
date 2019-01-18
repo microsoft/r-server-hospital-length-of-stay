@@ -17,6 +17,5 @@ pbi_name: Hospital Dashboard.pbix
 # urls
 code_url: "https://github.com/Microsoft/r-server-hospital-length-of-stay"
 website_url: "https://microsoft.github.io/r-server-hospital-length-of-stay/"  
-pbi_url: "https://start.cortanaintelligence.com/TryItNow/Dashboard/hospital"
 aka_url: "http://aka.ms/hospital-los" 
 

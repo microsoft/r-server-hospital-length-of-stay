@@ -15,7 +15,7 @@ RStudio needs to use R Server in order for the code for this solution.  Follow t
 <ol type="a">
 <li>From the <code>Tools</code> menu, choose <code>Global Options</code>.</li>
 <li>In the General tab, update the path to R to point to R Server:</li>
-<ul><li>On the VM deployed from <a href="{{ site.aka_url }}">Azure AI Gallery</a> the path is <code>C:\Program Files\Microsoft\ML Server\R_SERVER</code></li>
+<ul><li>On the VM deployed using the GitHub deployment the path is <code>C:\Program Files\Microsoft\ML Server\R_SERVER</code></li>
 </ol>
 <li>Exit RStudio.</li>
 <li>When you relaunch RStudio, R Client will now be the default R engine.</li>
@@ -24,4 +24,4 @@ RStudio needs to use R Server in order for the code for this solution.  Follow t
 
  
 
-<a href="CIG_Workflow.html#step2">Return to Typical Workflow for Azure AI Gallery Deployment<a>
+<a href="CIG_Workflow.html#step2">Return to Typical Workflow for GitHub Deployment<a>.
