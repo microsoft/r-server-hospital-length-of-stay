@@ -28,7 +28,8 @@ title: Typical Workflow for Azure AI Gallery Deployment
  {% include typicalintro1.md %}
  
 <div class="alert alert-warning" role="alert"> 
-This guide assumes you have deployed the {{ site.solution_name }} solution from the <a href="{{ site.aka_url }}">Azure AI Gallery</a>.  
+This guide assumes you have deployed the {{ site.solution_name }} solution to Azure using the `Deploy to Azure` button on <a href="https://github.com/Microsoft/r-server-hospital-length-of-stay">GitHub</a>. Click the button below to deploy it now: 
+[![Deploy to Azure](https://raw.githubusercontent.com/Azure/Azure-CortanaIntelligence-SolutionAuthoringWorkspace/master/docs/images/DeployToAzure.PNG)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2Fr-server-hospital-length-of-stay%2Fmaster%2FArmTemplates%2Fhospital_arm.json)
 
 <li>If you are using your own SQL Server for this solution, <a href="Typical_Workflow.html">use this guide instead</a>.</li>
 </div>
