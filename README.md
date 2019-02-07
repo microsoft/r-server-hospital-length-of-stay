@@ -1,7 +1,7 @@
 <img src="Resources/Images/los.jpg" align="right" height="200px">
 
 # Predicting Length of Stay in Hospitals
-
+Predicting patients length of stay, an important scenario in Healthcare.
 [![Deploy to Azure](https://raw.githubusercontent.com/Azure/Azure-CortanaIntelligence-SolutionAuthoringWorkspace/master/docs/images/DeployToAzure.PNG)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2Fr-server-hospital-length-of-stay%2Fmaster%2FArmTemplates%2Fhospital_arm.json)
 
 ## Implemented on SQL Server 2016 R Services
