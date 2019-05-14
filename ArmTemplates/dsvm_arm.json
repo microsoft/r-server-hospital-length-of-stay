@@ -33,7 +33,7 @@
         "imagePublisher": "microsoft-ads",
         "imageOffer": "windows-data-science-vm",
         "sku": "windows2016",
-        "version": "18.02.00",
+        "version": "03.25.19",
         "OSDiskName": "osdiskforwindowssimple",
         "nicName": "[parameters('vmName')]",
         "addressPrefix": "10.0.0.0/16",
