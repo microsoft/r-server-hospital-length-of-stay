@@ -2,7 +2,7 @@ use Hospital_Py
 go
 -- Stored Procedure to use native scoring for RF model (rxDForest implementation) for a single new case
 
--- @eid: specify the patient id to retrive record and score
+-- @eid: specify the patient id to retrive record and score, ie. 1234, 1235, 9999
 
 SET ANSI_NULLS ON
 GO
@@ -10,7 +10,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE or alter PROCEDURE [dbo].[do_native_predict]
+CREATE or alter PROCEDURE [dbo].[do_native_predict] --1234
     @eid int
 AS
 BEGIN
