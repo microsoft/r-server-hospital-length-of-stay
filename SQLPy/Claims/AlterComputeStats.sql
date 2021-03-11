@@ -7,7 +7,7 @@ BEGIN
 	-- Create an empty table that will store the Statistics. 
 	DROP TABLE if exists [dbo].[Stats]
 	CREATE TABLE [dbo].[Stats](
-		[variable_name] [varchar](30) NOT NULL,
+		[variable_name] [varchar](128) NOT NULL,
 		[type] [varchar](30) NOT NULL,
 		[mode] [varchar](30) NULL, 
 		[mean] [float] NULL,
@@ -21,7 +21,7 @@ BEGIN
 		FROM (SELECT COLUMN_NAME as variable_name, DATA_TYPE as type
 			  FROM INFORMATION_SCHEMA.COLUMNS
 	          WHERE TABLE_NAME = ''' + @input + ''' 
-			  AND COLUMN_NAME NOT IN (''ClaimClaimID'', ''ClaimLengthOfStay'', ''ClaimDateClosed'', ''ClaimClaimStatusID'', ''ClaimStatusDescription'')) as t ';
+			  AND COLUMN_NAME NOT IN (''ClaimClaimID'', ''ClaimLengthOfStay'', ''LengthOfStay'', ''ClaimDateClosed'', ''ClaimReportedDate'')) as t ';
 		EXEC sp_executesql @sql;
 
 	-- Loops to compute the Mode for categorical variables.
@@ -29,7 +29,7 @@ BEGIN
 		DECLARE @getname1 CURSOR
 
 		SET @getname1 = CURSOR FOR
-		SELECT variable_name FROM [dbo].[Stats] WHERE type IN('varchar', 'nvarchar', 'int')
+		SELECT variable_name FROM [dbo].[Stats] WHERE type IN('varchar', 'nvarchar', 'int', 'smallint')
 	
 		OPEN @getname1
 		FETCH NEXT
@@ -46,7 +46,7 @@ BEGIN
 						 GROUP BY ' + @name1 + ' 
 						 ORDER BY cnt desc) as T
 			WHERE Stats.variable_name =  ''' + @name1 + '''';
-			EXEC sp_executesql @sql1;
+            EXEC sp_executesql @sql1;
 
 			FETCH NEXT
 		    FROM @getname1 INTO @name1
@@ -59,7 +59,7 @@ BEGIN
 		DECLARE @getname2 CURSOR
 
 		SET @getname2 = CURSOR FOR
-		SELECT variable_name FROM [dbo].[Stats] WHERE type IN('float')
+		SELECT variable_name FROM [dbo].[Stats] WHERE type IN('float', 'decimal')
 	
 		OPEN @getname2
 		FETCH NEXT

@@ -1,4 +1,4 @@
-Use [redacted]
+Use [redacted] --prod db
 go
 drop view if exists Claim.ClaimLengthOfStay;
 go
@@ -44,7 +44,7 @@ as
 go
 select top 10 * from Claim.ClaimLengthOfStay
 
-:connect [redacted]
+:connect [redacted] --dev
 Use Hospital_Py
 go 
 

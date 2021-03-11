@@ -17,7 +17,7 @@ exec sp_rename N'LengthOfStay.length_cci', @archivecci, N'INDEX';
 exec sp_rename 'LengthOfStay', @archive;
 
 select * into LengthOfStay
-from Atlas.ClaimLengthOfStay
+from [redacted].ClaimLengthOfStay
 go 
 
 create clustered columnstore index length_cci on LengthOfStay with (drop_existing = off);
