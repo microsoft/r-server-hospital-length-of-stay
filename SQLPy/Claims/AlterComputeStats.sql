@@ -59,7 +59,7 @@ BEGIN
 		DECLARE @getname2 CURSOR
 
 		SET @getname2 = CURSOR FOR
-		SELECT variable_name FROM [dbo].[Stats] WHERE type IN('float', 'decimal')
+		SELECT variable_name FROM [dbo].[Stats] WHERE type IN('float', 'decimal') or variable_name = 'ClaimRoomsWithDamage'
 	
 		OPEN @getname2
 		FETCH NEXT
