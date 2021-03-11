@@ -37,10 +37,12 @@ BEGIN
                 PolicyVersionAttributesFormType, 
                 PolicyVersionAttributesOccupancyType, 			   
 		       (PolicyVersionAttributesCoverageA - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = ''PolicyVersionAttributesCoverageA''))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = ''PolicyVersionAttributesCoverageA'') AS PolicyVersionAttributesCoverageA,
-		       (ClaimMoneyReserve - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = ''ClaimMoneyReserve''))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = ''ClaimMoneyReserve'') AS ClaimMoneyReserve,
+		       --(ClaimMoneyReserve - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = ''ClaimMoneyReserve''))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = ''ClaimMoneyReserve'') AS ClaimMoneyReserve,
 		       (ClaimMoneyLosses - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = ''ClaimMoneyLosses''))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = ''ClaimMoneyLosses'') AS ClaimMoneyLosses,
 		       (ClaimMoneyLAE - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = ''ClaimMoneyLAE''))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = ''ClaimMoneyLAE'') AS ClaimMoneyLAE,
-		       ClaimRoomsWithDamage,
+		       isnull(ClaimRoomsWithDamage - (SELECT mean FROM [dbo].[Stats] WHERE variable_name = ''ClaimRoomsWithDamage''))/(SELECT std FROM [dbo].[Stats] WHERE variable_name = 'ClaimRoomsWithDamage') AS ClaimRoomsWithDamage,
+CAST(1 as varchar(2)) 
+               AS number_of_issues
 			   ClaimDateClosed,'+
 			   (CASE WHEN @is_production = 0 THEN 'CAST(lengthofstay as float) lengthofstay' else 'NULL as lengthofstay' end) + '
 	    FROM ' + @input;
