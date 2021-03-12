@@ -57,7 +57,7 @@ LoS_Train = RxSqlServerData(sql_query = "SELECT ClaimClaimID, {} FROM LoS WHERE 
 ##	Specify the variables to keep for the training 
 ##########################################################################################################################################
 ##variables_to_remove = ["eid", "vdate", "discharged", "facid", "lengthofstay"]
-variables_to_remove = ["ClaimClaimID", "ClaimLengthOfStay", "LengthOfStay", "ClaimDateClosed", "ClaimReportedDate"]
+variables_to_remove = ["ClaimClaimID", "ClaimDateClosed", "ClaimReportedDate", "lengthofstay"]
 training_variables = [x for x in variables_all if x not in variables_to_remove]
 formula = "lengthofstay ~ " + " + ".join(training_variables)
 

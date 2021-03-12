@@ -27,7 +27,7 @@ col_info = {"StatesStateCode": {"type": "factor", "levels":["AL", "DE", "FL", "G
                "ClaimClaimID": {"type": "integer"},
                "ClaimReportedDate": {"type": "factor"},
                "ClaimDateClosed": {"type": "factor"},
-               "LengthOfStay": {"type": "integer"},
+               "lengthofstay": {"type": "numeric"},
                "ClaimClaimStatusID": {"type": "integer"},
                "ClaimStatusDescription": {"type": "factor"},
                "ClaimMoneyReserve": {"type": "numeric"},
