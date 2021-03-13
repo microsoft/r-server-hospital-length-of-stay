@@ -94,7 +94,7 @@ app.get('/predict', function (req, res) {
     });
 
     var eid = req.query.eid;
-    console.log('Patient ID: ' + eid)
+    console.log('Claim ID: ' + eid)
     request.on('row', function (col) {
       if (col[0].value === null) {
         console.log('NULL result');

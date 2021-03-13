@@ -113,7 +113,7 @@ var showResult = function (los){
     dayofweek[6] = " *WEEKEND* Saturday ";
     
     var dw = dayofweek[d.getDay()];    
-    $("#losDays").html("Admitted to hospital.  <br/>Estimated length of stay: " + los + dy);
+    $("#losDays").html("Claim Submitted.  <br/>Estimated days to close: " + los + dy);
     $("#losDate").html(dischargeDate + dw )
 }
 
