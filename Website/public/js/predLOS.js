@@ -1,17 +1,40 @@
 // JavaScript Document
 
+const Patients = { 
+    "402690" : {
+        image : "img/Anthony.png", 
+        labimage : "img/lab1.PNG"
+    },
+    "402660" : {
+        image : "img/Ana.png", 
+        labimage : "img/lab2.PNG"
+    },
+    "402691" : {
+        image : "img/Ashley.png", 
+        labimage : "img/lab1.PNG"
+    },
+    "439181" : {
+        image : "img/Bob.png", 
+        labimage : "img/lab2.PNG"
+    },
+    "402695" : {
+        image : "img/Emille.png", 
+        labimage : "img/lab1.PNG"
+    }
+}
+
 $(document).ready(function () {
 
     id = getUrlParameter("id");
     // in this example, we have two hard-coded users, Anthony and Ana
     // populate the patient page with either Anthony or Ana based on the id
-        if (isEven(id)) {
-        $("#nameImg").attr("src","img/Anthony.png")
-        $("#labImg").attr("src","img/lab1.PNG")
-    } else {
-        $("#nameImg").attr("src","img/Ana.png")
-        $("#labImg").attr("src","img/lab2.PNG")
-    }
+        
+    const Patient = Patients[id];
+
+    if (Patient) {
+        $("#nameImg").attr("src",Patient.image)
+        $("#labImg").attr("src",Patient.labimage)
+    } 
     $("#nameImg").click(function(){
         toggleImg();
         console.log("clicked")
