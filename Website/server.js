@@ -33,7 +33,7 @@ var poolConfig = {
   var connectionConfig = {
     userName: 'Hospital_Py',
     password: 'LoSdemo2021',
-    server: 'FLDSVRSDV01.upcic.inc',
+    server: 'hiramsqlvm.eastus2.cloudapp.azure.com',
     options: { encrypt: true, database: 'Hospital_Py' }
 
 };
@@ -57,14 +57,14 @@ app.get('/', function (req, res) {
   res.render('home')
 });
 
-app.get('/patient', function (req, res) {
+app.get('/detail', function (req, res) {
   var id = req.query.id;
-  res.render('patient', { id: id });
+  res.render('detail', { id: id });
 });
 
-app.get('/patient2', function (req, res) {
+app.get('/detail2', function (req, res) {
   var id = req.query.id;
-  res.render('patient2', { id: id });
+  res.render('detail2', { id: id });
 });
 
 
@@ -94,7 +94,7 @@ app.get('/predict', function (req, res) {
     });
 
     var eid = req.query.eid;
-    console.log('Claim ID: ' + eid)
+    console.log('ID: ' + eid)
     request.on('row', function (col) {
       if (col[0].value === null) {
         console.log('NULL result');

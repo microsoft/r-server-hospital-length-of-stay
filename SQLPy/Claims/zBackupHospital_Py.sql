@@ -1,5 +1,5 @@
 -- :connect localhost
-:setvar CHG  "511"
+:setvar CHG  "1214"
 :setvar DISK ""
 :setvar Database "Hospital_Py"
 
@@ -37,7 +37,7 @@ while @Count > 0
 			with noformat, noinit, skip, norewind, nounload, compression
 			--, encryption(algorithm = AES_256, server certificate = [BackupCertWithPK])
 			, stats = 25;'
-		--exec sp_executesql @SQL;
+		exec sp_executesql @SQL;
 		print @SQL;
 		delete from #dbs --where name = @DB; --uncomment
 		select @Count = Count(*) from #dbs;

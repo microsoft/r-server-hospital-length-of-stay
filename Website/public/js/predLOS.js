@@ -1,23 +1,23 @@
 // JavaScript Document
 
 const Patients = { 
-    "402690" : {
+    "83909" : {
         image : "img/Anthony.png", 
         labimage : "img/lab1.PNG"
     },
-    "402660" : {
+    "27495" : {
         image : "img/Ana.png", 
         labimage : "img/lab2.PNG"
     },
-    "402691" : {
+    "61265" : {
         image : "img/Ashley.png", 
         labimage : "img/lab1.PNG"
     },
-    "439181" : {
+    "24849" : {
         image : "img/Bob.png", 
         labimage : "img/lab2.PNG"
     },
-    "402695" : {
+    "43714" : {
         image : "img/Emille.png", 
         labimage : "img/lab1.PNG"
     }
